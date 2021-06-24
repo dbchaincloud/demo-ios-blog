@@ -35,6 +35,8 @@ var APPCODE : String = "4HQJA8CUUF"
 var GetUserDataURL = BASEURL + "auth/accounts/"
 /// 插入信息
 var InsertDataURL = BASEURL + "txs"
+/// 查询
+var QueryDataUrl = BASEURL + "dbchain/querier/"
 /// 上传数据
 var UploadFileURL = BASEURL + "dbchain/upload/"
 /// 图片下载地址

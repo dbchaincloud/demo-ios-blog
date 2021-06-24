@@ -61,7 +61,7 @@ class CreateMnemonicView: UIView {
     lazy var nameTextField : UITextField = {
         let tf = UITextField()
         let placeholserAttributes = [NSAttributedString.Key.foregroundColor : UIColor.colorWithHexString("000000"),NSAttributedString.Key.font : UIFont().themeHNBoldFont(size: 25)]
-        tf.attributedPlaceholder = NSAttributedString.init(string: "NAME", attributes: placeholserAttributes)
+        tf.attributedPlaceholder = NSAttributedString.init(string: "取个昵称", attributes: placeholserAttributes)
         tf.backgroundColor = .colorWithHexString("F8F8F8")
         tf.textAlignment = .center
         tf.extSetCornerRadius(20)
@@ -110,8 +110,12 @@ class CreateMnemonicView: UIView {
     }
 
     @objc func clickGoInBtn(){
-        if self.goinButtonBlock != nil {
-            self.goinButtonBlock!()
+        if self.nameTextField.text?.count == 0 {
+            SwiftMBHUD.showError("请输入昵称")
+        } else {
+            if self.goinButtonBlock != nil {
+                self.goinButtonBlock!()
+            }
         }
     }
 

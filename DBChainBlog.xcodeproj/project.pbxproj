@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		81194732268319540043FBB4 /* SwiftLeePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 81194731268319540043FBB4 /* SwiftLeePackage */; };
 		8119473726831B5A0043FBB4 /* URLMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473626831B5A0043FBB4 /* URLMacro.swift */; };
+		8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473A268320A60043FBB4 /* TableNameMacro.swift */; };
+		81194740268323420043FBB4 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8119473E268323420043FBB4 /* MBProgressHUD.m */; };
+		81194746268329D40043FBB4 /* SwiftMBHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81194745268329D40043FBB4 /* SwiftMBHUD.swift */; };
 		8175C98326808B58008F4FC8 /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */; };
 		8175C98426808B58008F4FC8 /* LayoutConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95F26808B58008F4FC8 /* LayoutConstraintItem.swift */; };
 		8175C98526808B58008F4FC8 /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C96026808B58008F4FC8 /* ConstraintMakerPrioritizable.swift */; };
@@ -102,6 +104,7 @@
 		817DF03826806CFC00D65D0C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03726806CFC00D65D0C /* HomeViewController.swift */; };
 		817DF03B26806DF100D65D0C /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03A26806DF100D65D0C /* UserDefault.swift */; };
 		817DF03E2680748200D65D0C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03D2680748200D65D0C /* HomeView.swift */; };
+		81E028E82683516A00939944 /* SwiftLeePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 81E028E72683516A00939944 /* SwiftLeePackage */; };
 		81E88786268039160068BB03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88785268039160068BB03 /* AppDelegate.swift */; };
 		81E88788268039160068BB03 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88787268039160068BB03 /* SceneDelegate.swift */; };
 		81E8878A268039160068BB03 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88789268039160068BB03 /* ViewController.swift */; };
@@ -126,7 +129,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		81141BAE26842FB20087572C /* SwiftLeePackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SwiftLeePackage; path = ../../../Desktop/Framework/SwiftLeePackage; sourceTree = "<group>"; };
 		8119473626831B5A0043FBB4 /* URLMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLMacro.swift; sourceTree = "<group>"; };
+		8119473A268320A60043FBB4 /* TableNameMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableNameMacro.swift; sourceTree = "<group>"; };
+		8119473D268323410043FBB4 /* DBChainBlog-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DBChainBlog-Bridging-Header.h"; sourceTree = "<group>"; };
+		8119473E268323420043FBB4 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		8119473F268323420043FBB4 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		81194745268329D40043FBB4 /* SwiftMBHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMBHUD.swift; sourceTree = "<group>"; };
 		8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
 		8175C95F26808B58008F4FC8 /* LayoutConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraintItem.swift; sourceTree = "<group>"; };
 		8175C96026808B58008F4FC8 /* ConstraintMakerPrioritizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMakerPrioritizable.swift; sourceTree = "<group>"; };
@@ -251,7 +260,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81194732268319540043FBB4 /* SwiftLeePackage in Frameworks */,
+				81E028E82683516A00939944 /* SwiftLeePackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,8 +292,19 @@
 				817DF03A26806DF100D65D0C /* UserDefault.swift */,
 				81EB64F62681F34E00FEF7C3 /* UtilsFrame.swift */,
 				8119473626831B5A0043FBB4 /* URLMacro.swift */,
+				8119473A268320A60043FBB4 /* TableNameMacro.swift */,
 			);
 			path = Macro;
+			sourceTree = "<group>";
+		};
+		811947422683235E0043FBB4 /* OC */ = {
+			isa = PBXGroup;
+			children = (
+				8119473F268323420043FBB4 /* MBProgressHUD.h */,
+				8119473E268323420043FBB4 /* MBProgressHUD.m */,
+				81194745268329D40043FBB4 /* SwiftMBHUD.swift */,
+			);
+			path = OC;
 			sourceTree = "<group>";
 		};
 		8175C95C26808B4B008F4FC8 /* SnapKit */ = {
@@ -504,6 +524,8 @@
 		81E8879E26803BDC0068BB03 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				81141BAE26842FB20087572C /* SwiftLeePackage */,
+				811947422683235E0043FBB4 /* OC */,
 				8119473526831B320043FBB4 /* Macro */,
 				8119473426831B1C0043FBB4 /* Extension */,
 				8175C9CC26809745008F4FC8 /* JXSegmentedSources */,
@@ -513,6 +535,7 @@
 				81E887AA26803D8C0068BB03 /* C */,
 				81E8879F26803C060068BB03 /* BaseNavigationController.swift */,
 				81E887AD26803DBC0068BB03 /* BaseViewController.swift */,
+				8119473D268323410043FBB4 /* DBChainBlog-Bridging-Header.h */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -575,7 +598,7 @@
 			);
 			name = DBChainBlog;
 			packageProductDependencies = (
-				81194731268319540043FBB4 /* SwiftLeePackage */,
+				81E028E72683516A00939944 /* SwiftLeePackage */,
 			);
 			productName = DBChainBlog;
 			productReference = 81E88782268039160068BB03 /* DBChainBlog.app */;
@@ -592,6 +615,7 @@
 				TargetAttributes = {
 					81E88781268039160068BB03 = {
 						CreatedOnToolsVersion = 12.2;
+						LastSwiftMigration = 1220;
 					};
 				};
 			};
@@ -605,7 +629,7 @@
 			);
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
-				81194730268319540043FBB4 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */,
+				81E028E62683516A00939944 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */,
 			);
 			productRefGroup = 81E88783268039160068BB03 /* Products */;
 			projectDirPath = "";
@@ -687,6 +711,7 @@
 				8175C99D26808B58008F4FC8 /* ConstraintLayoutGuideDSL.swift in Sources */,
 				8175C98426808B58008F4FC8 /* LayoutConstraintItem.swift in Sources */,
 				81EB64EC2681D25100FEF7C3 /* BlogDetailViewController.swift in Sources */,
+				8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */,
 				81E88786268039160068BB03 /* AppDelegate.swift in Sources */,
 				8175CA2126809745008F4FC8 /* JXSegmentedTitleGradientCell.swift in Sources */,
 				8175CA1326809745008F4FC8 /* JXSegmentedIndicatorLineView.swift in Sources */,
@@ -738,6 +763,7 @@
 				8175C98D26808B58008F4FC8 /* ConstraintMakerExtendable.swift in Sources */,
 				8175CA0F26809745008F4FC8 /* JXSegmentedIndicatorGradientLineView.swift in Sources */,
 				8175C9A026808B58008F4FC8 /* Constraint.swift in Sources */,
+				81194746268329D40043FBB4 /* SwiftMBHUD.swift in Sources */,
 				8175C99A26808B58008F4FC8 /* ConstraintMakerEditable.swift in Sources */,
 				8175CA0B26809745008F4FC8 /* JXSegmentedIndicatorGradientView.swift in Sources */,
 				8175C98626808B58008F4FC8 /* ConstraintDescription.swift in Sources */,
@@ -746,6 +772,7 @@
 				8175CA2526809745008F4FC8 /* JXSegmentedNumberCell.swift in Sources */,
 				8175CA1C26809745008F4FC8 /* JXSegmentedTitleImageDataSource.swift in Sources */,
 				8175CA0A26809745008F4FC8 /* JXSegmentedIndicatorDotLineView.swift in Sources */,
+				81194740268323420043FBB4 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -892,6 +919,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 32TXKYTGQX;
 				INFOPLIST_FILE = DBChainBlog/Info.plist;
@@ -902,6 +930,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dzh.com.DBChainBlog;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "DBChainBlog/Class/DBChainBlog-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -912,6 +942,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 32TXKYTGQX;
 				INFOPLIST_FILE = DBChainBlog/Info.plist;
@@ -922,6 +953,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dzh.com.DBChainBlog;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "DBChainBlog/Class/DBChainBlog-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -951,7 +983,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		81194730268319540043FBB4 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */ = {
+		81E028E62683516A00939944 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://gitee.com/yangtingAnAn/SwiftLeePackage.git";
 			requirement = {
@@ -962,9 +994,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		81194731268319540043FBB4 /* SwiftLeePackage */ = {
+		81E028E72683516A00939944 /* SwiftLeePackage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 81194730268319540043FBB4 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */;
+			package = 81E028E62683516A00939944 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */;
 			productName = SwiftLeePackage;
 		};
 /* End XCSwiftPackageProductDependency section */

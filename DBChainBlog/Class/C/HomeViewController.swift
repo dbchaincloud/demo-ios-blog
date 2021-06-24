@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftLeePackage
 
 class HomeViewController: BaseViewController {
 
@@ -71,6 +72,9 @@ class HomeViewController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
+
+        getHomeBlogListData()
+
         view.backgroundColor = .colorWithHexString("F8F8F8")
         let titleDataSource = JXSegmentedTitleDataSource()
         titleDataSource.isTitleColorGradientEnabled = true
@@ -122,6 +126,19 @@ class HomeViewController: BaseViewController {
     @objc func checkHomePageClick(){
         let vc = MinePageViewController()
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func getHomeBlogListData() {
+        SwiftMBHUD.showLoading()
+
+        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+
+        let url = QueryDataUrl + "\(token)/"
+        Query().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) { (status) in
+            SwiftMBHUD.dismiss()
+            print(status)
+
+        }
     }
 }
 
