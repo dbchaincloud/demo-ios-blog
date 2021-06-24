@@ -12,6 +12,12 @@ class HomeListView: UIView {
 
     var HomeListDidSelectIndexBlock :HomeListTableViewDidSelectCellIndexBlock?
 
+    var modelArr:[blogModel] = [] {
+        didSet{
+            self.tableView.reloadData()
+        }
+    }
+
     lazy var tableView : UITableView = {
         let view = UITableView.init(frame: CGRect(x: 0, y: 80, width: SCREEN_WIDTH, height: self.frame.height - 80), style: .grouped)
         view.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: kTabBarHeight + kNavAndTabHeight + 20, right: 0)
@@ -39,8 +45,9 @@ class HomeListView: UIView {
 extension HomeListView:UITableViewDelegate,UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 10
+        return self.modelArr.count
     }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -53,6 +60,7 @@ extension HomeListView:UITableViewDelegate,UITableViewDataSource {
             cell = HomeListTableViewCell.init(style: .default, reuseIdentifier: HomeListTableViewCell.identifier)
         }
         cell?.selectionStyle = .none
+        cell?.model = self.modelArr[indexPath.section]
         return cell!
     }
 

@@ -33,12 +33,18 @@
                                 <color key="textColor" red="0.61960011719999997" green="0.61960381269999998" blue="0.61961358789999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_temporary_image" translatesAutoresizingMaskIntoConstraints="NO" id="EHH-Qg-mfL">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_temporary_image" translatesAutoresizingMaskIntoConstraints="NO" id="EHH-Qg-mfL">
                                 <rect key="frame" x="22" y="125" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="26" id="2iM-cd-3o4"/>
                                     <constraint firstAttribute="height" constant="26" id="R4l-qH-Klh"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="13"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 李四" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LV0-bc-qsh">
                                 <rect key="frame" x="58" y="128.5" width="150" height="19.5"/>
@@ -93,8 +99,13 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="backView" destination="pU8-5z-5M7" id="s3S-Tb-EBb"/>
+                <outlet property="bodyLabel" destination="Puq-JB-woV" id="mBG-nY-V9H"/>
+                <outlet property="iconImageV" destination="EHH-Qg-mfL" id="hm4-9s-W1j"/>
+                <outlet property="namelabel" destination="LV0-bc-qsh" id="KZ9-1o-1dC"/>
+                <outlet property="redNumberLabel" destination="h4U-Wk-UC8" id="tOr-e7-N24"/>
+                <outlet property="titleLabel" destination="q82-ZY-N8a" id="sOu-p9-FiQ"/>
             </connections>
-            <point key="canvasLocation" x="-367.39130434782612" y="219.97767857142856"/>
+            <point key="canvasLocation" x="-436" y="213"/>
         </tableViewCell>
     </objects>
     <resources>

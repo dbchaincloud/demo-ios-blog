@@ -11,6 +11,23 @@ class HomeListTableViewCell: UITableViewCell {
     static let identifier = "ListViewCell"
 
     @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var bodyLabel: UILabel!
+    @IBOutlet weak var iconImageV: UIImageView!
+    @IBOutlet weak var namelabel: UILabel!
+    @IBOutlet weak var redNumberLabel: UILabel!
+
+    var model = blogModel() {
+        didSet{
+            titleLabel.text = model.title
+            bodyLabel.text = model.body
+            namelabel.text = model.name
+            redNumberLabel.text = "\(model.readNumber!)"
+            if model.imgdata != nil {
+                iconImageV.image = UIImage(data: model.imgdata!)
+            }
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()

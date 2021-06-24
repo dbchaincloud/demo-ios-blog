@@ -18,7 +18,6 @@ extension UIView
     public final func extUseAutoLayout(){
 //        self.extSetBorderWidth(1, color: UIColor.green)
         self.translatesAutoresizingMaskIntoConstraints = false
-
     }
 
     /**
@@ -27,8 +26,6 @@ extension UIView
      - parameter radius: 圆角半径 必须
      */
     public final func extSetCornerRadius(_ radius : CGFloat ){
-
-
         self.layer.masksToBounds = true
         self.layer.cornerRadius = radius
 

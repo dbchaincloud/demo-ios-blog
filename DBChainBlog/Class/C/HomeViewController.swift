@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftLeePackage
+
 
 class HomeViewController: BaseViewController {
 
@@ -73,7 +73,7 @@ class HomeViewController: BaseViewController {
     override func setupUI() {
         super.setupUI()
 
-        getHomeBlogListData()
+//        getHomeBlogListData()
 
         view.backgroundColor = .colorWithHexString("F8F8F8")
         let titleDataSource = JXSegmentedTitleDataSource()
@@ -128,18 +128,7 @@ class HomeViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    func getHomeBlogListData() {
-        SwiftMBHUD.showLoading()
 
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
-
-        let url = QueryDataUrl + "\(token)/"
-        Query().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) { (status) in
-            SwiftMBHUD.dismiss()
-            print(status)
-
-        }
-    }
 }
 
 extension HomeViewController: JXSegmentedViewDelegate ,JXSegmentedListContainerViewDataSource {
