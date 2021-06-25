@@ -39,7 +39,7 @@ class CreateMnemonicController: BaseViewController {
                 let token = DBToken().createAccessToken(privateKey: manager.privateKeyUint , PublikeyData: manager.publicKeyString.hexaData)
                 let url = GetIntegralUrl + token
                 DBRequest.GET(url: url, params: nil) { (responeData) in
-                    SwiftMBHUD.dismiss()
+
                     let jsonStr = String(data: responeData, encoding: .utf8)
                     if String().isjsonStyle(txt: jsonStr!) {
                         let dic : [String : Any] = (jsonStr?.toDictionary())!
@@ -49,9 +49,49 @@ class CreateMnemonicController: BaseViewController {
                             UserDefault.savePrivateKey(manager.privateKeyString)
                             UserDefault.savePrivateKeyUintArr(manager.privateKeyUint)
 
-                            let vc = HomeViewController()
-                            let nav = BaseNavigationController.init(rootViewController: vc)
-                            UIApplication.shared.keyWindow?.rootViewController = nav
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                /// 插入个人信息
+                                let publicBase = manager.publicKeyString.hexaData.base64EncodedString()
+                                let insert = InsertDara.init(appcode: APPCODE,
+                                                             publikeyBase64Str: publicBase,
+                                                             address: manager.address,
+                                                             tableName: DatabaseTableName.user.rawValue,
+                                                             chainid: Chainid,
+                                                             privateKeyDataUint: manager.privateKeyUint,
+                                                             baseUrl: BASEURL,
+                                                             publicKey: manager.publicKeyString,
+                                                             insertDataUrl: InsertDataURL)
+
+                                let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
+
+                                DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
+                                    guard let mySelf = self else {return}
+                                    let fieldsDic = ["name":mySelf.contentView.nameTextField.text!,
+                                                     "age":"",
+                                                     "dbchain_key":manager.address,
+                                                     "sex":"",
+                                                     "status":"",
+                                                     "photo":"",
+                                                     "motto":""] as [String : Any]
+
+                                    insert.insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
+                                        print("插入数据的结果:\(stateStr)")
+                                        if stateStr == "1" {
+                                            SwiftMBHUD.dismiss()
+                                            let vc = HomeViewController()
+                                            let nav = BaseNavigationController.init(rootViewController: vc)
+                                            UIApplication.shared.keyWindow?.rootViewController = nav
+
+                                        } else {
+                                            SwiftMBHUD.showError("登录失败")
+                                        }
+                                    }
+                                } failure: { (code, message) in
+                                    print("获取用户信息失败")
+                                    SwiftMBHUD.dismiss()
+                                }
+                            }
+
                         } else { SwiftMBHUD.showError("获取积分失败") }
                     }
                 } failure: { (code, message) in

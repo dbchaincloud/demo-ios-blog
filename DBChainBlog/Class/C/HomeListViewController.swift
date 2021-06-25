@@ -31,6 +31,7 @@ class HomeListViewController: BaseViewController {
 
         getHomeBlogListData()
         view.addSubview(contentView)
+
         contentView.HomeListDidSelectIndexBlock = { (index: IndexPath) in
             let vc = BlogDetailViewController()
             self.navigationController?.pushViewController(vc, animated: true)
@@ -56,14 +57,11 @@ class HomeListViewController: BaseViewController {
                 if bmodel.result?.count ?? 0 > 0 {
                     for (index,model) in bmodel.result!.enumerated() {
                         model.readNumber = mySelf.randomIn(min: 100, max: 1000)
-                        if index == bmodel.result!.count - 1 {
-                            SwiftMBHUD.dismiss()
-                        }
-
                         /// 查询头像
                         Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
-
-
+                            if index == bmodel.result!.count - 1 {
+                                SwiftMBHUD.dismiss()
+                            }
                             let json = String(data: responseData, encoding: .utf8)
                             if let umodel = BaseUserModel.deserialize(from: json) {
                                 if umodel.result?.count ?? 0 > 0 {
