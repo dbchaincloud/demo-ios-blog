@@ -8,6 +8,15 @@
 import UIKit
 
 class UserDefault: NSObject {
+    /// 保存昵称
+    static func saveUserNikeName(_ name:String){
+        UserDefaults.standard.setValue(name, forKey: "kUserNikeNameKey")
+    }
+    /// 取出昵称
+    static func getUserNikeName() -> String?{
+        return UserDefaults.standard.string(forKey: "kUserNikeNameKey")
+    }
+
     /// 保存助记词
     static func saveCurrentMnemonic(_ mnemonicStr:String){
         UserDefaults.standard.setValue(mnemonicStr, forKey: "kCurrentMnemonic")

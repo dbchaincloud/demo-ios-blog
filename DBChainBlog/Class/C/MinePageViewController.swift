@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftLeePackage
 
 class MinePageViewController: BaseViewController {
 
@@ -14,8 +15,11 @@ class MinePageViewController: BaseViewController {
         return view
     }()
 
+    var infoModel = userModel()
+
     override func setupUI() {
         super.setupUI()
+        getCurrentUserInfo()
         view.addSubview(contentView)
     }
 
@@ -33,6 +37,40 @@ class MinePageViewController: BaseViewController {
 
     @objc func settingPageClick(){
         let vc = SettingMineViewController()
+        vc.userInfoModel = self.infoModel
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func getCurrentUserInfo() {
+        SwiftMBHUD.showLoading()
+        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr() as! [UInt8], PublikeyData: UserDefault.getPublickey()!.hexaData)
+        let url = QueryDataUrl + "\(token)/"
+        Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) { [weak self] (responseData) in
+            guard let mySelf = self else {return}
+            let jsonStr = String(data: responseData, encoding: .utf8)
+            if let userModel = BaseUserModel.deserialize(from: jsonStr) {
+                if userModel.result?.count ?? 0 > 0  {
+                    mySelf.infoModel = userModel.result!.last!
+                    mySelf.contentView.model = mySelf.infoModel
+                }
+            }
+
+            mySelf.getCurrentBlogText(urlStr: url)
+        }
+    }
+
+    func getCurrentBlogText(urlStr: String) {
+        Query().queryOneData(urlStr: urlStr, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) {[weak self] (responeData) in
+            guard let mySelf = self else {return}
+            SwiftMBHUD.dismiss()
+            let jsonStr = String(data: responeData, encoding: .utf8)
+            if let blogModel = BaseBlogsModel.deserialize(from: jsonStr) {
+                if blogModel.result?.count ?? 0 > 0 {
+                    mySelf.contentView.logModelArr = blogModel.result!
+                } else {
+                    print("没有发布过博客")
+                }
+            }
+        }
     }
 }

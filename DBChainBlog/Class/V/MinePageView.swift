@@ -9,6 +9,24 @@ import UIKit
 
 class MinePageView: UIView {
 
+    var model = userModel() {
+        didSet{
+            if !model.name.isBlank { nikeNameLabel.text = model.name }
+            if !model.motto.isBlank { signLabel.text = model.motto }
+            if model.sex == "0" {
+                genderImgV.image = UIImage(named: "homepage_gender_female")
+            } else {
+                genderImgV.image = UIImage(named: "setting_gender_boy")
+            }
+        }
+    }
+
+    var logModelArr = [blogModel]() {
+        didSet{
+            self.tableView.reloadData()
+        }
+    }
+
     lazy var iconImgV : UIImageView = {
         let imgv = UIImageView()
         imgv.image = UIImage(named: "home_icon_image")
@@ -87,8 +105,9 @@ class MinePageView: UIView {
 extension MinePageView : UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 10
+        return self.logModelArr.count
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -101,6 +120,8 @@ extension MinePageView : UITableViewDelegate, UITableViewDataSource {
             cell = HomeListTableViewCell.init(style: .default, reuseIdentifier: HomeListTableViewCell.identifier)
         }
         cell?.selectionStyle = .none
+        cell?.model = self.logModelArr[indexPath.section]
+
         return cell!
     }
 

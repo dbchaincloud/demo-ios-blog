@@ -32,9 +32,12 @@ class HomeListViewController: BaseViewController {
         getHomeBlogListData()
         view.addSubview(contentView)
 
-        contentView.HomeListDidSelectIndexBlock = { (index: IndexPath) in
+        contentView.HomeListDidSelectIndexBlock = { [weak self] (index: IndexPath) in
+            guard let mySelf = self else {return}
+            let model = mySelf.modelArr[index.section]
             let vc = BlogDetailViewController()
-            self.navigationController?.pushViewController(vc, animated: true)
+            vc.logModel = model
+            mySelf.navigationController?.pushViewController(vc, animated: true)
         }
     }
 

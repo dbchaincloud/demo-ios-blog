@@ -38,12 +38,13 @@ class CreateMnemonicController: BaseViewController {
             if manager.address.count > 0, manager.privateKeyString.count > 0 {
                 let token = DBToken().createAccessToken(privateKey: manager.privateKeyUint , PublikeyData: manager.publicKeyString.hexaData)
                 let url = GetIntegralUrl + token
-                DBRequest.GET(url: url, params: nil) { (responeData) in
-
+                DBRequest.GET(url: url, params: nil) { [weak self] (responeData) in
+                    guard let mySelf = self else {return}
                     let jsonStr = String(data: responeData, encoding: .utf8)
                     if String().isjsonStyle(txt: jsonStr!) {
                         let dic : [String : Any] = (jsonStr?.toDictionary())!
                         if dic["result"] as! String == "success" {
+                            UserDefault.saveUserNikeName(mySelf.contentView.nameTextField.text!)
                             UserDefault.saveAddress(manager.address)
                             UserDefault.savePublickey(manager.publicKeyString)
                             UserDefault.savePrivateKey(manager.privateKeyString)
@@ -64,8 +65,8 @@ class CreateMnemonicController: BaseViewController {
 
                                 let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
 
-                                DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
-                                    guard let mySelf = self else {return}
+                                DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { (jsonData) in
+
                                     let fieldsDic = ["name":mySelf.contentView.nameTextField.text!,
                                                      "age":"",
                                                      "dbchain_key":manager.address,

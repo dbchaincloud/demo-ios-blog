@@ -9,6 +9,25 @@ import UIKit
 
 class SettingMineView: UIView {
 
+    var umodel = userModel(){
+        didSet{
+            if !umodel.name.isBlank { nameTextField.text = umodel.name }
+            if !umodel.motto.isBlank { signTextfield.text = umodel.motto }
+            if !umodel.age.isBlank  {
+                ageTextfield.text = umodel.age
+            }
+            if umodel.sex == "0" {
+                bodyButton.backgroundColor = .clear
+                girlButton.backgroundColor = .colorWithHexString("EFEFEF")
+                selectSex = "0"
+            } else {
+                bodyButton.backgroundColor = .colorWithHexString("EFEFEF")
+                girlButton.backgroundColor = .clear
+                selectSex = "1"
+            }
+        }
+    }
+
     lazy var iconButton : UIButton = {
         let btn = UIButton()
         btn.setBackgroundImage(UIImage(named: "home_icon_image"), for: .normal)
@@ -20,7 +39,7 @@ class SettingMineView: UIView {
 
     lazy var nameTextField : UITextField = {
         let tf = UITextField()
-        tf.text = "MASIKE"
+        tf.placeholder = "设置昵称"
         tf.textColor = .black
         tf.font = UIFont().themeHNBoldFont(size: 25)
         return tf
@@ -29,8 +48,8 @@ class SettingMineView: UIView {
     lazy var girlButton : UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(named: "homepage_gender_female"), for: .normal)
-        btn.backgroundColor = .colorWithHexString("EFEFEF")
         btn.extSetCornerRadius(10)
+        btn.addTarget(self, action: #selector(clickSexButtonWithGirl), for: .touchUpInside)
         return btn
     }()
 
@@ -38,13 +57,16 @@ class SettingMineView: UIView {
         let btn = UIButton()
         btn.setImage(UIImage(named: "setting_gender_boy"), for: .normal)
         btn.extSetCornerRadius(10)
+        btn.backgroundColor = .colorWithHexString("EFEFEF")
+        btn.addTarget(self, action: #selector(clickSexButtonWithBody), for: .touchUpInside)
         return btn
     }()
 
     lazy var ageTextfield : UITextField = {
         let tf = UITextField()
-        tf.text = "22"
+        tf.placeholder = "设置年龄"
         tf.textColor = .black
+        tf.keyboardType = .numberPad
         tf.font = UIFont().themeHNBoldFont(size: 28)
         return tf
     }()
@@ -67,6 +89,7 @@ class SettingMineView: UIView {
         return btn
     }()
 
+    var selectSex = ""
     let tipStrArr = ["昵称","性别","年龄","座右铭"]
 
     override init(frame: CGRect) {
@@ -111,7 +134,7 @@ class SettingMineView: UIView {
                 bodyButton.frame = CGRect(x: 160, y: 15, width: 36, height: 36)
                 backView.addSubViews([girlButton,bodyButton])
             case 2:
-                ageTextfield.frame = CGRect(x: 105, y: 19, width: 100, height: 28)
+                ageTextfield.frame = CGRect(x: 105, y: 19, width: SCREEN_WIDTH - 190, height: 28)
                 backView.addSubview(ageTextfield)
             default:
                 signTextfield.frame = CGRect(x: 25, y: 52, width: SCREEN_WIDTH - 124, height: 26)
@@ -119,6 +142,19 @@ class SettingMineView: UIView {
             }
             self.addSubview(backView)
         }
+    }
+
+    @objc func clickSexButtonWithGirl (){
+        bodyButton.backgroundColor = .clear
+        girlButton.backgroundColor = .colorWithHexString("EFEFEF")
+        selectSex = "0"
+    }
+
+
+    @objc func clickSexButtonWithBody (){
+        bodyButton.backgroundColor = .colorWithHexString("EFEFEF")
+        girlButton.backgroundColor = .clear
+        selectSex = "1"
     }
 
     required init?(coder: NSCoder) {

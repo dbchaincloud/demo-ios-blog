@@ -48,7 +48,7 @@ class LoginView: UIView {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont().themeHNBoldFont(size: 25)
-        label.text = "MASIKE"
+        label.text = UserDefault.getUserNikeName() ?? "MASIKE"
         label.textAlignment = .center
         return label
     }()

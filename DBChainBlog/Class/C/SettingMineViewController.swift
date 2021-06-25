@@ -14,9 +14,12 @@ class SettingMineViewController: BaseViewController {
         return view
     }()
 
+    var userInfoModel = userModel()
+
     override func setupUI() {
         super.setupUI()
         view.addSubview(contentView)
+        contentView.umodel = userInfoModel
     }
 
     override func setNavBar() {

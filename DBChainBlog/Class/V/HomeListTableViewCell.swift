@@ -22,7 +22,9 @@ class HomeListTableViewCell: UITableViewCell {
             titleLabel.text = model.title
             bodyLabel.text = model.body
             namelabel.text = model.name
-            redNumberLabel.text = "\(model.readNumber!)"
+            if model.readNumber != nil {
+                redNumberLabel.text = "\(model.readNumber!)"
+            }
             if model.imgdata != nil {
                 iconImageV.image = UIImage(data: model.imgdata!)
             } else {
