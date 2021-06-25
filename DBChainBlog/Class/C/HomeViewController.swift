@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SwiftLeePackage
 
 class HomeViewController: BaseViewController {
 
@@ -72,8 +72,6 @@ class HomeViewController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
-
-//        getHomeBlogListData()
 
         view.backgroundColor = .colorWithHexString("F8F8F8")
         let titleDataSource = JXSegmentedTitleDataSource()
@@ -143,70 +141,6 @@ extension HomeViewController: JXSegmentedViewDelegate ,JXSegmentedListContainerV
     func listContainerView(_ listContainerView: JXSegmentedListContainerView, initListAt index: Int) -> JXSegmentedListContainerViewListDelegate {
 
         let vc = HomeListViewController()
-//
-//        var tempSourceArr = self.dataSource
-//
-//        for model in tempSourceArr {
-//
-//            if index == 0 {
-//
-//                vc.dataSource = tempSourceArr
-//
-//            } else if index == 1 {
-//
-//                if model.fileType != .Image {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 2 {
-//
-//                if model.fileType != .Video {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 3 {
-//
-//                if model.fileType != .PassWord {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 4 {
-//
-//                if model.fileType != .BankCard {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 5 {
-//
-//                if model.fileType != .BlockChain {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 6 {
-//
-//                if model.fileType != .PDF {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 7 {
-//
-//                if model.fileType != .Word {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 8 {
-//
-//                if model.fileType != .Exle {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//
-//            } else if index == 9 {
-//                if model.fileType != .PPT {
-//                    tempSourceArr = tempSourceArr.filter({$0 != model})
-//                }
-//            }
-//            vc.dataSource = tempSourceArr
-//        }
         return vc
     }
 

@@ -25,6 +25,8 @@ class HomeListTableViewCell: UITableViewCell {
             redNumberLabel.text = "\(model.readNumber!)"
             if model.imgdata != nil {
                 iconImageV.image = UIImage(data: model.imgdata!)
+            } else {
+                iconImageV.image = UIImage(named: "home_icon_image")
             }
         }
     }

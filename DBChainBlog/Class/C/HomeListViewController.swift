@@ -20,19 +20,31 @@ class HomeListViewController: BaseViewController {
         return view
     }()
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
     override func setupUI() {
         super.setupUI()
 
+        NotificationCenter.default.addObserver(self, selector: #selector(getHomeBlogListData), name: NSNotification.Name.init(rawValue: "BLOGSUPLOADSUCCESS"), object: nil)
+
+        getHomeBlogListData()
         view.addSubview(contentView)
         contentView.HomeListDidSelectIndexBlock = { (index: IndexPath) in
             let vc = BlogDetailViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        getHomeBlogListData()
     }
-    
-    func getHomeBlogListData() {
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc func getHomeBlogListData() {
+
         SwiftMBHUD.showLoading()
+        self.modelArr.removeAll()
         let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
 
         let url = QueryDataUrl + "\(token)/"
@@ -40,12 +52,18 @@ class HomeListViewController: BaseViewController {
             guard let mySelf = self else {return}
 
             if let bmodel = BaseBlogsModel.deserialize(from: status) {
+                
                 if bmodel.result?.count ?? 0 > 0 {
                     for (index,model) in bmodel.result!.enumerated() {
                         model.readNumber = mySelf.randomIn(min: 100, max: 1000)
+                        if index == bmodel.result!.count - 1 {
+                            SwiftMBHUD.dismiss()
+                        }
+
                         /// 查询头像
                         Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
-                            if index == bmodel.result!.count - 1 { SwiftMBHUD.dismiss()}
+
+
                             let json = String(data: responseData, encoding: .utf8)
                             if let umodel = BaseUserModel.deserialize(from: json) {
                                 if umodel.result?.count ?? 0 > 0 {
@@ -80,6 +98,7 @@ class HomeListViewController: BaseViewController {
                 } else {
                     /// 没有博客数据
                     print("没有博客数据")
+                    SwiftMBHUD.dismiss()
                 }
             } else {
                 SwiftMBHUD.showError("数据解析错误")

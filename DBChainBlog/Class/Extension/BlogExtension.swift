@@ -63,3 +63,31 @@ extension StringProtocol {
         }
     }
 }
+
+extension String {
+    /// 是否为json字符串
+    func isjsonStyle(txt:String) -> Bool {
+       let jsondata = txt.data(using: .utf8)
+       do {
+           try JSONSerialization.jsonObject(with: jsondata!, options: .mutableContainers)
+           return true
+       } catch {
+           return false
+       }
+   }
+
+    func toDictionary() -> [String : Any] {
+        var result = [String : Any]()
+        guard !self.isEmpty else { return result }
+
+        guard let dataSelf = self.data(using: .utf8) else {
+            return result
+        }
+
+        if let dic = try? JSONSerialization.jsonObject(with: dataSelf,
+                                                       options: .mutableContainers) as? [String : Any] {
+            result = dic
+        }
+        return result
+    }
+}

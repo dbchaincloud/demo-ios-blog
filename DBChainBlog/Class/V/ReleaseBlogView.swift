@@ -7,7 +7,11 @@
 
 import UIKit
 
+typealias ReleaseBlogSaveBlock = (_ titleStr: String,_ blogStr: String) -> ()
+
 class ReleaseBlogView: UIView {
+
+    var saveBlogBlock :ReleaseBlogSaveBlock?
 
     lazy var titleTextField : UITextField = {
         let tf = UITextField()
@@ -53,13 +57,14 @@ class ReleaseBlogView: UIView {
         return imgV
     }()
 
-    lazy var bottomBtn : UIButton = {
+    lazy var saveBtn : UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .colorWithHexString("2E44FF")
         btn.extSetCornerRadius(20)
         btn.setImage(UIImage(named: "save_write_blog"), for: .normal)
         btn.setImage(UIImage(named: "save_write_blog"), for: .selected)
         btn.setImage(UIImage(named: "save_write_blog"), for: .highlighted)
+        btn.addTarget(self, action: #selector(saveBlogTextClick), for: .touchUpInside)
         return btn
     }()
 
@@ -71,14 +76,26 @@ class ReleaseBlogView: UIView {
         placeholderLabel.frame = CGRect(x: 26, y: 19, width: 200, height: 20)
         contenTextView.addSubview(placeholderLabel)
         bottomImageV.frame = CGRect(x: 16, y: contenTextView.frame.maxY + 10, width: 137, height: 30)
-        bottomBtn.frame = CGRect(x: SCREEN_WIDTH - 95, y: contenTextView.frame.maxY - 20, width: 64, height: 64)
-        self.addSubViews([titleTextField,tipLabel,contenTextView,bottomImageV,bottomBtn])
+        saveBtn.frame = CGRect(x: SCREEN_WIDTH - 95, y: contenTextView.frame.maxY - 20, width: 64, height: 64)
+        self.addSubViews([titleTextField,tipLabel,contenTextView,bottomImageV,saveBtn])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    @objc func saveBlogTextClick() {
+        if self.titleTextField.text!.isBlank {
+            SwiftMBHUD.showError("请输入标题")
+        } else if self.contenTextView.text!.isBlank {
+            SwiftMBHUD.showError("请输入博客正文")
+        } else {
+            if self.saveBlogBlock != nil {
+                SwiftMBHUD.showLoading()
+                self.saveBlogBlock!(self.titleTextField.text!, self.contenTextView.text)
+            }
+        }
+    }
 }
 
 

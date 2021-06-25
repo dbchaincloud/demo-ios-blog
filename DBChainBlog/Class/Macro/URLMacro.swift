@@ -43,10 +43,10 @@ var UploadFileURL = BASEURL + "dbchain/upload/"
 var DownloadFileURL: String = BASEURL + "ipfs/"
 /// 新注册账号获取权限
 var GetIntegralUrl = BASEURL + "dbchain/oracle/new_app_user/"
-/// 内购 发起订单   Payment
-var PaymentIssueOrderURL = BASEURL + "dbchain/oracle/applepay/"
-/// 查询提交订单是否成功
-var QueryApplePayOrderSuccessStatusURL = BASEURL + "dbchain/oracle/submit_order_status/"
-/// 查询 支付订单
-var QueryApplePayOrderURL = BASEURL + "dbchain/oracle/payment_query/"
+///// 内购 发起订单   Payment
+//var PaymentIssueOrderURL = BASEURL + "dbchain/oracle/applepay/"
+///// 查询提交订单是否成功
+//var QueryApplePayOrderSuccessStatusURL = BASEURL + "dbchain/oracle/submit_order_status/"
+///// 查询 支付订单
+//var QueryApplePayOrderURL = BASEURL + "dbchain/oracle/payment_query/"
 

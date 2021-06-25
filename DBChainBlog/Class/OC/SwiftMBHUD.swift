@@ -40,6 +40,7 @@ class SwiftMBHUD: MBProgressHUD {
        }
 
        class func showLoading(_ info: String = "Loading...") {
+           self.dismiss()
            let view = viewWithShow()
            let hud = MBProgressHUD.showAdded(to: view, animated: true)
            hud.label.text = info
@@ -51,10 +52,12 @@ class SwiftMBHUD: MBProgressHUD {
        }
 
        class func showSuccess(_ status: String) {
+           self.dismiss()
            showText(text: status, icon: "color-success")
        }
 
        class func showError(_ status: String) {
+            self.dismiss()
            showText(text: status, icon: "color-error")
        }
 

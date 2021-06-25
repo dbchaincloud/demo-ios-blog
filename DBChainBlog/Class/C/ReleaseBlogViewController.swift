@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SwiftLeePackage
 class ReleaseBlogViewController: BaseViewController {
 
     lazy var blogView : ReleaseBlogView = {
@@ -17,6 +17,37 @@ class ReleaseBlogViewController: BaseViewController {
     override func setupUI() {
         super.setupUI()
         view.addSubview(blogView)
+
+        blogView.saveBlogBlock = { (titleStr: String, blogStr:String) in
+            /// 插入到博客表
+            let publicKey = UserDefault.getPublickey()
+            let publicBase = publicKey?.hexaData.base64EncodedString()
+
+            let insert = InsertDara.init(appcode: APPCODE, publikeyBase64Str: publicBase!, address: UserDefault.getAddress()!, tableName: DatabaseTableName.blogs.rawValue, chainid: Chainid, privateKeyDataUint: UserDefault.getPrivateKeyUintArr()! as! [UInt8], baseUrl: BASEURL, publicKey: UserDefault.getPublickey()!, insertDataUrl: InsertDataURL)
+
+            let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
+
+            DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
+                guard let mySelf = self else {return}
+                let fieldsDic = ["title":titleStr,"body":blogStr,"img":""]
+
+                insert.insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
+                    print("插入数据的结果:\(stateStr)")
+                    if stateStr == "1" {
+                        SwiftMBHUD.showSuccess("发布成功")
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BLOGSUPLOADSUCCESS"), object: nil)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            mySelf.navigationController?.popViewController(animated: true)
+                        }
+                    } else {
+                        SwiftMBHUD.showError("发布失败")
+                    }
+                }
+            } failure: { (code, message) in
+                print("获取用户信息失败")
+                SwiftMBHUD.dismiss()
+            }
+        }
     }
 
     override func setNavBar() {
