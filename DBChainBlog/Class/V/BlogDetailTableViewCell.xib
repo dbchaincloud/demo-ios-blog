@@ -21,7 +21,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nMD-1K-Y0Q">
                         <rect key="frame" x="16" y="0.0" width="325" height="106"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_temporary_image" translatesAutoresizingMaskIntoConstraints="NO" id="Xdh-6c-API">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_icon_image" translatesAutoresizingMaskIntoConstraints="NO" id="Xdh-6c-API">
                                 <rect key="frame" x="20" y="18" width="48" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="AFx-6C-g04"/>
@@ -80,12 +80,16 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="backView" destination="nMD-1K-Y0Q" id="xvZ-NK-Lv7"/>
+                <outlet property="contentTitleLabel" destination="GQD-wx-jTF" id="eub-4v-Zrk"/>
+                <outlet property="iconImgV" destination="Xdh-6c-API" id="e0Q-Yu-vMt"/>
+                <outlet property="nameLabel" destination="MpS-FA-oef" id="5YT-7v-4Vp"/>
+                <outlet property="replyBtn" destination="XCu-bL-Rzn" id="uru-Y3-0Rz"/>
             </connections>
-            <point key="canvasLocation" x="111" y="163"/>
+            <point key="canvasLocation" x="104" y="158"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="home_temporary_image" width="26" height="27"/>
+        <image name="home_icon_image" width="108" height="108"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

@@ -70,5 +70,10 @@ class discussModel: HandyJSON {
     var discuss_id: String = ""
     /// 评论内容
     var text: String = ""
+
+    /// 自定义类型.  头像
+    var imageData:Data?
+    var nickName: String = ""
+    
     required init(){}
 }
