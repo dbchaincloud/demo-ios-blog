@@ -17,7 +17,6 @@ class SettingMineViewController: BaseViewController {
         return view
     }()
 
-
     // MARK: 图片选择器界面
     var imagePicker: UIImagePickerController = UIImagePickerController()
 
@@ -193,9 +192,6 @@ extension SettingMineViewController: UIImagePickerControllerDelegate,UINavigatio
         guard let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             fatalError("error: did not picked a photo")
         }
-
-        let url = info[.imageURL]
-        print(url)
 
         /// 7. 根据须要作其它相关操做，这里选中图片之后关闭 picker controller 便可
         picker.dismiss(animated: true) { [unowned self] in

@@ -7,7 +7,11 @@
 
 import UIKit
 
+typealias MinePageClickBlogsDetailWithIndexPathBlock = (_ index: IndexPath) -> ()
+
 class MinePageView: UIView {
+
+    var MinePageClickIndexBlock :MinePageClickBlogsDetailWithIndexPathBlock?
 
     var model = userModel() {
         didSet{
@@ -149,6 +153,12 @@ extension MinePageView : UITableViewDelegate, UITableViewDataSource {
         cell?.model = self.logModelArr[indexPath.section]
 
         return cell!
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if self.MinePageClickIndexBlock != nil {
+            self.MinePageClickIndexBlock!(indexPath)
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

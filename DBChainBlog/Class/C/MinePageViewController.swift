@@ -26,6 +26,13 @@ class MinePageViewController: BaseViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(iconImageUploadSuccessEvent), name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
         view.addSubview(contentView)
+        contentView.MinePageClickIndexBlock = {[weak self] (index:IndexPath) in
+            guard let mySelf = self else {return}
+            let model = mySelf.contentView.logModelArr[index.section]
+            let vc = BlogDetailViewController()
+            vc.logModel = model
+            mySelf.navigationController?.pushViewController(vc, animated: true)
+        }
         getCurrentUserInfo()
     }
 
@@ -42,6 +49,7 @@ class MinePageViewController: BaseViewController {
     }
 
     @objc func iconImageUploadSuccessEvent(){
+        self.contentView.logModelArr.removeAll()
         getCurrentUserInfo()
         let filePath = documentTools() + "/USERICONPATH"
         let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
