@@ -15,12 +15,18 @@ class MinePageViewController: BaseViewController {
         return view
     }()
 
-    var infoModel = userModel()
+    var infoModel = userModel() {
+        didSet{
+            self.contentView.model = infoModel
+        }
+    }
 
     override func setupUI() {
         super.setupUI()
-        getCurrentUserInfo()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(iconImageUploadSuccessEvent), name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
         view.addSubview(contentView)
+        getCurrentUserInfo()
     }
 
     override func setNavBar() {
@@ -33,6 +39,18 @@ class MinePageViewController: BaseViewController {
         editBtn.setImage(UIImage(named: "homepage_edit"), for: .normal)
         editBtn.addTarget(self, action: #selector(settingPageClick), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: editBtn)
+    }
+
+    @objc func iconImageUploadSuccessEvent(){
+        getCurrentUserInfo()
+        let filePath = documentTools() + "/USERICONPATH"
+        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+        do{
+            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+            contentView.iconImg = UIImage(data: imageData)!
+        }catch{
+            contentView.iconImg = UIImage(named: "home_icon_image")!
+        }
     }
 
     @objc func settingPageClick(){
@@ -51,7 +69,6 @@ class MinePageViewController: BaseViewController {
             if let userModel = BaseUserModel.deserialize(from: jsonStr) {
                 if userModel.result?.count ?? 0 > 0  {
                     mySelf.infoModel = userModel.result!.last!
-                    mySelf.contentView.model = mySelf.infoModel
                 }
             }
 
@@ -66,7 +83,21 @@ class MinePageViewController: BaseViewController {
             let jsonStr = String(data: responeData, encoding: .utf8)
             if let blogModel = BaseBlogsModel.deserialize(from: jsonStr) {
                 if blogModel.result?.count ?? 0 > 0 {
-                    mySelf.contentView.logModelArr = blogModel.result!
+                    let filePath = documentTools() + "/USERICONPATH"
+                    if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+                        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+                        do{
+                            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                            for model in blogModel.result! {
+                                model.imgdata = imageData
+                                mySelf.contentView.logModelArr.append(model)
+                            }
+                        }catch{
+                            mySelf.contentView.logModelArr = blogModel.result!
+                        }
+                    } else {
+                        mySelf.contentView.logModelArr = blogModel.result!
+                    }
                 } else {
                     print("没有发布过博客")
                 }

@@ -35,7 +35,7 @@ class ReleaseBlogViewController: BaseViewController {
                     print("插入数据的结果:\(stateStr)")
                     if stateStr == "1" {
                         SwiftMBHUD.showSuccess("发布成功")
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BLOGSUPLOADSUCCESS"), object: nil)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: BLOGSUPLOADSUCCESS), object: nil)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             mySelf.navigationController?.popViewController(animated: true)
                         }

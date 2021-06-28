@@ -11,6 +11,7 @@
 		8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473A268320A60043FBB4 /* TableNameMacro.swift */; };
 		81194740268323420043FBB4 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8119473E268323420043FBB4 /* MBProgressHUD.m */; };
 		81194746268329D40043FBB4 /* SwiftMBHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81194745268329D40043FBB4 /* SwiftMBHUD.swift */; };
+		811C9A432689A65A00C9E513 /* FileTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C9A422689A65A00C9E513 /* FileTools.swift */; };
 		812C4BE32684697200BC96B6 /* HandyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 812C4BE22684697200BC96B6 /* HandyJSON */; };
 		812C4BEA26846A5B00BC96B6 /* BlogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C4BE926846A5B00BC96B6 /* BlogModels.swift */; };
 		8175C98326808B58008F4FC8 /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */; };
@@ -138,6 +139,9 @@
 		8119473E268323420043FBB4 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		8119473F268323420043FBB4 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		81194745268329D40043FBB4 /* SwiftMBHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMBHUD.swift; sourceTree = "<group>"; };
+		811C9A3F26897A5B00C9E513 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		811C9A4026897A5B00C9E513 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		811C9A422689A65A00C9E513 /* FileTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTools.swift; sourceTree = "<group>"; };
 		812C4BE926846A5B00BC96B6 /* BlogModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogModels.swift; sourceTree = "<group>"; };
 		8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
 		8175C95F26808B58008F4FC8 /* LayoutConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraintItem.swift; sourceTree = "<group>"; };
@@ -540,6 +544,7 @@
 				81E8879F26803C060068BB03 /* BaseNavigationController.swift */,
 				81E887AD26803DBC0068BB03 /* BaseViewController.swift */,
 				8119473D268323410043FBB4 /* DBChainBlog-Bridging-Header.h */,
+				811C9A422689A65A00C9E513 /* FileTools.swift */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -632,6 +637,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
@@ -773,6 +779,7 @@
 				8175C9A026808B58008F4FC8 /* Constraint.swift in Sources */,
 				81194746268329D40043FBB4 /* SwiftMBHUD.swift in Sources */,
 				8175C99A26808B58008F4FC8 /* ConstraintMakerEditable.swift in Sources */,
+				811C9A432689A65A00C9E513 /* FileTools.swift in Sources */,
 				8175CA0B26809745008F4FC8 /* JXSegmentedIndicatorGradientView.swift in Sources */,
 				8175C98626808B58008F4FC8 /* ConstraintDescription.swift in Sources */,
 				8175C99326808B58008F4FC8 /* UILayoutSupport+Extensions.swift in Sources */,
@@ -791,6 +798,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				81E8878C268039160068BB03 /* Base */,
+				811C9A3F26897A5B00C9E513 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -799,6 +807,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				81E88791268039180068BB03 /* Base */,
+				811C9A4026897A5B00C9E513 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -810,6 +819,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -871,6 +881,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

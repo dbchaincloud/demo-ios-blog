@@ -16,6 +16,7 @@ class HomeViewController: BaseViewController {
         return JXSegmentedListContainerView(dataSource: self)
     }()
     let titles = ["POPULAR","最新","评论最多"]
+    var rightIconBtn = UIButton()
 
     lazy var homeView : HomeView = {
         let view = HomeView.init(frame: self.view.frame)
@@ -72,7 +73,8 @@ class HomeViewController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
-
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(iconImageUploadSuccessEvent), name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
         view.backgroundColor = .colorWithHexString("F8F8F8")
         let titleDataSource = JXSegmentedTitleDataSource()
         titleDataSource.isTitleColorGradientEnabled = true
@@ -109,11 +111,22 @@ class HomeViewController: BaseViewController {
         leftImgV.frame = CGRect(x: 0, y: 0, width: 178, height: 40)
         navContentView.addSubview(leftImgV)
 
-        let rightBtn = UIButton.init(frame: CGRect(x: navContentView.frame.width - 76, y: 0, width: 40, height: 40))
-        rightBtn.extSetCornerRadius(20)
-        rightBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
-        rightBtn.addTarget(self, action: #selector(checkHomePageClick), for: .touchUpInside)
-        navContentView.addSubview(rightBtn)
+        rightIconBtn = UIButton.init(frame: CGRect(x: navContentView.frame.width - 76, y: 0, width: 40, height: 40))
+        rightIconBtn.extSetCornerRadius(20)
+        let filePath = documentTools() + "/USERICONPATH"
+        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+            do{
+                let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                rightIconBtn.setImage(UIImage(data: imageData), for: .normal)
+            }catch{
+                rightIconBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
+            }
+        } else {
+            rightIconBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
+        }
+        rightIconBtn.addTarget(self, action: #selector(checkHomePageClick), for: .touchUpInside)
+        navContentView.addSubview(rightIconBtn)
     }
 
     @objc func writeBlogClick() {
@@ -126,7 +139,18 @@ class HomeViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
+    /// 更换头像
+    @objc func iconImageUploadSuccessEvent(){
+        let filePath = documentTools() + "/USERICONPATH"
+        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+        do{
+            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+            rightIconBtn.setImage(UIImage(data: imageData), for: .normal)
 
+        }catch{
+            rightIconBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
+        }
+    }
 }
 
 extension HomeViewController: JXSegmentedViewDelegate ,JXSegmentedListContainerViewDataSource {

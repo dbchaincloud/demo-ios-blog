@@ -7,7 +7,13 @@
 
 import UIKit
 
+typealias SettingMineUserInfoBlock = (_ nameStr:String,_ sex:String,_ age: String,_ motto:String) -> ()
+typealias SettingClickIconImageViewBlock = () -> ()
+
 class SettingMineView: UIView {
+
+    var settingSaveBlock : SettingMineUserInfoBlock?
+    var settingIconImageViewBlock :SettingClickIconImageViewBlock?
 
     var umodel = userModel(){
         didSet{
@@ -28,12 +34,28 @@ class SettingMineView: UIView {
         }
     }
 
+    var iconImage = UIImage() {
+        didSet{
+            iconButton.setBackgroundImage(iconImage, for: .normal)
+            iconButton.setBackgroundImage(iconImage, for: .selected)
+        }
+    }
+
     lazy var iconButton : UIButton = {
         let btn = UIButton()
-        btn.setBackgroundImage(UIImage(named: "home_icon_image"), for: .normal)
-        btn.setBackgroundImage(UIImage(named: "home_icon_image"), for: .selected)
+        let filePath = documentTools() + "/USERICONPATH"
+        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+            let imageData = try! Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+            btn.setBackgroundImage(UIImage(data: imageData)!, for: .normal)
+            btn.setBackgroundImage(UIImage(data: imageData)!, for: .selected)
+        } else {
+            btn.setBackgroundImage(UIImage(named: "home_icon_image"), for: .normal)
+            btn.setBackgroundImage(UIImage(named: "home_icon_image"), for: .selected)
+        }
         btn.setImage(UIImage(named: "setting_mine_camera"), for: .normal)
         btn.setImage(UIImage(named: "setting_mine_camera"), for: .selected)
+        btn.addTarget(self, action: #selector(selectIconImageViewClick), for: .touchUpInside)
         return btn
     }()
 
@@ -86,6 +108,7 @@ class SettingMineView: UIView {
         btn.setTitle("保存", for: .normal)
         btn.setTitleColor(.white, for: .normal)
         btn.titleLabel?.font = UIFont.ThemeFont.H2Bold
+        btn.addTarget(self, action: #selector(saveUserInfomationClick), for: .touchUpInside)
         return btn
     }()
 
@@ -95,6 +118,7 @@ class SettingMineView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        iconButton.extSetCornerRadius(54)
         self.addSubview(iconButton)
         self.addSubview(saveBtn)
 
@@ -155,6 +179,18 @@ class SettingMineView: UIView {
         bodyButton.backgroundColor = .colorWithHexString("EFEFEF")
         girlButton.backgroundColor = .clear
         selectSex = "1"
+    }
+
+    @objc func saveUserInfomationClick() {
+        if self.settingSaveBlock != nil {
+            self.settingSaveBlock!(self.nameTextField.text!, self.selectSex, self.ageTextfield.text!, self.signTextfield.text!)
+        }
+    }
+
+    @objc func selectIconImageViewClick() {
+        if self.settingIconImageViewBlock != nil {
+            self.settingIconImageViewBlock!()
+        }
     }
 
     required init?(coder: NSCoder) {

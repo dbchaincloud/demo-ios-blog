@@ -27,7 +27,8 @@ class HomeListViewController: BaseViewController {
     override func setupUI() {
         super.setupUI()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(getHomeBlogListData), name: NSNotification.Name.init(rawValue: "BLOGSUPLOADSUCCESS"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getHomeBlogListData), name: NSNotification.Name.init(rawValue: BLOGSUPLOADSUCCESS), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getHomeBlogListData), name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
 
         getHomeBlogListData()
         view.addSubview(contentView)
@@ -44,6 +45,7 @@ class HomeListViewController: BaseViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
 
     @objc func getHomeBlogListData() {
 

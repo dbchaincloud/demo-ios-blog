@@ -32,7 +32,19 @@ class LoginView: UIView {
 
     lazy var iconImgV : UIImageView = {
         let imgV = UIImageView()
-        imgV.image = UIImage(named: "home_icon_image")
+
+        let filePath = documentTools() + "/USERICONPATH"
+        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+            do {
+                let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                imgV.image = UIImage(data: imageData)!
+            } catch {
+                imgV.image = UIImage(named: "home_icon_image")
+            }
+        } else {
+            imgV.image = UIImage(named: "home_icon_image")
+        }
         imgV.extSetCornerRadius(54)
         return imgV
     }()
@@ -88,7 +100,7 @@ class LoginView: UIView {
         label.text = UserDefault.getCurrentMnemonic()
         return label
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         topImgV.frame = CGRect(x: SCREEN_WIDTH * 0.5 - 112, y: 0, width: 224, height: 48)

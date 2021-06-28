@@ -39,6 +39,12 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>请允许DBChainBlog使用您的相机, 用于拍照上传头像功能</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>请允许DBChainBlog使用您的相册, 用于选择图片上传头像功能</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>请允许DBChainBlog使用您的相册, 用于选择图片上传头像功能</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

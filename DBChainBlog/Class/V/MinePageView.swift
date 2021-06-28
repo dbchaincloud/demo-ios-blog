@@ -27,17 +27,38 @@ class MinePageView: UIView {
         }
     }
 
+    var iconImg = UIImage() {
+        didSet {
+            iconImgV.image = iconImg
+        }
+    }
+    
     lazy var iconImgV : UIImageView = {
         let imgv = UIImageView()
-        imgv.image = UIImage(named: "home_icon_image")
+        let filePath = documentTools() + "/USERICONPATH"
+        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+            do{
+                let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                imgv.image = UIImage(data: imageData)!
+            }catch{
+                imgv.image = UIImage(named: "home_icon_image")
+            }
+        } else {
+            imgv.image = UIImage(named: "home_icon_image")
+        }
         return imgv
     }()
 
     lazy var nikeNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "MASIKE"
         label.textColor = .black
         label.font = UIFont().themeHNBoldFont(size: 25)
+        if model.name.isBlank {
+            label.text = "MASIKE"
+        } else {
+            label.text = model.name
+        }
         return label
     }()
 
@@ -45,7 +66,11 @@ class MinePageView: UIView {
         let label = UILabel()
         label.textColor = .colorWithHexString("444444")
         label.font = UIFont().themeHNFont(size: 16)
-        label.text = "留下一句座右铭吧~"
+        if model.motto.isBlank {
+            label.text = "留下一句座右铭吧~"
+        } else {
+            label.text = model.motto
+        }
         return label
     }()
 
@@ -58,6 +83,7 @@ class MinePageView: UIView {
     lazy var headerView : UIView = {
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 254))
         iconImgV.frame = CGRect(x: SCREEN_WIDTH * 0.5 - 54, y: 40, width: 108, height: 108)
+        iconImgV.extSetCornerRadius(54)
         view.addSubViews([iconImgV,nikeNameLabel,signLabel,genderImgV])
         nikeNameLabel.snp.makeConstraints { (make) in
             make.top.equalTo(iconImgV.snp.bottom).offset(15)

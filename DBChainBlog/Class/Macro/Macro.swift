@@ -10,6 +10,11 @@ import UIKit
 
 ///  邀请码随机生成字符串
 let invitationCodeArndomStr = "wzAG2dsfbkrEinDKPamBpQ6WtUuHLNceyRVXZ78h3TCJSY5qxjvM14F"
+let USERICONPATH = "UserIconPath"
+/// 博客发布成功通知Key
+let BLOGSUPLOADSUCCESS = "BLOGSUPLOADSUCCESS"
+/// 头像上传成功通知key
+let USERICONUPLOADSUCCESS = "USERICONUPLOADSUCCESS"
 
 let SCREEN_WIDTH = UIScreen.main.bounds.width
 let SCREEN_HEIGHT = UIScreen.main.bounds.height

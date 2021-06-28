@@ -39,17 +39,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A8B8D729-C196-4A86-87E2-E66EB4E42FD6"
+            uuid = "6C860E18-6B71-4CCB-9BBB-749C470E2B31"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DBChainBlog/Class/V/HomeListView.swift"
+            filePath = "DBChainBlog/Class/C/SettingMineViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "17"
-            endingLineNumber = "17"
-            landmarkName = "modelArr"
-            landmarkType = "24">
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

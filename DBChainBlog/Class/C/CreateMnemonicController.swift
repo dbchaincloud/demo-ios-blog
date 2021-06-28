@@ -31,6 +31,7 @@ class CreateMnemonicController: BaseViewController {
             SwiftMBHUD.showLoading()
             /// 获取一个积分
             UserDefault.saveCurrentMnemonic(self.mnemonicStr)
+
             /// 生成公钥私钥地址等保存
             let strArr :[String] = self.mnemonicStr.components(separatedBy: " ")
             let manager = DBMnemonicManager().MnemonicGetPrivateKeyStrAndPublickStrWithMnemonicArr(strArr)
