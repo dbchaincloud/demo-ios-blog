@@ -7,11 +7,13 @@
 
 import UIKit
 
-typealias BlogDetailReplyBlock = (_ replyTitle:String) -> ()
+typealias BlogDetailReplyBlock = (_ replyTitle:String,_ replyID: String) -> ()
+//typealias BlogDetailReplyWithReplyIDBlock = () -> ()
 
 class BlogDetailView: UIView {
 
     var BlogReplyBlock :BlogDetailReplyBlock?
+    var replyID: String!
 
     var discussModelArr = [discussModel](){
         didSet{
@@ -162,6 +164,8 @@ class BlogDetailView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        NotificationCenter.default.addObserver(self,selector: #selector(keyboardWillhide(_:)),name: UIResponder.keyboardWillHideNotification, object: nil)
+
         tableView.estimatedRowHeight = 84
         tableView.rowHeight = UITableView.automaticDimension
         tableView.tableHeaderView = headerView
@@ -177,10 +181,23 @@ class BlogDetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+
+    @objc func keyboardWillhide(_ sender: NSNotification) {
+        if self.replyTextField.text!.isBlank {
+            self.replyID = ""
+        }
+    }
+
+    deinit {
+          NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+     }
+
+
     @objc func replyButtonClick() {
         if !self.replyTextField.text!.isBlank {
             if self.BlogReplyBlock != nil {
-                self.BlogReplyBlock!(self.replyTextField.text!)
+                self.BlogReplyBlock!(self.replyTextField.text!,self.replyID)
+                self.replyTextField.resignFirstResponder()
             }
         } else {
             SwiftMBHUD.showText("请先输入内容")
@@ -276,7 +293,14 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
         let textStr = self.discussModelArr[section].text
         let textHeight = self.height(text: textStr)
         let view = sectionHeaderView.init(frame: CGRect(x: 16, y: 0, width: SCREEN_WIDTH - 32, height: textHeight + 60), textHeight: textHeight)
-        view.model = self.discussModelArr[section]
+        let sectionModel = self.discussModelArr[section]
+        view.model = sectionModel
+        view.sectionHeaderClickReplyBlock = {[weak self] in
+            guard let mySelf = self else {return}
+            mySelf.replyID = sectionModel.id
+            mySelf.replyTextField.becomeFirstResponder()
+            print("点击组头 第 :\(section) 行 --- \(sectionModel.nickName)")
+        }
         return view
     }
 
@@ -293,7 +317,10 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
 }
 
 
+typealias sectionHeaderClickReplyButtonBlock = () -> ()
 class sectionHeaderView : UIView {
+
+    var sectionHeaderClickReplyBlock :sectionHeaderClickReplyButtonBlock?
 
     var model = discussModel(){
         didSet{
@@ -310,6 +337,7 @@ class sectionHeaderView : UIView {
     var iconImgV : UIImageView!
     var nameLabel:UILabel!
     var textLabel:UILabel!
+    var replyBtn :UIButton!
     let cornerRadius:CGFloat = 15.0
     var shapeLayer:CAShapeLayer!
 
@@ -321,17 +349,25 @@ class sectionHeaderView : UIView {
         self.backgroundColor = .white
         iconImgV = UIImageView()
         iconImgV.extSetCornerRadius(24)
+        iconImgV.contentMode = .scaleAspectFill
         self.addSubview(iconImgV)
+
         nameLabel = UILabel()
         nameLabel.textColor = .black
         nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
-
         self.addSubview(nameLabel)
-        textLabel = UILabel()
 
+        textLabel = UILabel()
         textLabel.font = UIFont.systemFont(ofSize: 15)
         textLabel.textColor = .black
         self.addSubview(textLabel)
+
+        replyBtn = UIButton()
+        replyBtn.setTitle("回复", for: .normal)
+        replyBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        replyBtn.setTitleColor(.colorWithHexString("9E9E9E"), for: .normal)
+        replyBtn.addTarget(self, action: #selector(relpyButtonClickEvent), for: .touchUpInside)
+        self.addSubview(replyBtn)
 
         //设置圆角遮罩
           shapeLayer = CAShapeLayer()
@@ -357,9 +393,10 @@ class sectionHeaderView : UIView {
       override func layoutSubviews() {
           super.layoutSubviews()
 
-          self.iconImgV.frame = CGRect(x: 20, y: 18, width: 48, height: 48)
-          self.nameLabel.frame =  CGRect(x: iconImgV.frame.maxX + 18, y: 18, width: 160, height: 26)
-          self.textLabel.frame = CGRect(x: iconImgV.frame.maxX + 18, y: nameLabel.frame.maxY + 8, width: SCREEN_WIDTH - 122, height: textHeight)
+        self.iconImgV.frame = CGRect(x: 20, y: 18, width: 48, height: 48)
+        self.nameLabel.frame =  CGRect(x: iconImgV.frame.maxX + 18, y: 18, width: 160, height: 26)
+        self.textLabel.frame = CGRect(x: iconImgV.frame.maxX + 18, y: nameLabel.frame.maxY + 8, width: SCREEN_WIDTH - 122, height: textHeight)
+        self.replyBtn.frame = CGRect(x: self.frame.maxX - 68, y: 8, width: 40, height: 26)
 
           //调整遮罩层路径
         if model.replyModelArr.count > 0 {
@@ -378,6 +415,12 @@ class sectionHeaderView : UIView {
             shapeLayer.path = bezierPath.cgPath
         }
       }
+
+    @objc func relpyButtonClickEvent() {
+        if self.sectionHeaderClickReplyBlock != nil {
+            self.sectionHeaderClickReplyBlock!()
+        }
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

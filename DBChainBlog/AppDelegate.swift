@@ -10,11 +10,23 @@ import UIKit
 @available(iOS 13.0, *)
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        IQKeyboardManager.shared.enable = true
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+
+        if UserDefault.getCurrentMnemonic() != nil {
+            let vc = LoginViewController()
+            let nav = BaseNavigationController.init(rootViewController: vc)
+            window?.rootViewController = nav
+        } else {
+            let vc = CreateMnemonicController()
+            let nav = BaseNavigationController.init(rootViewController: vc)
+            window?.rootViewController = nav
+        }
+
         return true
     }
 

@@ -15,7 +15,7 @@ class BlogDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var iconImgV: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentTitleLabel: UILabel!
-    @IBOutlet weak var replyBtn: UIButton!
+
 
     var model = discussModel(){
         didSet{
@@ -61,13 +61,20 @@ class BlogDetailTableViewCell: UITableViewCell {
     var replyModel = replyDiscussModel() {
         didSet{
             if replyModel.imageData != nil {
-                iconImgV.image = UIImage(data: replyModel.imageData!)
-            }else{
+
+                let img = UIImage(data: replyModel.imageData!)
+                if img != nil {
+                    iconImgV.image = img
+                } else {
+                    iconImgV.image = UIImage(named: "home_icon_image")
+                }
+
+            } else {
                 iconImgV.image = UIImage(named: "home_icon_image")
             }
 
             if !replyModel.nickName.isBlank {
-                nameLabel.text = replyModel.nickName
+                nameLabel.text = replyModel.nickName + " 回复 " + replyModel.replyNickName
             } else {
                 nameLabel.text = "未知用户"
             }

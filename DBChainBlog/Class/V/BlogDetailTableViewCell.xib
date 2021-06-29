@@ -37,17 +37,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XCu-bL-Rzn">
-                                <rect key="frame" x="277" y="18" width="30" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="16" id="COt-l5-NVU"/>
-                                    <constraint firstAttribute="width" constant="30" id="xks-KQ-Lzl"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <state key="normal" title=" 回复">
-                                    <color key="titleColor" systemColor="opaqueSeparatorColor"/>
-                                </state>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GQD-wx-jTF">
                                 <rect key="frame" x="86" y="46" width="221" height="50"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -57,15 +46,13 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="GQD-wx-jTF" firstAttribute="trailing" secondItem="XCu-bL-Rzn" secondAttribute="trailing" id="2ci-fE-Wkf"/>
                             <constraint firstItem="GQD-wx-jTF" firstAttribute="leading" secondItem="MpS-FA-oef" secondAttribute="leading" id="IZI-qh-hjt"/>
                             <constraint firstItem="MpS-FA-oef" firstAttribute="leading" secondItem="Xdh-6c-API" secondAttribute="trailing" constant="18" id="Jhx-I6-y4V"/>
                             <constraint firstItem="Xdh-6c-API" firstAttribute="top" secondItem="nMD-1K-Y0Q" secondAttribute="top" constant="18" id="NDO-xC-doH"/>
-                            <constraint firstItem="XCu-bL-Rzn" firstAttribute="top" secondItem="MpS-FA-oef" secondAttribute="top" id="exs-0p-4Qp"/>
+                            <constraint firstAttribute="trailing" secondItem="GQD-wx-jTF" secondAttribute="trailing" constant="20" id="bex-yl-R08"/>
                             <constraint firstItem="GQD-wx-jTF" firstAttribute="top" secondItem="MpS-FA-oef" secondAttribute="bottom" constant="6" id="h6E-nV-Yhc"/>
                             <constraint firstAttribute="bottom" secondItem="GQD-wx-jTF" secondAttribute="bottom" constant="10" id="oNW-4C-BbP"/>
                             <constraint firstItem="MpS-FA-oef" firstAttribute="top" secondItem="Xdh-6c-API" secondAttribute="top" id="ouf-05-mkw"/>
-                            <constraint firstAttribute="trailing" secondItem="XCu-bL-Rzn" secondAttribute="trailing" constant="20" id="yWi-Bp-Rku"/>
                             <constraint firstItem="Xdh-6c-API" firstAttribute="leading" secondItem="nMD-1K-Y0Q" secondAttribute="leading" constant="20" id="z7Y-bF-TqW"/>
                         </constraints>
                     </view>
@@ -83,16 +70,12 @@
                 <outlet property="contentTitleLabel" destination="GQD-wx-jTF" id="eub-4v-Zrk"/>
                 <outlet property="iconImgV" destination="Xdh-6c-API" id="e0Q-Yu-vMt"/>
                 <outlet property="nameLabel" destination="MpS-FA-oef" id="5YT-7v-4Vp"/>
-                <outlet property="replyBtn" destination="XCu-bL-Rzn" id="uru-Y3-0Rz"/>
             </connections>
             <point key="canvasLocation" x="-149" y="35"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="home_icon_image" width="108" height="108"/>
-        <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

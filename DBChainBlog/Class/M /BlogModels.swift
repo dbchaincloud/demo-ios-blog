@@ -70,7 +70,8 @@ class discussModel: HandyJSON,Equatable {
             lhs.text == rhs.text &&
             lhs.imageData == rhs.imageData &&
             lhs.nickName == rhs.nickName &&
-            lhs.replyModelArr == rhs.replyModelArr
+            lhs.replyModelArr == rhs.replyModelArr &&
+            lhs.replyNickName == rhs.replyNickName
     }
 
     var id: String = ""
@@ -86,8 +87,10 @@ class discussModel: HandyJSON,Equatable {
     /// 自定义类型.  头像
     var imageData:Data?
     var nickName: String = ""
-    var replyModelArr :[replyDiscussModel] = []
 
+    var replyModelArr :[replyDiscussModel] = []
+    /// 回复人的昵称
+    var replyNickName: String = ""
     required init(){}
 }
 
@@ -108,7 +111,8 @@ class replyDiscussModel: HandyJSON,Equatable {
             lhs.text == rhs.text &&
             lhs.imageData == rhs.imageData &&
             lhs.nickName == rhs.nickName &&
-            lhs.replyID == rhs.replyID
+            lhs.replyID == rhs.replyID &&
+            lhs.replyNickName == rhs.replyNickName
     }
 
     var id: String = ""
@@ -127,6 +131,7 @@ class replyDiscussModel: HandyJSON,Equatable {
 
     /// 回复id
     var replyID :String = ""
-
+    /// 回复人的昵称
+    var replyNickName: String = ""
     required init(){}
 }
