@@ -60,7 +60,19 @@ class BaseDiscussModel: HandyJSON {
     required init(){}
 }
 
-class discussModel: HandyJSON {
+class discussModel: HandyJSON,Equatable {
+    static func == (lhs: discussModel, rhs: discussModel) -> Bool {
+        return lhs.id == rhs.id &&
+            lhs.created_at == rhs.created_at &&
+            lhs.created_by == rhs.created_by &&
+            lhs.blog_id == rhs.blog_id &&
+            lhs.discuss_id == rhs.discuss_id &&
+            lhs.text == rhs.text &&
+            lhs.imageData == rhs.imageData &&
+            lhs.nickName == rhs.nickName &&
+            lhs.replyModelArr == rhs.replyModelArr
+    }
+
     var id: String = ""
     var created_by: String = ""
     var created_at: String = ""
@@ -74,6 +86,47 @@ class discussModel: HandyJSON {
     /// 自定义类型.  头像
     var imageData:Data?
     var nickName: String = ""
-    
+    var replyModelArr :[replyDiscussModel] = []
+
+    required init(){}
+}
+
+//class BaseReplyDiscussModel: HandyJSON {
+//    var height : String?
+//    var result : [replyDiscussModel]?
+//    required init(){}
+//}
+
+class replyDiscussModel: HandyJSON,Equatable {
+
+    static func == (lhs: replyDiscussModel, rhs: replyDiscussModel) -> Bool {
+        return lhs.id == rhs.id &&
+            lhs.created_at == rhs.created_at &&
+            lhs.created_by == rhs.created_by &&
+            lhs.blog_id == rhs.blog_id &&
+            lhs.discuss_id == rhs.discuss_id &&
+            lhs.text == rhs.text &&
+            lhs.imageData == rhs.imageData &&
+            lhs.nickName == rhs.nickName &&
+            lhs.replyID == rhs.replyID
+    }
+
+    var id: String = ""
+
+    var created_by: String = ""
+    var created_at: String = ""
+    /// 文章id
+    var blog_id:String = ""
+    /// 评论id
+    var discuss_id: String = ""
+    /// 评论内容
+    var text: String = ""
+    /// 自定义类型.  头像
+    var imageData:Data?
+    var nickName: String = ""
+
+    /// 回复id
+    var replyID :String = ""
+
     required init(){}
 }

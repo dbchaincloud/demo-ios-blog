@@ -35,6 +35,7 @@ class BlogDetailViewController: BaseViewController {
             let insert = InsertDara.init(appcode: APPCODE, publikeyBase64Str: publicBase!, address: UserDefault.getAddress()!, tableName: DatabaseTableName.discuss.rawValue, chainid: Chainid, privateKeyDataUint: UserDefault.getPrivateKeyUintArr()! as! [UInt8], baseUrl: BASEURL, publicKey: UserDefault.getPublickey()!, insertDataUrl: InsertDataURL)
 
             let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
+
             SwiftMBHUD.showLoading()
             DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
                 guard let mySelf = self else {return}
@@ -67,49 +68,164 @@ class BlogDetailViewController: BaseViewController {
         self.discussModelArr.removeAll()
         let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
         let url = QueryDataUrl + "\(token)/"
-        Query().queryOneData(urlStr: url, tableName: DatabaseTableName.discuss.rawValue, appcode: APPCODE, fieldToValueDic: ["blog_id":self.logModel.id]) {[weak self] (responseData) in
-            guard let mySelf = self else {return}
-            SwiftMBHUD.dismiss()
-            let json = String(data: responseData, encoding: .utf8)
-            if let baseDiscussModel = BaseDiscussModel.deserialize(from: json) {
-                if baseDiscussModel.result?.count ?? 0 > 0 {
+        /// 临时保存回复数据
+        var tempReplyArr :[discussModel] = []
 
-                    for model in baseDiscussModel.result! {
-                        /// 查找User表的头像cid
-                        Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (userData) in
-                            let userJson = String(data: userData, encoding: .utf8)
-                            if let userModel = BaseUserModel.deserialize(from: userJson) {
-                                if userModel.result?.count ?? 0 > 0 {
-                                    /// 下载头像
-                                    let usermodel = userModel.result!.last
-                                    if !usermodel!.name.isBlank {
-                                        model.nickName = usermodel!.name
+        let queue = DispatchQueue(label: "myQueue")
+        let group = DispatchGroup()
+        let signal = DispatchSemaphore(value: 1)
+
+        group.enter()
+        queue.async {
+            signal.wait()
+            Query().queryOneData(urlStr: url, tableName: DatabaseTableName.discuss.rawValue, appcode: APPCODE, fieldToValueDic: ["blog_id":self.logModel.id]) {[weak self] (responseData) in
+                guard let mySelf = self else {group.leave(); return}
+                SwiftMBHUD.dismiss()
+                let json = String(data: responseData, encoding: .utf8)
+                if let baseDiscussModel = BaseDiscussModel.deserialize(from: json) {
+                    if baseDiscussModel.result?.count ?? 0 > 0 {
+
+                        for (idx,model) in baseDiscussModel.result!.enumerated() {
+                            print("评论的id:\(model.id) 文章的id: \(model.blog_id)  回复评论的id:\(model.discuss_id)")
+
+                            /// 查找User表的头像cid
+                            Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (userData) in
+                                let userJson = String(data: userData, encoding: .utf8)
+                                if let userModel = BaseUserModel.deserialize(from: userJson) {
+                                    if userModel.result?.count ?? 0 > 0 {
+                                        /// 下载头像
+                                        let usermodel = userModel.result!.last
+                                        if !usermodel!.name.isBlank {
+                                            model.nickName = usermodel!.name
+                                        }
+
+                                        guard !usermodel!.photo.isBlank else {
+                                            if model.discuss_id.isBlank {
+                                                mySelf.discussModelArr.append(model)
+                                            } else {
+                                                tempReplyArr.append(model)
+                                            }
+                                            if idx == baseDiscussModel.result!.count - 1 {
+                                                signal.signal()
+                                                group.leave()
+                                            }
+                                            return
+                                        }
+
+                                        let imageURL = DownloadFileURL + usermodel!.photo
+                                        DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
+                                            guard let mySelf = self else {return}
+                                            model.imageData = imageJsonData
+                                            if model.discuss_id.isBlank {
+                                                mySelf.discussModelArr.append(model)
+                                            } else {
+                                                tempReplyArr.append(model)
+                                            }
+
+//                                            if idx == baseDiscussModel.result!.count - 1 {
+////                                                print("单独评论的条数:\(mySelf.discussModelArr.count)  111回复的数量:\(tempReplyArr.count)")
+//
+//                                                for relpyModel in tempReplyArr {
+//                                                    let rmodel = replyDiscussModel()
+//                                                    rmodel.blog_id = relpyModel.blog_id
+//                                                    rmodel.created_at = relpyModel.created_at
+//                                                    rmodel.created_by = relpyModel.created_by
+//                                                    rmodel.id = relpyModel.id
+//                                                    rmodel.imageData = relpyModel.imageData
+//                                                    rmodel.nickName = relpyModel.nickName
+//                                                    rmodel.replyID = relpyModel.id
+//                                                    rmodel.discuss_id = relpyModel.discuss_id
+//                                                    rmodel.text = relpyModel.text
+//
+//                                                    for (index,dmodel) in mySelf.discussModelArr.enumerated() {
+//                                                        if dmodel.id == relpyModel.discuss_id {
+//                                                            dmodel.replyModelArr.append(rmodel)
+//                                                            mySelf.discussModelArr[index] = dmodel
+//                                                        }
+//                                                    }
+//                                                }
+//                                            }
+                                            if idx == baseDiscussModel.result!.count - 1 {
+                                                signal.signal()
+                                                group.leave()
+                                            }
+                                        } failure: { (code, message) in
+                                            print("头像下载失败")
+                                        }
+
+                                    } else {
+                                        if model.discuss_id.isBlank {
+                                            mySelf.discussModelArr.append(model)
+                                        } else {
+                                            tempReplyArr.append(model)
+                                        }
+
+                                        if idx == baseDiscussModel.result!.count - 1 {
+                                            signal.signal()
+                                            group.leave()
+                                        }
+//                                        if idx == baseDiscussModel.result!.count - 1 {
+////                                            print("单独评论的条数:\(mySelf.discussModelArr.count)  222回复的数量:\(tempReplyArr.count)")
+//                                            for relpyModel in tempReplyArr {
+//                                                let rmodel = replyDiscussModel()
+//                                                rmodel.blog_id = relpyModel.blog_id
+//                                                rmodel.created_at = relpyModel.created_at
+//                                                rmodel.created_by = relpyModel.created_by
+//                                                rmodel.id = relpyModel.id
+//                                                rmodel.imageData = relpyModel.imageData
+//                                                rmodel.nickName = relpyModel.nickName
+//                                                rmodel.replyID = relpyModel.id
+//                                                rmodel.discuss_id = relpyModel.discuss_id
+//                                                rmodel.text = relpyModel.text
+//
+//                                                for (index,dmodel) in mySelf.discussModelArr.enumerated() {
+//                                                    if dmodel.id == relpyModel.discuss_id {
+//                                                        dmodel.replyModelArr.append(rmodel)
+//                                                        mySelf.discussModelArr[index] = dmodel
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
                                     }
-
-                                    guard !usermodel!.photo.isBlank else {
-                                        mySelf.discussModelArr.append(model)
-                                        return
-                                    }
-
-                                    let imageURL = DownloadFileURL + usermodel!.photo
-                                    DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
-                                        guard let mySelf = self else {return}
-                                        model.imageData = imageJsonData
-                                        mySelf.discussModelArr.append(model)
-
-                                    } failure: { (code, message) in
-                                        print("头像下载失败")
-                                    }
-                                } else {
-                                    mySelf.discussModelArr.append(model)
                                 }
                             }
                         }
+                    } else {
+                        signal.signal()
+                        group.leave()
+                        SwiftMBHUD.dismiss()
                     }
-                } else {
-                    SwiftMBHUD.dismiss()
                 }
             }
+        }
+
+        group.enter()
+        queue.async {
+            signal.wait()
+
+            print("单条评论数组: \(self.discussModelArr.count) --- 多评论数组:\(tempReplyArr.count)")
+            for relpyModel in tempReplyArr {
+                let rmodel = replyDiscussModel()
+                rmodel.blog_id = relpyModel.blog_id
+                rmodel.created_at = relpyModel.created_at
+                rmodel.created_by = relpyModel.created_by
+                rmodel.id = relpyModel.id
+                rmodel.imageData = relpyModel.imageData
+                rmodel.nickName = relpyModel.nickName
+                rmodel.replyID = relpyModel.id
+                rmodel.discuss_id = relpyModel.discuss_id
+                rmodel.text = relpyModel.text
+
+                for (index,dmodel) in self.discussModelArr.enumerated() {
+                    if dmodel.id == relpyModel.discuss_id {
+                        dmodel.discuss_id = relpyModel.discuss_id
+                        dmodel.replyModelArr.append(rmodel)
+                        self.discussModelArr[index] = dmodel
+                    }
+                }
+            }
+
+            signal.signal()
         }
     }
 

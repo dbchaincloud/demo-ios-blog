@@ -15,8 +15,9 @@ class BlogDetailView: UIView {
 
     var discussModelArr = [discussModel](){
         didSet{
-            print("评论列表数据:\(discussModelArr.count)")
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -88,12 +89,15 @@ class BlogDetailView: UIView {
     }()
 
     lazy var replyBackView : UIView = {
+        let view = UIView.init(frame: CGRect(x: 0, y: SCREEN_HEIGHT - kTabBarHeight - 88, width: SCREEN_WIDTH, height: 88))
+        view.backgroundColor = .white
+        return view
+    }()
+
+    lazy var replyTextBackView : UIView = {
         let view = UIView.init(frame: CGRect(x: 16, y: SCREEN_HEIGHT - kTabBarHeight - 78, width: SCREEN_WIDTH - 32, height: 52))
         view.extSetCornerRadius(14)
         view.backgroundColor = .colorWithHexString("EFEFEF")
-        replyTextField.frame = CGRect(x: 10, y: 0, width: view.frame.width - 100, height: view.frame.height)
-        replyBtn.frame = CGRect(x: replyTextField.frame.maxX + 4, y: 6, width: 80, height: 40)
-        view.addSubViews([replyTextField,replyBtn])
         return view
     }()
 
@@ -163,6 +167,10 @@ class BlogDetailView: UIView {
         tableView.tableHeaderView = headerView
         self.addSubview(tableView)
         self.addSubview(replyBackView)
+        self.addSubview(replyTextBackView)
+        replyTextField.frame = CGRect(x: 10, y: 0, width: replyTextBackView.frame.width - 100, height: replyTextBackView.frame.height)
+        replyBtn.frame = CGRect(x: replyTextField.frame.maxX + 4, y: 6, width: 80, height: 40)
+        replyTextBackView.addSubViews([replyTextField,replyBtn])
     }
 
     required init?(coder: NSCoder) {
@@ -206,6 +214,19 @@ class BlogDetailView: UIView {
             return labelSize.height
     }
 
+    /// 计算组头富文本高度
+    func headerTextHeight(text: String) -> CGFloat {        // 注意这里的宽度计算，要根据自己的约束来计算
+            let maxSize = CGSize(width: (SCREEN_WIDTH - 122), height: CGFloat(MAXFLOAT))
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .justified
+            paragraphStyle.lineBreakMode = .byWordWrapping
+            paragraphStyle.lineSpacing = 2.0
+            let labelSize = NSString(string: text).boundingRect(with: maxSize,
+                                                                options: [.usesFontLeading, .usesLineFragmentOrigin],
+                                                                attributes:[.font : UIFont.systemFont(ofSize: 15), .paragraphStyle: paragraphStyle],
+                                                                context: nil).size
+            return labelSize.height
+    }
 }
 
 extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
@@ -215,10 +236,8 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if section == 2 {
-//            return 3
-//        }
-        return 1
+        let model = self.discussModelArr[section]
+        return model.replyModelArr.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -229,24 +248,138 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
             cell = BlogDetailTableViewCell.init(style: .default, reuseIdentifier: BlogDetailTableViewCell.identifier)
         }
         cell?.selectionStyle = .none
-        cell?.model = self.discussModelArr[indexPath.section]
+        cell?.replyModel = self.discussModelArr[indexPath.section].replyModelArr[indexPath.row]
+
+        let cornerRadius:CGFloat = 15.0
+        let sectionCount = tableView.numberOfRows(inSection: indexPath.section)
+        let shapeLayer = CAShapeLayer()
+        cell?.backView.layer.mask = nil
+        //如果是最后一个单元格则设置圆角遮罩
+        if indexPath.row == sectionCount - 1 {
+            let bounds = cell?.backView.bounds
+            let bezierPath = UIBezierPath(roundedRect: bounds!,
+                                                          byRoundingCorners: [.bottomLeft,.bottomRight],
+                                                          cornerRadii: CGSize(width: cornerRadius,height: cornerRadius))
+            shapeLayer.path = bezierPath.cgPath
+            cell?.backView.layer.mask = shapeLayer
+        }
         return cell!
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.01
+        let textStr = self.discussModelArr[section].text
+        let textHeight = self.height(text: textStr)
+        return textHeight + 60
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 0.01))
+        let textStr = self.discussModelArr[section].text
+        let textHeight = self.height(text: textStr)
+        let view = sectionHeaderView.init(frame: CGRect(x: 16, y: 0, width: SCREEN_WIDTH - 32, height: textHeight + 60), textHeight: textHeight)
+        view.model = self.discussModelArr[section]
+        return view
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+
         return 12
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+
         return UIView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 12))
     }
     
+}
+
+
+class sectionHeaderView : UIView {
+
+    var model = discussModel(){
+        didSet{
+            if model.imageData != nil {
+                self.iconImgV.image = UIImage(data: model.imageData!)
+            } else {
+                self.iconImgV.image = UIImage(named: "home_icon_image")
+            }
+
+            self.nameLabel.text = model.nickName
+            self.textLabel.text = model.text
+        }
+    }
+    var iconImgV : UIImageView!
+    var nameLabel:UILabel!
+    var textLabel:UILabel!
+    let cornerRadius:CGFloat = 15.0
+    var shapeLayer:CAShapeLayer!
+
+    var textHeight :CGFloat!
+     init(frame: CGRect,textHeight: CGFloat) {
+        super.init(frame: frame)
+
+        self.textHeight = textHeight
+        self.backgroundColor = .white
+        iconImgV = UIImageView()
+        iconImgV.extSetCornerRadius(24)
+        self.addSubview(iconImgV)
+        nameLabel = UILabel()
+        nameLabel.textColor = .black
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
+
+        self.addSubview(nameLabel)
+        textLabel = UILabel()
+
+        textLabel.font = UIFont.systemFont(ofSize: 15)
+        textLabel.textColor = .black
+        self.addSubview(textLabel)
+
+        //设置圆角遮罩
+          shapeLayer = CAShapeLayer()
+          self.layer.mask = shapeLayer
+    }
+
+    //覆盖frame，自动添加边距
+      override var frame: CGRect {
+          get {
+              return super.frame
+          }
+          set {
+              var frame = newValue
+              frame.origin.x += cornerRadius
+              frame.origin.y += 0
+              frame.size.width -= 2 * cornerRadius
+              frame.size.height -= 0
+              super.frame = frame
+          }
+      }
+
+      //子视图布局
+      override func layoutSubviews() {
+          super.layoutSubviews()
+
+          self.iconImgV.frame = CGRect(x: 20, y: 18, width: 48, height: 48)
+          self.nameLabel.frame =  CGRect(x: iconImgV.frame.maxX + 18, y: 18, width: 160, height: 26)
+          self.textLabel.frame = CGRect(x: iconImgV.frame.maxX + 18, y: nameLabel.frame.maxY + 8, width: SCREEN_WIDTH - 122, height: textHeight)
+
+          //调整遮罩层路径
+        if model.replyModelArr.count > 0 {
+            let bezierPath = UIBezierPath(roundedRect: bounds,
+                                          byRoundingCorners: [.topLeft,.topRight],
+                                          cornerRadii: CGSize(width: cornerRadius,
+                                                              height: cornerRadius))
+            shapeLayer.path = bezierPath.cgPath
+
+        } else {
+
+            let bezierPath = UIBezierPath(roundedRect: bounds,
+                                          byRoundingCorners: [.topLeft,.topRight,.bottomLeft,.bottomRight],
+                                          cornerRadii: CGSize(width: cornerRadius,
+                                                              height: cornerRadius))
+            shapeLayer.path = bezierPath.cgPath
+        }
+      }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
