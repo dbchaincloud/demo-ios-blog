@@ -31,7 +31,7 @@ class BaseNavigationController:  UINavigationController,UINavigationControllerDe
 
         //设置左右bar的颜色
         navBar.tintColor = UIColor.white
-//        // 设置标题的样式
+        // 设置标题的样式
         let attriDic = [NSAttributedString.Key.font:UIFont.systemFont(ofSize: 18),NSAttributedString.Key.foregroundColor:UIColor.black]
         navBar.titleTextAttributes = attriDic
 

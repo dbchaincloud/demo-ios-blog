@@ -30,6 +30,10 @@ class BlogDetailViewController: BaseViewController {
         contentView.BlogReplyBlock = {[weak self] (titleStr: String, replyID: String ) in
             guard let mySelf = self else {return}
             mySelf.replyTitle(withTitle: titleStr, withReplyId: replyID)
+//            if titleStr.isBlank{
+//                SwiftMBHUD.showError("请先输入内容")
+//            } else {
+//            }
         }
 
         contentView.titleStr = logModel.title
@@ -92,7 +96,6 @@ class BlogDetailViewController: BaseViewController {
                     if baseDiscussModel.result?.count ?? 0 > 0 {
 
                         for (idx,model) in baseDiscussModel.result!.enumerated() {
-//                            print("评论的id:\(model.id) 文章的id: \(model.blog_id)  回复评论的id:\(model.discuss_id)")
 
                             /// 查找User表的头像cid   QmTpgJnPzkq1ist8CCT3cUFijd6STL2JjnwHzCMYNfR6sW
                             Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (userData) in

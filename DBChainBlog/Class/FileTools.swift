@@ -69,8 +69,6 @@ class FileTools: NSObject {
 
     /*创建指定名字的文件*/
     public func createFile(fileName : String = "", path : String , contents : Data? = nil , attributes : [FileAttributeKey : Any]? = nil) -> Bool{
-//        DBPrint(message:"path: \(path)")
-//        DBPrint(message:"filetools: \(getFile(fileName : fileName , path : path))")
         if fileManager.fileExists(atPath: path) == true{
             return fileManager.createFile(atPath: getFile(fileName : fileName , path : path), contents: contents, attributes: attributes)
         }

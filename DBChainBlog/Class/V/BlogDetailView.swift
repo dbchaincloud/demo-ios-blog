@@ -196,11 +196,14 @@ class BlogDetailView: UIView {
     @objc func replyButtonClick() {
         if !self.replyTextField.text!.isBlank {
             if self.BlogReplyBlock != nil {
+                if self.replyID == nil {
+                    self.replyID = ""
+                }
                 self.BlogReplyBlock!(self.replyTextField.text!,self.replyID)
                 self.replyTextField.resignFirstResponder()
             }
         } else {
-            SwiftMBHUD.showText("请先输入内容")
+            self.replyTextField.becomeFirstResponder()
         }
     }
 
@@ -269,17 +272,30 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
 
         let cornerRadius:CGFloat = 15.0
         let sectionCount = tableView.numberOfRows(inSection: indexPath.section)
-        let shapeLayer = CAShapeLayer()
-        cell?.backView.layer.mask = nil
-        //如果是最后一个单元格则设置圆角遮罩
+
         if indexPath.row == sectionCount - 1 {
-            let bounds = cell?.backView.bounds
-            let bezierPath = UIBezierPath(roundedRect: bounds!,
-                                                          byRoundingCorners: [.bottomLeft,.bottomRight],
-                                                          cornerRadii: CGSize(width: cornerRadius,height: cornerRadius))
-            shapeLayer.path = bezierPath.cgPath
-            cell?.backView.layer.mask = shapeLayer
+
+            let path:UIBezierPath = UIBezierPath.init(roundedRect: (cell?.backView.bounds)!, byRoundingCorners: [.bottomLeft,.bottomRight], cornerRadii: CGSize(width: cornerRadius, height: 0))
+
+            let shapLayer:CAShapeLayer = CAShapeLayer()
+
+            shapLayer.lineWidth = 1
+            
+            shapLayer.strokeColor = UIColor.white.cgColor
+
+            shapLayer.fillColor = UIColor.clear.cgColor
+
+            shapLayer.path = path.cgPath
+
+            let maskLayer:CAShapeLayer = CAShapeLayer.init()
+
+            maskLayer.path = path.cgPath
+
+            cell?.backView.layer.mask = maskLayer
+
+            cell?.backView.layer.addSublayer(shapLayer)
         }
+
         return cell!
     }
 

@@ -62,6 +62,7 @@ class SwiftMBHUD: MBProgressHUD {
        }
 
         class func showText(_ text:String) {
+            self.dismiss()
             showText(text)
         }
 }
