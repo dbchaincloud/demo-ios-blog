@@ -157,7 +157,6 @@ class BlogDetailView: UIView {
         view.dataSource = self
         view.backgroundColor = .clear
         view.showsVerticalScrollIndicator = false
-        view.separatorStyle = .none
         view.register(UINib.init(nibName: "BlogDetailTableViewCell", bundle: nil), forCellReuseIdentifier: BlogDetailTableViewCell.identifier)
         return view
     }()
@@ -166,6 +165,7 @@ class BlogDetailView: UIView {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self,selector: #selector(keyboardWillhide(_:)),name: UIResponder.keyboardWillHideNotification, object: nil)
 
+        tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 84
         tableView.rowHeight = UITableView.automaticDimension
         tableView.tableHeaderView = headerView
@@ -267,55 +267,31 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
         if cell == nil {
             cell = BlogDetailTableViewCell.init(style: .default, reuseIdentifier: BlogDetailTableViewCell.identifier)
         }
+        
         cell?.selectionStyle = .none
         cell?.replyModel = self.discussModelArr[indexPath.section].replyModelArr[indexPath.row]
 
-        let cornerRadius:CGFloat = 15.0
-        let sectionCount = tableView.numberOfRows(inSection: indexPath.section)
 
-        if indexPath.row == sectionCount - 1 {
-
-            let path:UIBezierPath = UIBezierPath.init(roundedRect: (cell?.backView.bounds)!, byRoundingCorners: [.bottomLeft,.bottomRight], cornerRadii: CGSize(width: cornerRadius, height: 0))
-
-            let shapLayer:CAShapeLayer = CAShapeLayer()
-
-            shapLayer.lineWidth = 1
-            
-            shapLayer.strokeColor = UIColor.white.cgColor
-
-            shapLayer.fillColor = UIColor.clear.cgColor
-
-            shapLayer.path = path.cgPath
-
-            let maskLayer:CAShapeLayer = CAShapeLayer.init()
-
-            maskLayer.path = path.cgPath
-
-            cell?.backView.layer.mask = maskLayer
-
-            cell?.backView.layer.addSublayer(shapLayer)
-        }
 
         return cell!
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let textStr = self.discussModelArr[section].text
-        let textHeight = self.height(text: textStr)
-        return textHeight + 60
+        let textHeight = self.headerTextHeight(text: textStr)
+        return textHeight + 70
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let textStr = self.discussModelArr[section].text
-        let textHeight = self.height(text: textStr)
-        let view = sectionHeaderView.init(frame: CGRect(x: 16, y: 0, width: SCREEN_WIDTH - 32, height: textHeight + 60), textHeight: textHeight)
+        let textHeight = self.headerTextHeight(text: textStr)
+        let view = sectionHeaderView.init(frame: CGRect(x: 16, y: 0, width: SCREEN_WIDTH - 32, height: textHeight + 70), textHeight: textHeight)
         let sectionModel = self.discussModelArr[section]
         view.model = sectionModel
         view.sectionHeaderClickReplyBlock = {[weak self] in
             guard let mySelf = self else {return}
             mySelf.replyID = sectionModel.id
             mySelf.replyTextField.becomeFirstResponder()
-            print("点击组头 第 :\(section) 行 --- \(sectionModel.nickName)")
         }
         return view
     }
@@ -329,7 +305,21 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
 
         return UIView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 12))
     }
-    
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+
+        let sectionCount = tableView.numberOfRows(inSection: indexPath.section)
+        if indexPath.row == sectionCount - 1 {
+            let corner = UIRectCorner.init(arrayLiteral: [.bottomLeft,.bottomRight])
+            let radii = CGSize(width: 15, height: 15)
+            let maskPath = UIBezierPath.init(roundedRect: cell.bounds, byRoundingCorners: corner, cornerRadii: radii)
+
+            let maskLayer = CAShapeLayer.init()
+            maskLayer.frame = cell.bounds
+            maskLayer.path = maskPath.cgPath
+            cell.layer.mask = maskLayer
+        }
+    }
 }
 
 
@@ -376,6 +366,7 @@ class sectionHeaderView : UIView {
         textLabel = UILabel()
         textLabel.font = UIFont.systemFont(ofSize: 15)
         textLabel.textColor = .black
+        textLabel.numberOfLines = 0
         self.addSubview(textLabel)
 
         replyBtn = UIButton()
@@ -411,7 +402,7 @@ class sectionHeaderView : UIView {
 
         self.iconImgV.frame = CGRect(x: 20, y: 18, width: 48, height: 48)
         self.nameLabel.frame =  CGRect(x: iconImgV.frame.maxX + 18, y: 18, width: 160, height: 26)
-        self.textLabel.frame = CGRect(x: iconImgV.frame.maxX + 18, y: nameLabel.frame.maxY + 8, width: SCREEN_WIDTH - 122, height: textHeight)
+        self.textLabel.frame = CGRect(x: iconImgV.frame.maxX + 18, y: nameLabel.frame.maxY + 8, width: SCREEN_WIDTH - 122, height: textHeight + 4)
         self.replyBtn.frame = CGRect(x: self.frame.maxX - 68, y: 8, width: 40, height: 26)
 
           //调整遮罩层路径

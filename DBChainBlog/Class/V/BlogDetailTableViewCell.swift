@@ -10,8 +10,6 @@ import UIKit
 class BlogDetailTableViewCell: UITableViewCell {
 
     static let identifier = "BlogDetailCellID"
-
-    @IBOutlet weak var backView: UIView!
     @IBOutlet weak var iconImgV: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentTitleLabel: UILabel!
@@ -19,27 +17,6 @@ class BlogDetailTableViewCell: UITableViewCell {
 
     var model = discussModel(){
         didSet{
-
-//            if model.replyModelArr.count > 0 {
-//                for rmodel in model.replyModelArr {
-//                    if rmodel.imageData != nil {
-//                        iconImgV.image = UIImage(data: model.imageData!)
-//                    } else {
-//                        iconImgV.image = UIImage(named: "home_icon_image")
-//                    }
-//                    if !rmodel.nickName.isBlank {
-//                        nameLabel.text = model.nickName
-//                    } else {
-//                        nameLabel.text = "未知用户"
-//                    }
-//                    contentTitleLabel.text = rmodel.text
-//                }
-//
-//            } else {
-//
-//
-//            }
-
             if model.imageData != nil {
                 iconImgV.image = UIImage(data: model.imageData!)
             }else{
@@ -86,11 +63,26 @@ class BlogDetailTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        self.backgroundColor = .clear
+        self.backgroundColor = .white
         self.iconImgV.contentMode = .scaleAspectFill
         self.iconImgV.extSetCornerRadius(24)
         self.contentTitleLabel.numberOfLines = 0
     }
+
+    //覆盖frame，自动添加边距
+      override var frame: CGRect {
+          get {
+              return super.frame
+          }
+          set {
+              var frame = newValue
+              frame.origin.x += 15
+              frame.origin.y += 0
+              frame.size.width -= 2 * 15
+              frame.size.height -= 0
+              super.frame = frame
+          }
+      }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
