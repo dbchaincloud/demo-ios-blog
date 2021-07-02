@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftLeePackage
+import DBChainKit
 
 class BlogDetailViewController: BaseViewController {
 
@@ -30,10 +30,6 @@ class BlogDetailViewController: BaseViewController {
         contentView.BlogReplyBlock = {[weak self] (titleStr: String, replyID: String ) in
             guard let mySelf = self else {return}
             mySelf.replyTitle(withTitle: titleStr, withReplyId: replyID)
-//            if titleStr.isBlank{
-//                SwiftMBHUD.showError("请先输入内容")
-//            } else {
-//            }
         }
 
         contentView.titleStr = logModel.title
@@ -175,7 +171,6 @@ class BlogDetailViewController: BaseViewController {
         group.enter()
         queue.async {
             signal.wait()
-
             for relpyModel in tempReplyArr {
                 let rmodel = replyDiscussModel()
                 rmodel.blog_id = relpyModel.blog_id

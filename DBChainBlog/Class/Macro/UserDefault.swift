@@ -63,5 +63,9 @@ class UserDefault: NSObject {
         return UserDefaults.standard.array(forKey: "kPrivateKeyUintArrKey")
     }
 
+    static func removeUserData() {
+        UserDefaults.standard.removeObject(forKey: "kCurrentMnemonic")
+        UserDefaults.standard.removeObject(forKey: "kUserNikeNameKey")
+    }
 
 }

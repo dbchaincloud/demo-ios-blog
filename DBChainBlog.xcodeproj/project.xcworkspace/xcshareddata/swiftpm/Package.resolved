@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "DBChainKit",
+        "repositoryURL": "git@github.com:dbchaincloud/ios-client.git",
+        "state": {
+          "branch": "master",
+          "revision": "3271db54cc374187620f725adbab8e9b34e1e7af",
+          "version": null
+        }
+      },
+      {
         "package": "SawtoothSigning",
         "repositoryURL": "https://github.com/hyperledger/sawtooth-sdk-swift.git",
         "state": {

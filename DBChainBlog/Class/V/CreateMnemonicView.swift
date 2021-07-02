@@ -53,14 +53,14 @@ class CreateMnemonicView: UIView {
     lazy var mnemonicLabel : UILabel = {
         let label = UILabel()
         label.textColor = .colorWithHexString("3B3B3B")
-        label.font = UIFont.ThemeFont.H3Regular
+        label.font = UIFont.ThemeFont.H2Regular
         label.numberOfLines = 0
         return label
     }()
 
     lazy var nameTextField : UITextField = {
         let tf = UITextField()
-        let placeholserAttributes = [NSAttributedString.Key.foregroundColor : UIColor.colorWithHexString("000000"),NSAttributedString.Key.font : UIFont().themeHNBoldFont(size: 25)]
+        let placeholserAttributes = [NSAttributedString.Key.foregroundColor : UIColor.colorWithHexString("9E9E9E"),NSAttributedString.Key.font : UIFont().themeHNBoldFont(size: 25)]
         tf.attributedPlaceholder = NSAttributedString.init(string: "取个昵称", attributes: placeholserAttributes)
         tf.backgroundColor = .colorWithHexString("F8F8F8")
         tf.textAlignment = .center

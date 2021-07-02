@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DBChainKit
 class LoginViewController: BaseViewController {
 
     lazy var loginView : LoginView = {
@@ -24,21 +24,18 @@ class LoginViewController: BaseViewController {
         }
 
         loginView.signOutBlock = {
+            let filePath = documentTools() + "/USERICONPATH"
+            /// 创建文件并保存
+            if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+                /// 该文件已存在
+                // 删除
+                let _ = FileTools.sharedInstance.deleteFile(fileName: USERICONPATH, path: filePath)
+            }
+            UserDefault.removeUserData()
+
             let vc = CreateMnemonicController()
             let nav = BaseNavigationController.init(rootViewController: vc)
             UIApplication.shared.keyWindow?.rootViewController = nav
         }
     }
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftLeePackage
+import DBChainKit
 import Alamofire
 
 let documentTools = FileTools.sharedInstance.docDir
@@ -122,7 +122,7 @@ class SettingMineViewController: BaseViewController {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
                     /// 保存 昵称
                     UserDefault.saveUserNikeName(nameStr)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         mySelf.navigationController?.popViewController(animated: true)
                     }
                 } else {

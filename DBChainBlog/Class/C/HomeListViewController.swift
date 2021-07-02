@@ -6,11 +6,11 @@
 //
 
 import UIKit
-import SwiftLeePackage
+import DBChainKit
 class HomeListViewController: BaseViewController {
 
     var modelArr:[blogModel] = [] {
-        didSet{
+        didSet {
             self.contentView.modelArr = modelArr
         }
     }

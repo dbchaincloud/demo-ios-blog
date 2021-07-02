@@ -271,8 +271,6 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
         cell?.selectionStyle = .none
         cell?.replyModel = self.discussModelArr[indexPath.section].replyModelArr[indexPath.row]
 
-
-
         return cell!
     }
 
@@ -309,6 +307,7 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 
         let sectionCount = tableView.numberOfRows(inSection: indexPath.section)
+
         if indexPath.row == sectionCount - 1 {
             let corner = UIRectCorner.init(arrayLiteral: [.bottomLeft,.bottomRight])
             let radii = CGSize(width: 15, height: 15)

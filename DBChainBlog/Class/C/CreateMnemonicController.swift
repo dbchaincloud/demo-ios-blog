@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import SwiftLeePackage
+import DBChainKit
 
 class CreateMnemonicController: BaseViewController {
 
@@ -24,12 +24,20 @@ class CreateMnemonicController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
+
         view.addSubview(contentView)
-        mnemonicStr = SwiftLeePackage().createMnemonic()
+
+        mnemonicStr = DBChainKit().createMnemonic()
+
+        /// 生成助记词
+        contentView.createMnemonicBlock = {
+            self.mnemonicStr = DBChainKit().createMnemonic()
+        }
+
         /// 进入首页
         contentView.goinButtonBlock = {
             SwiftMBHUD.showLoading()
-            /// 获取一个积分
+
             UserDefault.saveCurrentMnemonic(self.mnemonicStr)
 
             /// 生成公钥私钥地址等保存
@@ -37,8 +45,11 @@ class CreateMnemonicController: BaseViewController {
             let manager = DBMnemonicManager().MnemonicGetPrivateKeyStrAndPublickStrWithMnemonicArr(strArr)
 
             if manager.address.count > 0, manager.privateKeyString.count > 0 {
+
                 let token = DBToken().createAccessToken(privateKey: manager.privateKeyUint , PublikeyData: manager.publicKeyString.hexaData)
+
                 let url = GetIntegralUrl + token
+
                 DBRequest.GET(url: url, params: nil) { [weak self] (responeData) in
                     guard let mySelf = self else {return}
                     let jsonStr = String(data: responeData, encoding: .utf8)
@@ -50,9 +61,8 @@ class CreateMnemonicController: BaseViewController {
                             UserDefault.savePublickey(manager.publicKeyString)
                             UserDefault.savePrivateKey(manager.privateKeyString)
                             UserDefault.savePrivateKeyUintArr(manager.privateKeyUint)
-
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                /// 插入个人信息
+                                /// 更新个人信息
                                 let publicBase = manager.publicKeyString.hexaData.base64EncodedString()
                                 let insert = InsertDara.init(appcode: APPCODE,
                                                              publikeyBase64Str: publicBase,
@@ -63,10 +73,9 @@ class CreateMnemonicController: BaseViewController {
                                                              baseUrl: BASEURL,
                                                              publicKey: manager.publicKeyString,
                                                              insertDataUrl: InsertDataURL)
-
+                                
                                 let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
-
-                                DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { (jsonData) in
+                                DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { (userModel) in
 
                                     let fieldsDic = ["name":mySelf.contentView.nameTextField.text!,
                                                      "age":"",
@@ -76,8 +85,7 @@ class CreateMnemonicController: BaseViewController {
                                                      "photo":"",
                                                      "motto":""] as [String : Any]
 
-                                    insert.insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
-                                        print("插入数据的结果:\(stateStr)")
+                                    insert.insertRowSortedSignDic(model: userModel, fields: fieldsDic) { (stateStr) in
                                         if stateStr == "1" {
                                             SwiftMBHUD.dismiss()
                                             let vc = HomeViewController()
@@ -105,10 +113,7 @@ class CreateMnemonicController: BaseViewController {
                 SwiftMBHUD.showText("助记词错误 无法生成公钥与私钥")
             }
         }
-        /// 生成助记词
-        contentView.createMnemonicBlock = {
-            self.mnemonicStr = SwiftLeePackage().createMnemonic()
-        }
+
     }
 
 }

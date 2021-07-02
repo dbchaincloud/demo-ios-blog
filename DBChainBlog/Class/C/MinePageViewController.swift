@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwiftLeePackage
+import DBChainKit
 
 class MinePageViewController: BaseViewController {
 
@@ -16,7 +16,7 @@ class MinePageViewController: BaseViewController {
     }()
 
     var infoModel = userModel() {
-        didSet{
+        didSet {
             self.contentView.model = infoModel
         }
     }
@@ -107,6 +107,7 @@ class MinePageViewController: BaseViewController {
                         mySelf.contentView.logModelArr = blogModel.result!
                     }
                 } else {
+                    SwiftMBHUD.dismiss()
                     print("没有发布过博客")
                 }
             }

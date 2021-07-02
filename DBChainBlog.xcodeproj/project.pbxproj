@@ -130,7 +130,7 @@
 		817DF03826806CFC00D65D0C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03726806CFC00D65D0C /* HomeViewController.swift */; };
 		817DF03B26806DF100D65D0C /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03A26806DF100D65D0C /* UserDefault.swift */; };
 		817DF03E2680748200D65D0C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03D2680748200D65D0C /* HomeView.swift */; };
-		81E028E82683516A00939944 /* SwiftLeePackage in Frameworks */ = {isa = PBXBuildFile; productRef = 81E028E72683516A00939944 /* SwiftLeePackage */; };
+		81A31586268D689900EEFEDA /* DBChainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81A31585268D689900EEFEDA /* DBChainKit */; };
 		81E88786268039160068BB03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88785268039160068BB03 /* AppDelegate.swift */; };
 		81E88788268039160068BB03 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88787268039160068BB03 /* SceneDelegate.swift */; };
 		81E8878A268039160068BB03 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88789268039160068BB03 /* ViewController.swift */; };
@@ -155,7 +155,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		81141BAE26842FB20087572C /* SwiftLeePackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SwiftLeePackage; path = ../../../Desktop/Framework/SwiftLeePackage; sourceTree = "<group>"; };
 		8119473626831B5A0043FBB4 /* URLMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLMacro.swift; sourceTree = "<group>"; };
 		8119473A268320A60043FBB4 /* TableNameMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableNameMacro.swift; sourceTree = "<group>"; };
 		8119473D268323410043FBB4 /* DBChainBlog-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DBChainBlog-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -314,8 +313,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81E028E82683516A00939944 /* SwiftLeePackage in Frameworks */,
 				812C4BE32684697200BC96B6 /* HandyJSON in Frameworks */,
+				81A31586268D689900EEFEDA /* DBChainKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,7 +641,6 @@
 		81E8879E26803BDC0068BB03 /* Class */ = {
 			isa = PBXGroup;
 			children = (
-				81141BAE26842FB20087572C /* SwiftLeePackage */,
 				811D4E9A268B4F03007DBF9F /* IQKeyboardManagerSwift */,
 				811947422683235E0043FBB4 /* OC */,
 				8119473526831B320043FBB4 /* Macro */,
@@ -719,8 +717,8 @@
 			);
 			name = DBChainBlog;
 			packageProductDependencies = (
-				81E028E72683516A00939944 /* SwiftLeePackage */,
 				812C4BE22684697200BC96B6 /* HandyJSON */,
+				81A31585268D689900EEFEDA /* DBChainKit */,
 			);
 			productName = DBChainBlog;
 			productReference = 81E88782268039160068BB03 /* DBChainBlog.app */;
@@ -752,8 +750,8 @@
 			);
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
-				81E028E62683516A00939944 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */,
 				812C4BE12684697200BC96B6 /* XCRemoteSwiftPackageReference "HandyJSON" */,
+				81A31584268D689900EEFEDA /* XCRemoteSwiftPackageReference "ios-client" */,
 			);
 			productRefGroup = 81E88783268039160068BB03 /* Products */;
 			projectDirPath = "";
@@ -1144,9 +1142,9 @@
 				minimumVersion = 5.0.2;
 			};
 		};
-		81E028E62683516A00939944 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */ = {
+		81A31584268D689900EEFEDA /* XCRemoteSwiftPackageReference "ios-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://gitee.com/yangtingAnAn/SwiftLeePackage.git";
+			repositoryURL = "git@github.com:dbchaincloud/ios-client.git";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -1160,10 +1158,10 @@
 			package = 812C4BE12684697200BC96B6 /* XCRemoteSwiftPackageReference "HandyJSON" */;
 			productName = HandyJSON;
 		};
-		81E028E72683516A00939944 /* SwiftLeePackage */ = {
+		81A31585268D689900EEFEDA /* DBChainKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 81E028E62683516A00939944 /* XCRemoteSwiftPackageReference "SwiftLeePackage" */;
-			productName = SwiftLeePackage;
+			package = 81A31584268D689900EEFEDA /* XCRemoteSwiftPackageReference "ios-client" */;
+			productName = DBChainKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
