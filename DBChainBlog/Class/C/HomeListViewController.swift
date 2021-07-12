@@ -54,53 +54,67 @@ class HomeListViewController: BaseViewController {
         let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
 
         let url = QueryDataUrl + "\(token)/"
+
         Query().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) {[weak self] (status) in
             guard let mySelf = self else {return}
 
             if let bmodel = BaseBlogsModel.deserialize(from: status) {
-                
                 if bmodel.result?.count ?? 0 > 0 {
+                    let signal = DispatchSemaphore(value: 1)
+
+                    let global = DispatchGroup()
+
                     for (index,model) in bmodel.result!.enumerated() {
-                        model.readNumber = mySelf.randomIn(min: 100, max: 1000)
-                        /// 查询头像
-                        Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
-                            if index == bmodel.result!.count - 1 {
-                                SwiftMBHUD.dismiss()
-                            }
-                            let json = String(data: responseData, encoding: .utf8)
-                            if let umodel = BaseUserModel.deserialize(from: json) {
-                                if umodel.result?.count ?? 0 > 0 {
-                                    /// 下载头像
-                                    let userLastModel = umodel.result?.last
-                                    model.name = userLastModel!.name
-                                    guard !userLastModel!.photo.isBlank else {
+                        global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
+                            signal.wait()
+                            model.readNumber = mySelf.randomIn(min: 100, max: 1000)
+
+                            /// Token 时效原因, 数据过多时会导致后面数据获取失败,  Token 需要重新生成
+                            let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+                            let UserUrl = QueryDataUrl + "\(userToken)/"
+                            /// 查询头像
+                            Query().queryOneData(urlStr: UserUrl, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
+
+                                let json = String(data: responseData, encoding: .utf8)
+                                if let umodel = BaseUserModel.deserialize(from: json) {
+                                    if umodel.result?.count ?? 0 > 0 {
+                                        /// 下载头像
+                                        let userLastModel = umodel.result?.last
+                                        model.name = userLastModel!.name
+                                        guard !userLastModel!.photo.isBlank else {
+                                            mySelf.modelArr.append(model)
+                                            signal.signal()
+                                            return
+                                        }
+                                        let imageURL = DownloadFileURL + userLastModel!.photo
+                                        DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
+                                            guard let mySelf = self else {return}
+                                            model.imgdata = imageJsonData
+                                            mySelf.modelArr.append(model)
+                                            signal.signal()
+                                        } failure: { (code, message) in
+                                            mySelf.modelArr.append(model)
+                                            signal.signal()
+                                        }
+
+                                    } else {
                                         mySelf.modelArr.append(model)
-                                        return
+                                        signal.signal()
                                     }
-
-                                    let imageURL = DownloadFileURL + userLastModel!.photo
-                                    DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
-                                        guard let mySelf = self else {return}
-                                        model.imgdata = imageJsonData
-                                        mySelf.modelArr.append(model)
-
-                                    } failure: { (code, message) in
-                                        print("头像下载失败")
-                                    }
-
                                 } else {
                                     mySelf.modelArr.append(model)
+                                    signal.signal()
                                 }
-                            } else {
-                                print("查询头像失败")
-                                mySelf.modelArr.append(model)
+
+                                if index == bmodel.result!.count - 1 {
+                                    SwiftMBHUD.dismiss()
+                                }
                             }
-                        }
+                        }))
                     }
 
                 } else {
                     /// 没有博客数据
-                    print("没有博客数据")
                     SwiftMBHUD.dismiss()
                 }
             } else {
