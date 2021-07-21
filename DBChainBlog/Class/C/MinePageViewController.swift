@@ -52,12 +52,14 @@ class MinePageViewController: BaseViewController {
         self.contentView.logModelArr.removeAll()
         getCurrentUserInfo()
         let filePath = documentTools() + "/USERICONPATH"
-        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
-        do{
-            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
-            contentView.iconImg = UIImage(data: imageData)!
-        }catch{
-            contentView.iconImg = UIImage(named: "home_icon_image")!
+        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true  {
+            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+            do{
+                let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                contentView.iconImg = UIImage(data: imageData)!
+            }catch{
+                contentView.iconImg = UIImage(named: "home_icon_image")!
+            }
         }
     }
 

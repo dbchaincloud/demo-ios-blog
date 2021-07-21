@@ -62,10 +62,17 @@ class SettingMineViewController: BaseViewController {
                 }
 
             } else {
-                if mySelf.userInfoModel.photo.isBlank {
-                    mySelf.uploadUserInfoEvent("", nameStr, sex, age, mottoStr)
+                /// 判断数据是否有修改
+                if mySelf.userInfoModel.age == age,mySelf.userInfoModel.name == nameStr,mySelf.userInfoModel.sex == sex,mySelf.userInfoModel.motto == mottoStr {
+                    SwiftMBHUD.dismiss()
+                    mySelf.navigationController?.popViewController(animated: true)
                 } else {
-                    mySelf.uploadUserInfoEvent(mySelf.userInfoModel.photo,nameStr, sex, age, mottoStr)
+                    /// 数据有修改
+                    if mySelf.userInfoModel.photo.isBlank {
+                        mySelf.uploadUserInfoEvent("", nameStr, sex, age, mottoStr)
+                    } else {
+                        mySelf.uploadUserInfoEvent(mySelf.userInfoModel.photo,nameStr, sex, age, mottoStr)
+                    }
                 }
             }
         }

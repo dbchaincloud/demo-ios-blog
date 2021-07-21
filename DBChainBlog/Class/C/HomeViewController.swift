@@ -142,14 +142,16 @@ class HomeViewController: BaseViewController {
     /// 更换头像
     @objc func iconImageUploadSuccessEvent(){
         let filePath = documentTools() + "/USERICONPATH"
-        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
-        do{
-            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
-            rightIconBtn.setImage(UIImage(data: imageData), for: .normal)
+        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+            do{
+                let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                rightIconBtn.setImage(UIImage(data: imageData), for: .normal)
 
-        }catch{
+            }catch{
 
-            rightIconBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
+                rightIconBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
+            }
         }
     }
 }
