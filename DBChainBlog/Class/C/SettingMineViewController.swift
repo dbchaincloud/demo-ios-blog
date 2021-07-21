@@ -9,7 +9,6 @@ import UIKit
 import DBChainKit
 import Alamofire
 
-let documentTools = FileTools.sharedInstance.docDir
 class SettingMineViewController: BaseViewController {
 
     lazy var contentView : SettingMineView = {

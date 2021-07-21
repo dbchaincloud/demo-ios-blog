@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+/// 文件管理 沙盒路径  dynamic
+let documentTools = FileTools.sharedInstance.docDir
 ///  邀请码随机生成字符串
 let invitationCodeArndomStr = "wzAG2dsfbkrEinDKPamBpQ6WtUuHLNceyRVXZ78h3TCJSY5qxjvM14F"
 let USERICONPATH = "UserIconPath"

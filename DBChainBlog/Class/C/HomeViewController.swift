@@ -148,6 +148,7 @@ class HomeViewController: BaseViewController {
             rightIconBtn.setImage(UIImage(data: imageData), for: .normal)
 
         }catch{
+
             rightIconBtn.setImage(UIImage(named: "home_icon_image"), for: .normal)
         }
     }

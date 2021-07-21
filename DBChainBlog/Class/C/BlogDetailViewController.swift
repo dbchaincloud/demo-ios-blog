@@ -92,7 +92,6 @@ class BlogDetailViewController: BaseViewController {
                     if baseDiscussModel.result?.count ?? 0 > 0 {
 
                         for (idx,model) in baseDiscussModel.result!.enumerated() {
-
                             /// 查找User表的头像cid   QmTpgJnPzkq1ist8CCT3cUFijd6STL2JjnwHzCMYNfR6sW
                             Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (userData) in
                                 let userJson = String(data: userData, encoding: .utf8)
@@ -104,39 +103,58 @@ class BlogDetailViewController: BaseViewController {
                                             model.nickName = usermodel!.name
                                         }
 
-                                        guard !usermodel!.photo.isBlank else {
+                                        if !usermodel!.photo.isBlank {
+                                            /// 判断本地是否有数据
+                                            let dicPath = documentTools() + "/\(usermodel!.photo)"
+                                            if FileTools.sharedInstance.isFileExisted(fileName: usermodel!.photo, path: dicPath) == true {
+                                                /// 本地有缓存数据.
+                                                /// 该文件已存在
+                                                let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: dicPath)
+                                                let imageData = try! Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                                                model.imageData = imageData
+
+                                                if model.discuss_id.isBlank {
+                                                    mySelf.discussModelArr.append(model)
+                                                } else {
+                                                    model.replyNickName = usermodel!.name
+                                                    tempReplyArr.append(model)
+                                                }
+
+                                                if idx == baseDiscussModel.result!.count - 1 {
+                                                    signal.signal()
+                                                    group.leave()
+                                                }
+                                            } else {
+                                                let imageURL = DownloadFileURL + usermodel!.photo
+                                                DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
+                                                    guard let mySelf = self else {return}
+                                                    model.imageData = imageJsonData
+                                                    if model.discuss_id.isBlank {
+                                                        mySelf.discussModelArr.append(model)
+                                                    } else {
+                                                        model.replyNickName = usermodel!.name
+                                                        tempReplyArr.append(model)
+                                                    }
+                                                    if idx == baseDiscussModel.result!.count - 1 {
+                                                        signal.signal()
+                                                        group.leave()
+                                                    }
+                                                } failure: { (code, message) in
+                                                    print("头像下载失败")
+                                                    if idx == baseDiscussModel.result!.count - 1 {
+                                                        signal.signal()
+                                                        group.leave()
+                                                    }
+                                                }
+                                            }
+
+                                        } else {
                                             if model.discuss_id.isBlank {
                                                 mySelf.discussModelArr.append(model)
                                             } else {
                                                 model.replyNickName = usermodel!.name
                                                 tempReplyArr.append(model)
                                             }
-                                            if idx == baseDiscussModel.result!.count - 1 {
-                                                signal.signal()
-                                                group.leave()
-                                            }
-                                            return
-                                        }
-
-                                        let imageURL = DownloadFileURL + usermodel!.photo
-                                        DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
-                                            guard let mySelf = self else {return}
-
-                                            model.imageData = imageJsonData
-
-                                            if model.discuss_id.isBlank {
-                                                mySelf.discussModelArr.append(model)
-                                            } else {
-                                                model.replyNickName = usermodel!.name
-                                                tempReplyArr.append(model)
-                                            }
-
-                                            if idx == baseDiscussModel.result!.count - 1 {
-                                                signal.signal()
-                                                group.leave()
-                                            }
-                                        } failure: { (code, message) in
-                                            print("头像下载失败")
                                             if idx == baseDiscussModel.result!.count - 1 {
                                                 signal.signal()
                                                 group.leave()

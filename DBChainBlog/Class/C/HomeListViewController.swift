@@ -63,6 +63,7 @@ class HomeListViewController: BaseViewController {
                     let signal = DispatchSemaphore(value: 1)
 
                     let global = DispatchGroup()
+                    var tempBlogArr :[blogModel] = []
 
                     for (index,model) in bmodel.result!.enumerated() {
                         global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
@@ -72,6 +73,7 @@ class HomeListViewController: BaseViewController {
                             /// Token 时效原因, 数据过多时会导致后面数据获取失败,  Token 需要重新生成
                             let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
                             let UserUrl = QueryDataUrl + "\(userToken)/"
+
                             /// 查询头像
                             Query().queryOneData(urlStr: UserUrl, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
 
@@ -81,32 +83,62 @@ class HomeListViewController: BaseViewController {
                                         /// 下载头像
                                         let userLastModel = umodel.result?.last
                                         model.name = userLastModel!.name
-                                        guard !userLastModel!.photo.isBlank else {
-                                            mySelf.modelArr.append(model)
-                                            signal.signal()
-                                            return
-                                        }
-                                        let imageURL = DownloadFileURL + userLastModel!.photo
-                                        DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
-                                            guard let mySelf = self else {return}
-                                            model.imgdata = imageJsonData
-                                            mySelf.modelArr.append(model)
-                                            signal.signal()
-                                        } failure: { (code, message) in
-                                            mySelf.modelArr.append(model)
-                                            signal.signal()
-                                        }
+                                        if !userLastModel!.photo.isBlank {
+                                            let dicPath = documentTools() + "/\(userLastModel!.photo)"
+                                            if FileTools.sharedInstance.isFileExisted(fileName: userLastModel!.photo, path: dicPath) == true {
+                                                /// 该文件已存在
+                                                let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: dicPath)
+                                                let imageData = try! Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+                                                model.imgdata = imageData
+                                                tempBlogArr.append(model)
+                                                signal.signal()
+                                            } else {
+                                                /// 下载图片
+                                                let imageURL = DownloadFileURL + userLastModel!.photo
 
+                                                DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
+                                                    guard let mySelf = self else {return}
+                                                    /// 创建目录 文件夹 缓存数据
+                                                    let isSuccess = FileTools.sharedInstance.createDirectory(path:dicPath)
+                                                    /// 创建文件并保存
+                                                    if isSuccess {
+                                                        let saveFileStatus = FileTools.sharedInstance.createFile(fileName: userLastModel!.photo, path: dicPath, contents: imageJsonData, attributes: nil)
+                                                        if saveFileStatus == true {
+                                                            /// 该文件已存在
+                                                            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: dicPath)
+                                                            print("保存成功!!!! \(fileDic[0])")
+
+                                                        } else {
+                                                            print("保存失败!!!! \(userLastModel?.name)")
+                                                        }
+                                                    }
+                                                    model.imgdata = imageJsonData
+                                                    tempBlogArr.append(model)
+                                                    print("下载头像成功的下标:\(index) 下载头像的用户昵称: \(userLastModel!.name)")
+                                                    signal.signal()
+                                                } failure: { (code, message) in
+                                                    tempBlogArr.append(model)
+                                                    signal.signal()
+                                                }
+                                            }
+                                        } else {
+                                            print("没有头像的下标: \(index)")
+                                            tempBlogArr.append(model)
+                                            signal.signal()
+                                        }
                                     } else {
-                                        mySelf.modelArr.append(model)
+                                        print("没有查询到用户信息的下标: \(index) -- 博客标题: \(model.name)")
+                                        tempBlogArr.append(model)
                                         signal.signal()
                                     }
                                 } else {
-                                    mySelf.modelArr.append(model)
+                                    tempBlogArr.append(model)
                                     signal.signal()
                                 }
 
                                 if index == bmodel.result!.count - 1 {
+                                    print("头像全部下载完毕!!!!!!!!!")
+                                    mySelf.modelArr = tempBlogArr
                                     SwiftMBHUD.dismiss()
                                 }
                             }
