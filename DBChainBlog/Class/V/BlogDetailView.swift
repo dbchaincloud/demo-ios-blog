@@ -91,23 +91,24 @@ class BlogDetailView: UIView {
     }()
 
     lazy var replyBackView : UIView = {
-        let view = UIView.init(frame: CGRect(x: 0, y: SCREEN_HEIGHT - kTabBarHeight - 88, width: SCREEN_WIDTH, height: 88))
+        let view = UIView.init(frame: CGRect(x: 0, y: SCREEN_HEIGHT - kTabBarHeight - 88, width: SCREEN_WIDTH, height: 120   ))
         view.backgroundColor = .white
         return view
     }()
 
-    lazy var replyTextBackView : UIView = {
-        let view = UIView.init(frame: CGRect(x: 16, y: SCREEN_HEIGHT - kTabBarHeight - 78, width: SCREEN_WIDTH - 32, height: 52))
-        view.extSetCornerRadius(14)
-        view.backgroundColor = .colorWithHexString("EFEFEF")
-        return view
-    }()
+//    lazy var replyTextBackView : UIView = {
+//        let view = UIView.init(frame: CGRect(x: 16, y: SCREEN_HEIGHT - kTabBarHeight - 78, width: SCREEN_WIDTH - 32, height: 52))
+//        view.extSetCornerRadius(14)
+//        view.backgroundColor = .colorWithHexString("EFEFEF")
+//        return view
+//    }()
 
     lazy var replyTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "留下你的观点吧!"
         tf.textColor = .black
-        tf.backgroundColor = .clear
+        tf.backgroundColor = .colorWithHexString("EFEFEF")
+        tf.extSetCornerRadius(14)
         tf.font = UIFont.ThemeFont.HeadRegular
         return tf
     }()
@@ -171,10 +172,15 @@ class BlogDetailView: UIView {
         tableView.tableHeaderView = headerView
         self.addSubview(tableView)
         self.addSubview(replyBackView)
-        self.addSubview(replyTextBackView)
-        replyTextField.frame = CGRect(x: 10, y: 0, width: replyTextBackView.frame.width - 100, height: replyTextBackView.frame.height)
-        replyBtn.frame = CGRect(x: replyTextField.frame.maxX + 4, y: 6, width: 80, height: 40)
-        replyTextBackView.addSubViews([replyTextField,replyBtn])
+
+        let leftView = UIView()
+        leftView.backgroundColor = .clear
+        leftView.frame = CGRect(origin: .zero, size: CGSize(width: 10, height: 0))
+        replyTextField.leftView = leftView
+        replyTextField.leftViewMode = .always
+        replyTextField.frame = CGRect(x: 10, y: 10, width: SCREEN_WIDTH - 32 - 100, height: 52)
+        replyBtn.frame = CGRect(x: replyTextField.frame.maxX + 14, y: 16, width: 80, height: 40)
+        replyBackView.addSubViews([replyTextField,replyBtn])
     }
 
     required init?(coder: NSCoder) {
