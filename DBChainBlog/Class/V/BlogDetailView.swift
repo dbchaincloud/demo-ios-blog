@@ -16,10 +16,11 @@ class BlogDetailView: UIView {
     var replyID: String!
 
     var discussModelArr = [discussModel](){
-        didSet{
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+        didSet {
+            print("评论数量: \(discussModelArr.count)")
+            self.tableView.reloadData()
+//            DispatchQueue.main.async {
+//            }
         }
     }
     
@@ -96,13 +97,6 @@ class BlogDetailView: UIView {
         return view
     }()
 
-//    lazy var replyTextBackView : UIView = {
-//        let view = UIView.init(frame: CGRect(x: 16, y: SCREEN_HEIGHT - kTabBarHeight - 78, width: SCREEN_WIDTH - 32, height: 52))
-//        view.extSetCornerRadius(14)
-//        view.backgroundColor = .colorWithHexString("EFEFEF")
-//        return view
-//    }()
-
     lazy var replyTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "留下你的观点吧!"
@@ -125,7 +119,7 @@ class BlogDetailView: UIView {
 
     lazy var headerView : UIView = {
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: Int(SCREEN_WIDTH), height: viewHeight))
-        tipLabel.frame = CGRect(x: 16, y: 10, width: SCREEN_WIDTH - 32, height: 26)
+        tipLabel.frame = CGRect(x: 16, y: 18, width: SCREEN_WIDTH - 32, height: 26)
         view.addSubViews([tipLabel,titleLabel,textLabel,commentLabel,topComLabel])
         titleLabel.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(16)
@@ -276,7 +270,6 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
         
         cell?.selectionStyle = .none
         cell?.replyModel = self.discussModelArr[indexPath.section].replyModelArr[indexPath.row]
-
         return cell!
     }
 
@@ -313,16 +306,19 @@ extension BlogDetailView : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 
         let sectionCount = tableView.numberOfRows(inSection: indexPath.section)
+        let blogCell = cell as! BlogDetailTableViewCell
+        let cornerRadius:CGFloat = 15.0
 
         if indexPath.row == sectionCount - 1 {
-            let corner = UIRectCorner.init(arrayLiteral: [.bottomLeft,.bottomRight])
-            let radii = CGSize(width: 15, height: 15)
-            let maskPath = UIBezierPath.init(roundedRect: cell.bounds, byRoundingCorners: corner, cornerRadii: radii)
-
-            let maskLayer = CAShapeLayer.init()
-            maskLayer.frame = cell.bounds
-            maskLayer.path = maskPath.cgPath
-            cell.layer.mask = maskLayer
+            DispatchQueue.main.async {
+                let shapeLayer = CAShapeLayer()
+                let bezierPath = UIBezierPath(roundedRect: blogCell.backView.bounds,
+                                              byRoundingCorners: [.bottomLeft,.bottomRight],
+                                              cornerRadii: CGSize(width: cornerRadius,
+                                                                  height: cornerRadius))
+                shapeLayer.path = bezierPath.cgPath
+                blogCell.backView.layer.mask = shapeLayer
+            }
         }
     }
 }

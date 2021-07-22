@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,8 +18,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="369" height="186"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S6f-aH-2de">
+                        <rect key="frame" x="15" y="0.0" width="339" height="186"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="卧龙大聪明" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MpS-FA-oef">
-                        <rect key="frame" x="86" y="18" width="82" height="20"/>
+                        <rect key="frame" x="101" y="18" width="82" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="TKh-0F-FPQ"/>
                         </constraints>
@@ -27,13 +32,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理？？？说的好像有道理" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GQD-wx-jTF">
-                        <rect key="frame" x="86" y="48" width="269" height="126"/>
+                        <rect key="frame" x="100" y="48" width="239" height="126"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_icon_image" translatesAutoresizingMaskIntoConstraints="NO" id="Xdh-6c-API">
-                        <rect key="frame" x="20" y="18" width="48" height="48"/>
+                        <rect key="frame" x="35" y="18" width="48" height="48"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="48" id="MdY-V1-fVz"/>
                             <constraint firstAttribute="width" constant="48" id="UmI-BE-Hyy"/>
@@ -41,26 +46,34 @@
                     </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="GQD-wx-jTF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="86" id="BlB-mo-wJr"/>
-                    <constraint firstItem="Xdh-6c-API" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="KH7-VA-8Xh"/>
+                    <constraint firstItem="S6f-aH-2de" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="1oY-wf-LiD"/>
+                    <constraint firstItem="GQD-wx-jTF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="100" id="BlB-mo-wJr"/>
+                    <constraint firstItem="Xdh-6c-API" firstAttribute="leading" secondItem="S6f-aH-2de" secondAttribute="leading" constant="20" id="KH7-VA-8Xh"/>
+                    <constraint firstAttribute="trailing" secondItem="S6f-aH-2de" secondAttribute="trailing" constant="15" id="Ks6-MI-4Sa"/>
                     <constraint firstItem="GQD-wx-jTF" firstAttribute="top" secondItem="MpS-FA-oef" secondAttribute="bottom" constant="10" id="NBx-CJ-LxG"/>
                     <constraint firstItem="Xdh-6c-API" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="18" id="bgL-ZS-gXc"/>
                     <constraint firstItem="MpS-FA-oef" firstAttribute="leading" secondItem="Xdh-6c-API" secondAttribute="trailing" constant="18" id="dGz-HP-SRL"/>
-                    <constraint firstAttribute="trailing" secondItem="GQD-wx-jTF" secondAttribute="trailing" constant="14" id="hY9-WR-pE6"/>
+                    <constraint firstAttribute="bottom" secondItem="S6f-aH-2de" secondAttribute="bottom" id="frz-w3-xv8"/>
+                    <constraint firstAttribute="trailing" secondItem="GQD-wx-jTF" secondAttribute="trailing" constant="30" id="hY9-WR-pE6"/>
+                    <constraint firstItem="S6f-aH-2de" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="lcy-2x-2QR"/>
                     <constraint firstItem="MpS-FA-oef" firstAttribute="top" secondItem="Xdh-6c-API" secondAttribute="top" id="p8z-xI-Hk4"/>
                     <constraint firstAttribute="bottom" secondItem="GQD-wx-jTF" secondAttribute="bottom" constant="12" id="qes-Bi-HFI"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="backView" destination="S6f-aH-2de" id="IgD-h9-C3w"/>
                 <outlet property="contentTitleLabel" destination="GQD-wx-jTF" id="eub-4v-Zrk"/>
                 <outlet property="iconImgV" destination="Xdh-6c-API" id="e0Q-Yu-vMt"/>
                 <outlet property="nameLabel" destination="MpS-FA-oef" id="5YT-7v-4Vp"/>
             </connections>
-            <point key="canvasLocation" x="220" y="4"/>
+            <point key="canvasLocation" x="-198" y="-51"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="home_icon_image" width="108" height="108"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -86,7 +86,6 @@ class BlogDetailViewController: BaseViewController {
             signal.wait()
             Query().queryOneData(urlStr: url, tableName: DatabaseTableName.discuss.rawValue, appcode: APPCODE, fieldToValueDic: ["blog_id":self.logModel.id]) {[weak self] (responseData) in
                 guard let mySelf = self else {group.leave(); return}
-                SwiftMBHUD.dismiss()
                 let json = String(data: responseData, encoding: .utf8)
                 if let baseDiscussModel = BaseDiscussModel.deserialize(from: json) {
                     if baseDiscussModel.result?.count ?? 0 > 0 {
@@ -189,28 +188,33 @@ class BlogDetailViewController: BaseViewController {
         group.enter()
         queue.async {
             signal.wait()
-            for relpyModel in tempReplyArr {
-                let rmodel = replyDiscussModel()
-                rmodel.blog_id = relpyModel.blog_id
-                rmodel.created_at = relpyModel.created_at
-                rmodel.created_by = relpyModel.created_by
-                rmodel.id = relpyModel.id
-                rmodel.imageData = relpyModel.imageData
-                rmodel.nickName = relpyModel.nickName
-                rmodel.replyID = relpyModel.id
-                rmodel.discuss_id = relpyModel.discuss_id
-                rmodel.text = relpyModel.text
-                
-                for (index,dmodel) in self.discussModelArr.enumerated() {
-                    if dmodel.id == relpyModel.discuss_id {
-                        rmodel.replyNickName = dmodel.nickName
-                        dmodel.discuss_id = relpyModel.discuss_id
-                        dmodel.replyModelArr.append(rmodel)
-                        self.discussModelArr[index] = dmodel
+            DispatchQueue.main.async {
+                SwiftMBHUD.dismiss()
+                var tempModelArr = self.discussModelArr
+                for relpyModel in tempReplyArr {
+                    let rmodel = replyDiscussModel()
+                    rmodel.blog_id = relpyModel.blog_id
+                    rmodel.created_at = relpyModel.created_at
+                    rmodel.created_by = relpyModel.created_by
+                    rmodel.id = relpyModel.id
+                    rmodel.imageData = relpyModel.imageData
+                    rmodel.nickName = relpyModel.nickName
+                    rmodel.replyID = relpyModel.id
+                    rmodel.discuss_id = relpyModel.discuss_id
+                    rmodel.text = relpyModel.text
+
+                    for (index,dmodel) in tempModelArr.enumerated() {
+                        if dmodel.id == relpyModel.discuss_id {
+                            rmodel.replyNickName = dmodel.nickName
+                            dmodel.discuss_id = relpyModel.discuss_id
+                            dmodel.replyModelArr.append(rmodel)
+                            tempModelArr[index] = dmodel
+                        }
                     }
                 }
-            }
 
+                self.discussModelArr = tempModelArr
+            }
             signal.signal()
         }
     }
