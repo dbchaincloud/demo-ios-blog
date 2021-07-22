@@ -19,7 +19,7 @@ class HomeListView: UIView {
     }
 
     lazy var tableView : UITableView = {
-        let view = UITableView.init(frame: CGRect(x: 0, y: 80, width: SCREEN_WIDTH, height: self.frame.height - 80), style: .grouped)
+        let view = UITableView.init(frame: CGRect(x: 0, y: 10, width: SCREEN_WIDTH, height: self.frame.height - 10), style: .grouped)
         view.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: kTabBarHeight + kNavAndTabHeight + 20, right: 0)
         view.delegate = self
         view.dataSource = self

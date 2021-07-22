@@ -88,7 +88,7 @@
                         </constraints>
                     </view>
                 </subviews>
-                <color key="backgroundColor" red="0.97253721950000005" green="0.97254294159999999" blue="0.97255772350000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="pU8-5z-5M7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="HBu-hB-I8b"/>
                     <constraint firstItem="pU8-5z-5M7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="MsP-9z-8zW"/>

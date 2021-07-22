@@ -75,7 +75,6 @@ class HomeViewController: BaseViewController {
         super.setupUI()
         
         NotificationCenter.default.addObserver(self, selector: #selector(iconImageUploadSuccessEvent), name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
-        view.backgroundColor = .colorWithHexString("F8F8F8")
         let titleDataSource = JXSegmentedTitleDataSource()
         titleDataSource.isTitleColorGradientEnabled = true
         titleDataSource.titleNormalColor = .colorWithHexString("444444")
@@ -94,16 +93,16 @@ class HomeViewController: BaseViewController {
         view.addSubview(segmentedView)
 
         segmentedView.listContainer = listContainerView
-        segmentedView.backgroundColor = .colorWithHexString("F8F8F8")
+        segmentedView.backgroundColor = .clear
         view.addSubview(listContainerView)
-        view.addSubview(headerView)
+//        view.addSubview(headerView)
         view.addSubview(blogBtn)
     }
 
     override func setNavBar() {
         super.setNavBar()
 
-        self.navigationController?.navigationBar.barTintColor = .colorWithHexString("F8F8F8")
+        self.navigationController?.navigationBar.barTintColor = .colorWithHexString("#F3F3F3")
         let navContentView = UIView.init(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: kNavBarHeight))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navContentView)
 
