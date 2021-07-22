@@ -148,8 +148,10 @@ class SettingMineViewController: BaseViewController {
         let headers : HTTPHeaders = ["Content-type": "multipart/form-data",
                                      "Content-Disposition" : "form-data",
                                      "Content-Type": "application/json;charset=utf-8"]
+        /// 压缩图片
+        let imgData = self.selectUploadImage.compressImage()
         AF.upload(multipartFormData: { MultipartFormData in
-            MultipartFormData.append(self.selectUploadImage.pngData()!, withName: "file", fileName: imageName, mimeType: "application/octet-stream")
+            MultipartFormData.append(imgData, withName: "file", fileName: imageName, mimeType: "application/octet-stream")
         }, to: urlStr,headers: headers).responseJSON { response in
             if response.response?.statusCode == 200 {
                 let value = response.value as? Dictionary<String, Any>
@@ -186,6 +188,7 @@ class SettingMineViewController: BaseViewController {
         navImgV.image = UIImage(named: "setting_infomation")
         self.navigationItem.titleView = navImgV
     }
+    
 }
 
 
@@ -212,4 +215,58 @@ extension SettingMineViewController: UIImagePickerControllerDelegate,UINavigatio
         picker.dismiss(animated: true, completion: nil)
       }
 
+}
+
+
+extension UIImage {
+    //图片压缩逻辑
+    public func compressImage() -> Data{
+        let imageSize = self.jpegData(compressionQuality: 1)!.count/1024
+        var myImage = self
+        if imageSize < 500{
+            //如果小于500k,直接上传
+            return myImage.jpegData(compressionQuality: 1)!
+        }else{
+            //取短边
+            let width = myImage.size.width > myImage.size.height ? myImage.size.height:myImage.size.width
+            if width <= 1080{
+                //大于500k短边小于1080，直接上传
+                return myImage.jpegData(compressionQuality: 1)!
+            }else{
+                //待压缩的Size
+                let size: CGSize?
+                //如果宽大于高
+                if myImage.size.width > myImage.size.height{
+                    size = CGSize.init(width: myImage.size.width*(1080/myImage.size.height), height: 1080)
+                }else{
+                    size = CGSize.init(width: 1080, height: myImage.size.height*(1080/myImage.size.width))
+                }
+                //尺寸压缩
+                UIGraphicsBeginImageContext(size!)
+                myImage.draw(in: CGRect.init(x: 0, y: 0, width: size!.width, height: size!.height))
+                myImage = UIGraphicsGetImageFromCurrentImageContext()!
+                UIGraphicsEndImageContext()
+
+                if myImage.jpegData(compressionQuality: 1)!.count/1024 >= 500{
+                    //尺寸压缩后还大于500k
+                    for index in 1...5{
+                        let rate = CGFloat(1) - 0.1*CGFloat(index)
+                        let count = myImage.jpegData(compressionQuality: rate)!.count/1024
+                        if count <= 500{
+                            return myImage.jpegData(compressionQuality: rate)!
+                        }
+                        //系数0.5仍然大于500k上传
+                        if index == 5{
+                            return myImage.jpegData(compressionQuality: rate)!
+                        }
+                    }
+                } else {
+                    //尺寸压缩后还小于500k
+
+                    return myImage.jpegData(compressionQuality: 1)!
+                }
+            }
+        }
+        return myImage.jpegData(compressionQuality: 1)!
+    }
 }
