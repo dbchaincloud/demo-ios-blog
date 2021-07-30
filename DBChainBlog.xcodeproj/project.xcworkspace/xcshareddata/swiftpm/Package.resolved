@@ -32,8 +32,8 @@
         "package": "DBChainKit",
         "repositoryURL": "git@github.com:dbchaincloud/ios-client.git",
         "state": {
-          "branch": "master",
-          "revision": "3271db54cc374187620f725adbab8e9b34e1e7af",
+          "branch": "main",
+          "revision": "0d792b8fe5ca9df82741eb64159e8d2d4133ab6e",
           "version": null
         }
       },
