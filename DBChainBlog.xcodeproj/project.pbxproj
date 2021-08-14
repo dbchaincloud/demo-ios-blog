@@ -36,8 +36,9 @@
 		811D4ECC268B4F03007DBF9F /* IQNSArray+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */; };
 		811D4ECD268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */; };
 		812C4BEA26846A5B00BC96B6 /* BlogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C4BE926846A5B00BC96B6 /* BlogModels.swift */; };
+		814CE4CE26C78EF7001C4D01 /* DBChainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 814CE4CD26C78EF7001C4D01 /* DBChainKit */; };
+		814CE4D126C790FA001C4D01 /* InsertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814CE4D026C790FA001C4D01 /* InsertRequest.swift */; };
 		8161EC2526AA9B2700F5D24D /* HandyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 8161EC2426AA9B2700F5D24D /* HandyJSON */; };
-		8161EC3126AAB03D00F5D24D /* DBChainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8161EC3026AAB03D00F5D24D /* DBChainKit */; };
 		8175C98326808B58008F4FC8 /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */; };
 		8175C98426808B58008F4FC8 /* LayoutConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95F26808B58008F4FC8 /* LayoutConstraintItem.swift */; };
 		8175C98526808B58008F4FC8 /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C96026808B58008F4FC8 /* ConstraintMakerPrioritizable.swift */; };
@@ -189,6 +190,7 @@
 		811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQNSArray+Sort.swift"; sourceTree = "<group>"; };
 		811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQKeyboardManager+UITextFieldViewNotification.swift"; sourceTree = "<group>"; };
 		812C4BE926846A5B00BC96B6 /* BlogModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogModels.swift; sourceTree = "<group>"; };
+		814CE4D026C790FA001C4D01 /* InsertRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertRequest.swift; sourceTree = "<group>"; };
 		8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
 		8175C95F26808B58008F4FC8 /* LayoutConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraintItem.swift; sourceTree = "<group>"; };
 		8175C96026808B58008F4FC8 /* ConstraintMakerPrioritizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMakerPrioritizable.swift; sourceTree = "<group>"; };
@@ -314,7 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8161EC2526AA9B2700F5D24D /* HandyJSON in Frameworks */,
-				8161EC3126AAB03D00F5D24D /* DBChainKit in Frameworks */,
+				814CE4CE26C78EF7001C4D01 /* DBChainKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +336,7 @@
 			children = (
 				817DF02E2680436B00D65D0C /* UIViewExtension.swift */,
 				81E887A326803C930068BB03 /* BlogExtension.swift */,
+				814CE4D026C790FA001C4D01 /* InsertRequest.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -718,7 +721,7 @@
 			name = DBChainBlog;
 			packageProductDependencies = (
 				8161EC2426AA9B2700F5D24D /* HandyJSON */,
-				8161EC3026AAB03D00F5D24D /* DBChainKit */,
+				814CE4CD26C78EF7001C4D01 /* DBChainKit */,
 			);
 			productName = DBChainBlog;
 			productReference = 81E88782268039160068BB03 /* DBChainBlog.app */;
@@ -751,7 +754,7 @@
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
 				8161EC2326AA9B2700F5D24D /* XCRemoteSwiftPackageReference "HandyJSON" */,
-				8161EC2F26AAB03D00F5D24D /* XCRemoteSwiftPackageReference "ios-client" */,
+				814CE4CC26C78EF7001C4D01 /* XCRemoteSwiftPackageReference "ios-client" */,
 			);
 			productRefGroup = 81E88783268039160068BB03 /* Products */;
 			projectDirPath = "";
@@ -888,6 +891,7 @@
 				81EB64E0268195FD00FEF7C3 /* MinePageViewController.swift in Sources */,
 				8175CA1526809745008F4FC8 /* JXSegmentedIndicatorDoubleLineView.swift in Sources */,
 				81E887AE26803DBC0068BB03 /* BaseViewController.swift in Sources */,
+				814CE4D126C790FA001C4D01 /* InsertRequest.swift in Sources */,
 				8175CA0C26809745008F4FC8 /* JXSegmentedIndicatorTriangleView.swift in Sources */,
 				811D4EB9268B4F03007DBF9F /* IQPreviousNextView.swift in Sources */,
 				8175C98A26808B58008F4FC8 /* ConstraintInsets.swift in Sources */,
@@ -1134,6 +1138,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		814CE4CC26C78EF7001C4D01 /* XCRemoteSwiftPackageReference "ios-client" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:dbchaincloud/ios-client.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		8161EC2326AA9B2700F5D24D /* XCRemoteSwiftPackageReference "HandyJSON" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://gitee.com/yangtingAnAn/HandyJSON.git";
@@ -1142,26 +1154,18 @@
 				minimumVersion = 5.0.2;
 			};
 		};
-		8161EC2F26AAB03D00F5D24D /* XCRemoteSwiftPackageReference "ios-client" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:dbchaincloud/ios-client.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		814CE4CD26C78EF7001C4D01 /* DBChainKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 814CE4CC26C78EF7001C4D01 /* XCRemoteSwiftPackageReference "ios-client" */;
+			productName = DBChainKit;
+		};
 		8161EC2426AA9B2700F5D24D /* HandyJSON */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8161EC2326AA9B2700F5D24D /* XCRemoteSwiftPackageReference "HandyJSON" */;
 			productName = HandyJSON;
-		};
-		8161EC3026AAB03D00F5D24D /* DBChainKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8161EC2F26AAB03D00F5D24D /* XCRemoteSwiftPackageReference "ios-client" */;
-			productName = DBChainKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

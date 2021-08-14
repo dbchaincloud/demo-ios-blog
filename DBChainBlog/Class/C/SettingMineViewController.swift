@@ -80,10 +80,7 @@ class SettingMineViewController: BaseViewController {
 
     func uploadUserInfoEvent(_ resultCid:String,_ nameStr:String,_ sex:String,_ age:String,_ mottoStr:String) {
         /// 插入user表
-        let publicKey = UserDefault.getPublickey()
-        let publicBase = publicKey?.hexaData.base64EncodedString()
-
-        let insert = InsertDara.init(appcode: APPCODE, publikeyBase64Str: publicBase!, address: UserDefault.getAddress()!, tableName: DatabaseTableName.user.rawValue, chainid: Chainid, privateKeyDataUint: UserDefault.getPrivateKeyUintArr()! as! [UInt8], baseUrl: BASEURL, publicKey: UserDefault.getPublickey()!, insertDataUrl: InsertDataURL)
+        let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
 
         let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
         DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { [weak self] (umodel) in
@@ -143,7 +140,7 @@ class SettingMineViewController: BaseViewController {
 
 
     func uploadUserIconGetResultString(imageName:String,resultStrBlock:@escaping(_ resultStr : String) -> Void) {
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: UserDefault.getPublickey()!.hexaData)
+        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: UserDefault.getPublickey()!.hexaData)
         let urlStr = UploadFileURL + token + "/\(APPCODE)"
         let headers : HTTPHeaders = ["Content-type": "multipart/form-data",
                                      "Content-Disposition" : "form-data",

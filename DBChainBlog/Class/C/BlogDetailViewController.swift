@@ -41,13 +41,8 @@ class BlogDetailViewController: BaseViewController {
     /// 发布评论
     func replyTitle(withTitle titleStr: String,withReplyId replyid:String) {
         /// 发布评论
-        let publicKey = UserDefault.getPublickey()
-        let publicBase = publicKey?.hexaData.base64EncodedString()
-
-        let insert = InsertDara.init(appcode: APPCODE, publikeyBase64Str: publicBase!, address: UserDefault.getAddress()!, tableName: DatabaseTableName.discuss.rawValue, chainid: Chainid, privateKeyDataUint: UserDefault.getPrivateKeyUintArr()! as! [UInt8], baseUrl: BASEURL, publicKey: UserDefault.getPublickey()!, insertDataUrl: InsertDataURL)
-
+        let insert = InsertRequest.init(tableName: DatabaseTableName.discuss.rawValue, insertDataUrl: InsertDataURL)
         let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
-
         SwiftMBHUD.showLoading()
         DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
             guard let mySelf = self else {return}
@@ -72,7 +67,7 @@ class BlogDetailViewController: BaseViewController {
     func getCurrentBlogCommentList() {
         SwiftMBHUD.showLoading()
         self.discussModelArr.removeAll()
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
         let url = QueryDataUrl + "\(token)/"
         /// 临时保存回复数据
         var tempReplyArr :[discussModel] = []
@@ -84,7 +79,7 @@ class BlogDetailViewController: BaseViewController {
         group.enter()
         queue.async {
             signal.wait()
-            Query().queryOneData(urlStr: url, tableName: DatabaseTableName.discuss.rawValue, appcode: APPCODE, fieldToValueDic: ["blog_id":self.logModel.id]) {[weak self] (responseData) in
+            DBQuery().queryOneData(urlStr: url, tableName: DatabaseTableName.discuss.rawValue, appcode: APPCODE, fieldToValueDic: ["blog_id":self.logModel.id]) {[weak self] (responseData) in
                 guard let mySelf = self else {group.leave(); return}
                 let json = String(data: responseData, encoding: .utf8)
                 if let baseDiscussModel = BaseDiscussModel.deserialize(from: json) {
@@ -92,7 +87,7 @@ class BlogDetailViewController: BaseViewController {
 
                         for (idx,model) in baseDiscussModel.result!.enumerated() {
                             /// 查找User表的头像cid   QmTpgJnPzkq1ist8CCT3cUFijd6STL2JjnwHzCMYNfR6sW
-                            Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (userData) in
+                            DBQuery().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (userData) in
                                 let userJson = String(data: userData, encoding: .utf8)
                                 if let userModel = BaseUserModel.deserialize(from: userJson) {
                                     if userModel.result?.count ?? 0 > 0 {

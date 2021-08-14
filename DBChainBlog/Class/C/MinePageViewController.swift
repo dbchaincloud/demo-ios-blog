@@ -71,9 +71,9 @@ class MinePageViewController: BaseViewController {
 
     func getCurrentUserInfo() {
         SwiftMBHUD.showLoading()
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr() as! [UInt8], PublikeyData: UserDefault.getPublickey()!.hexaData)
+        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
         let url = QueryDataUrl + "\(token)/"
-        Query().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) { [weak self] (responseData) in
+        DBQuery().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) { [weak self] (responseData) in
             guard let mySelf = self else {return}
             let jsonStr = String(data: responseData, encoding: .utf8)
             if let userModel = BaseUserModel.deserialize(from: jsonStr) {
@@ -87,7 +87,7 @@ class MinePageViewController: BaseViewController {
     }
 
     func getCurrentBlogText(urlStr: String) {
-        Query().queryOneData(urlStr: urlStr, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) {[weak self] (responeData) in
+        DBQuery().queryOneData(urlStr: urlStr, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) {[weak self] (responeData) in
             guard let mySelf = self else {return}
             SwiftMBHUD.dismiss()
             let jsonStr = String(data: responeData, encoding: .utf8)

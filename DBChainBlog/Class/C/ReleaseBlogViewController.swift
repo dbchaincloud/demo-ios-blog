@@ -20,11 +20,7 @@ class ReleaseBlogViewController: BaseViewController {
 
         blogView.saveBlogBlock = { (titleStr: String, blogStr:String) in
             /// 插入到博客表
-            let publicKey = UserDefault.getPublickey()
-            let publicBase = publicKey?.hexaData.base64EncodedString()
-
-            let insert = InsertDara.init(appcode: APPCODE, publikeyBase64Str: publicBase!, address: UserDefault.getAddress()!, tableName: DatabaseTableName.blogs.rawValue, chainid: Chainid, privateKeyDataUint: UserDefault.getPrivateKeyUintArr()! as! [UInt8], baseUrl: BASEURL, publicKey: UserDefault.getPublickey()!, insertDataUrl: InsertDataURL)
-
+            let insert = InsertRequest.init(tableName: DatabaseTableName.blogs.rawValue, insertDataUrl: InsertDataURL)
             let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
 
             DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in

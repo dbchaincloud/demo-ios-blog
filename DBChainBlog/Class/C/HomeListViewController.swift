@@ -51,11 +51,9 @@ class HomeListViewController: BaseViewController {
 
         SwiftMBHUD.showLoading()
         self.modelArr.removeAll()
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
-
+        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
         let url = QueryDataUrl + "\(token)/"
-
-        Query().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) {[weak self] (status) in
+        DBQuery().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) {[weak self] (status) in
             guard let mySelf = self else {return}
 
             if let bmodel = BaseBlogsModel.deserialize(from: status) {
@@ -71,11 +69,11 @@ class HomeListViewController: BaseViewController {
                             model.readNumber = mySelf.randomIn(min: 100, max: 1000)
 
                             /// Token 时效原因, 数据过多时会导致后面数据获取失败,  Token 需要重新生成
-                            let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! as! [UInt8], PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+                            let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
                             let UserUrl = QueryDataUrl + "\(userToken)/"
 
                             /// 查询头像
-                            Query().queryOneData(urlStr: UserUrl, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
+                            DBQuery().queryOneData(urlStr: UserUrl, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
 
                                 let json = String(data: responseData, encoding: .utf8)
                                 if let umodel = BaseUserModel.deserialize(from: json) {
@@ -96,8 +94,7 @@ class HomeListViewController: BaseViewController {
                                                 /// 下载图片
                                                 let imageURL = DownloadFileURL + userLastModel!.photo
 
-                                                DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
-                                                    guard let mySelf = self else {return}
+                                                DBRequest.GET(url: imageURL, params: nil) { (imageJsonData) in
                                                     /// 创建目录 文件夹 缓存数据
                                                     let isSuccess = FileTools.sharedInstance.createDirectory(path:dicPath)
                                                     /// 创建文件并保存
@@ -109,7 +106,7 @@ class HomeListViewController: BaseViewController {
                                                             print("保存成功!!!! \(fileDic[0])")
 
                                                         } else {
-                                                            print("保存失败!!!! \(userLastModel?.name)")
+                                                            print("保存失败!!!! \(String(describing: userLastModel?.name))")
                                                         }
                                                     }
                                                     model.imgdata = imageJsonData

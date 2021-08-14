@@ -53,14 +53,24 @@ class UserDefault: NSObject {
         return UserDefaults.standard.string(forKey: "kPrivateKey")
     }
 
-    /// 保存私钥 [Uint8]
-    static func savePrivateKeyUintArr(_ uintArr:[Any]){
-        UserDefaults.standard.setValue(uintArr, forKey: "kPrivateKeyUintArrKey")
+//    /// 保存私钥 [Uint8]
+//    static func savePrivateKeyUintArr(_ uintArr:[UInt8]){
+//        UserDefaults.standard.setValue(uintArr, forKey: "kPrivateKeyUintArrKey")
+//    }
+//
+//    /// 取出私钥 [Uint8]
+//    static func getPrivateKeyUintArr() -> [UInt8]? {
+//        return UserDefaults.standard.array(forKey: "kPrivateKeyUintArrKey")
+//    }
+
+    /// 保存秘钥 [Uint8 ] 格式
+    static func savePrivateKeyUintArr(_ PrivateUintKey: [UInt8]) {
+        UserDefaults.standard.setValue(PrivateUintKey, forKey: "kPrivateKeyUintArrKey")
     }
-    
-    /// 取出私钥 [Uint8]
-    static func getPrivateKeyUintArr() -> [Any]? {
-        return UserDefaults.standard.array(forKey: "kPrivateKeyUintArrKey")
+
+    /// 取出秘钥  [ Uint8 ]
+    static func getPrivateKeyUintArr() -> [UInt8]? {
+        return UserDefaults.standard.object(forKey: "kPrivateKeyUintArrKey") as? [UInt8]
     }
 
     static func removeUserData() {

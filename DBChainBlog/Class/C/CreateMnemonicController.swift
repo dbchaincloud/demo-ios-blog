@@ -63,17 +63,19 @@ class CreateMnemonicController: BaseViewController {
                             UserDefault.savePrivateKeyUintArr(manager.privateKeyUint)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                 /// 更新个人信息
-                                let publicBase = manager.publicKeyString.hexaData.base64EncodedString()
-                                let insert = InsertDara.init(appcode: APPCODE,
-                                                             publikeyBase64Str: publicBase,
-                                                             address: manager.address,
-                                                             tableName: DatabaseTableName.user.rawValue,
-                                                             chainid: Chainid,
-                                                             privateKeyDataUint: manager.privateKeyUint,
-                                                             baseUrl: BASEURL,
-                                                             publicKey: manager.publicKeyString,
-                                                             insertDataUrl: InsertDataURL)
-                                
+//                                let publicBase = manager.publicKeyString.hexaData.base64EncodedString()
+//                                let insert = InsertDara.init(appcode: APPCODE,
+//                                                             publikeyBase64Str: publicBase,
+//                                                             address: manager.address,
+//                                                             tableName: DatabaseTableName.user.rawValue,
+//                                                             chainid: Chainid,
+//                                                             privateKeyDataUint: manager.privateKeyUint,
+//                                                             baseUrl: BASEURL,
+//                                                             publicKey: manager.publicKeyString,
+//                                                             insertDataUrl: InsertDataURL)
+
+                                let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
+
                                 let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
                                 DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { (userModel) in
 
@@ -91,7 +93,6 @@ class CreateMnemonicController: BaseViewController {
                                             let vc = HomeViewController()
                                             let nav = BaseNavigationController.init(rootViewController: vc)
                                             UIApplication.shared.keyWindow?.rootViewController = nav
-
                                         } else {
                                             SwiftMBHUD.showError("登录失败")
                                         }
