@@ -6,4 +6,6 @@ target 'DBChainBlog' do
 
   # Pods for DBChainBlog
 	pod 'HandyJSON', '~> 5.0.2'
+  pod 'DBChainSm2'
+  pod 'Kingfisher'
 end

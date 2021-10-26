@@ -21,7 +21,8 @@ class blogModel: HandyJSON {
     var title:String = ""
     var body: String = ""
     var name: String = ""
-    var imgdata: Data?
+//    var imgdata: Data?
+    var imgUrl: String?
     var readNumber: Int?
     required init(){}
 }

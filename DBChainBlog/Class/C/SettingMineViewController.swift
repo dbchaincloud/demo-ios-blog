@@ -80,8 +80,8 @@ class SettingMineViewController: BaseViewController {
 
     func uploadUserInfoEvent(_ resultCid:String,_ nameStr:String,_ sex:String,_ age:String,_ mottoStr:String) {
         /// 插入user表
-        let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
-
+//        let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
+        let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
         let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
         DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { [weak self] (umodel) in
             guard let mySelf = self else {return}
@@ -92,7 +92,7 @@ class SettingMineViewController: BaseViewController {
                        "status":"",
                        "photo":resultCid,
                        "motto":mottoStr]
-            insert.insertRowSortedSignDic(model: umodel, fields: dic) { (stateStr) in
+            insert.sm2_insertRowSortedSignDic(model: umodel, fields: dic) { (stateStr) in
                 if stateStr == "1" {
                     SwiftMBHUD.showSuccess("保存成功")
                     if mySelf.selectUploadImage.pngData() != nil {
@@ -140,7 +140,9 @@ class SettingMineViewController: BaseViewController {
 
 
     func uploadUserIconGetResultString(imageName:String,resultStrBlock:@escaping(_ resultStr : String) -> Void) {
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: UserDefault.getPublickey()!.hexaData)
+//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: UserDefault.getPublickey()!.hexaData)
+        
+        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
         let urlStr = UploadFileURL + token + "/\(APPCODE)"
         let headers : HTTPHeaders = ["Content-type": "multipart/form-data",
                                      "Content-Disposition" : "form-data",

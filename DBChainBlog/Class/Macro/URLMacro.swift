@@ -3,7 +3,9 @@
 //  DBChainBlog
 //
 //  Created by iOS on 2021/6/23.
-//
+//   val appCode = "5APTSCPSF7"
+//val baseUrl = "https://controlpanel.dbchain.cloud/relay/"
+//val chainId = "testnet"
 
 import UIKit
 import Foundation
@@ -11,7 +13,7 @@ import Foundation
 let BASEURL : String = "https://controlpanel.dbchain.cloud/relay/"
 var Chainid : String = "testnet"
 //var APPCODE : String = "4HQJA8CUUF"
-var APPCODE : String = "DHVPP9PXKV"
+var APPCODE : String = "5APTSCPSF7"
 
 /// 获取用户信息
 var GetUserDataURL = BASEURL + "auth/accounts/"

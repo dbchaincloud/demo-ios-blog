@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HomeListTableViewCell: UITableViewCell {
     static let identifier = "ListViewCell"
@@ -25,8 +26,11 @@ class HomeListTableViewCell: UITableViewCell {
             if model.readNumber != nil {
                 redNumberLabel.text = "\(model.readNumber!)"
             }
-            if model.imgdata != nil {
-                iconImageV.image = UIImage(data: model.imgdata!)
+            if model.imgUrl != nil {
+//                iconImageV.image = UIImage(data: model.imgdata!)
+//                iconImageV.kf.setImage(with: <#T##Source?#>, placeholder: <#T##Placeholder?#>, options: <#T##KingfisherOptionsInfo?#>, completionHandler: <#T##((Result<RetrieveImageResult, KingfisherError>) -> Void)?##((Result<RetrieveImageResult, KingfisherError>) -> Void)?##(Result<RetrieveImageResult, KingfisherError>) -> Void#>)
+
+                iconImageV.kf.setImage(with: URL(string: DownloadFileURL + model.imgUrl!),placeholder: UIImage(named: "home_icon_image"))
             } else {
                 iconImageV.image = UIImage(named: "home_icon_image")
             }

@@ -71,7 +71,8 @@ class MinePageViewController: BaseViewController {
 
     func getCurrentUserInfo() {
         SwiftMBHUD.showLoading()
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
+//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
+        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
         let url = QueryDataUrl + "\(token)/"
         DBQuery().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) { [weak self] (responseData) in
             guard let mySelf = self else {return}
@@ -93,21 +94,21 @@ class MinePageViewController: BaseViewController {
             let jsonStr = String(data: responeData, encoding: .utf8)
             if let blogModel = BaseBlogsModel.deserialize(from: jsonStr) {
                 if blogModel.result?.count ?? 0 > 0 {
-                    let filePath = documentTools() + "/USERICONPATH"
-                    if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
-                        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
-                        do{
-                            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
-                            for model in blogModel.result! {
-                                model.imgdata = imageData
-                                mySelf.contentView.logModelArr.append(model)
-                            }
-                        }catch{
-                            mySelf.contentView.logModelArr = blogModel.result!
-                        }
-                    } else {
-                        mySelf.contentView.logModelArr = blogModel.result!
-                    }
+//                    let filePath = documentTools() + "/USERICONPATH"
+//                    if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+//                        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
+//                        do{
+//                            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
+//                            for model in blogModel.result! {
+////                                model.imgdata = imageData
+//                                mySelf.contentView.logModelArr.append(model)
+//                            }
+//                        }catch{
+//                            mySelf.contentView.logModelArr = blogModel.result!
+//                        }
+//                    } else {
+//                    }
+                    mySelf.contentView.logModelArr = blogModel.result!
                 } else {
                     SwiftMBHUD.dismiss()
                     print("没有发布过博客")

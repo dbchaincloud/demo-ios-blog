@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "11ECCF6E-81A4-43C8-B997-20DB4B05E804"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "66EB616A-D6F3-428F-8FEC-C0AFF73A4801"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Library/Developer/Xcode/DerivedData/DBChainBlog-fnjyazntoiiphpabsayrmpzxfqoy/SourcePackages/checkouts/ios-client/Sources/DBChainKit/include/DBInsertData.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
+            landmarkName = "insertRowData(insertUrlStr:publikeyBase:signature:insertDataStatusBlock:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "246BE6E0-354F-4431-9E50-4E8E745DE528"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Library/Developer/Xcode/DerivedData/DBChainBlog-fnjyazntoiiphpabsayrmpzxfqoy/SourcePackages/checkouts/ios-client/Sources/DBChainKit/include/DBRequestCollection.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "getUserAccountNum(urlStr:DBUserModelCloure:failure:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

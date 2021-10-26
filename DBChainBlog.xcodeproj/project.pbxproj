@@ -36,6 +36,10 @@
 		811D4ECB268B4F03007DBF9F /* IQUIView+Hierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB4268B4F03007DBF9F /* IQUIView+Hierarchy.swift */; };
 		811D4ECC268B4F03007DBF9F /* IQNSArray+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */; };
 		811D4ECD268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */; };
+		8125D99B2727ACA700451426 /* Sm2Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D99A2727ACA700451426 /* Sm2Address.swift */; };
+		8125D9AD2727AF5000451426 /* Sm2Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D9AC2727AF5000451426 /* Sm2Token.swift */; };
+		8125D9B02727CD5500451426 /* Sm2InsertNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D9AF2727CD5500451426 /* Sm2InsertNetwork.swift */; };
+		8125D9B32727D36900451426 /* Sm2GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D9B22727D36900451426 /* Sm2GCDTimer.swift */; };
 		812C4BEA26846A5B00BC96B6 /* BlogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C4BE926846A5B00BC96B6 /* BlogModels.swift */; };
 		814CE4D126C790FA001C4D01 /* InsertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814CE4D026C790FA001C4D01 /* InsertRequest.swift */; };
 		8175C98326808B58008F4FC8 /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */; };
@@ -190,6 +194,10 @@
 		811D4EB4268B4F03007DBF9F /* IQUIView+Hierarchy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQUIView+Hierarchy.swift"; sourceTree = "<group>"; };
 		811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQNSArray+Sort.swift"; sourceTree = "<group>"; };
 		811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQKeyboardManager+UITextFieldViewNotification.swift"; sourceTree = "<group>"; };
+		8125D99A2727ACA700451426 /* Sm2Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sm2Address.swift; sourceTree = "<group>"; };
+		8125D9AC2727AF5000451426 /* Sm2Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sm2Token.swift; sourceTree = "<group>"; };
+		8125D9AF2727CD5500451426 /* Sm2InsertNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sm2InsertNetwork.swift; sourceTree = "<group>"; };
+		8125D9B22727D36900451426 /* Sm2GCDTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sm2GCDTimer.swift; sourceTree = "<group>"; };
 		812C4BE926846A5B00BC96B6 /* BlogModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogModels.swift; sourceTree = "<group>"; };
 		814CE4D026C790FA001C4D01 /* InsertRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertRequest.swift; sourceTree = "<group>"; };
 		8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
@@ -429,6 +437,17 @@
 			path = Categories;
 			sourceTree = "<group>";
 		};
+		8125D9902727AC4100451426 /* Sm2 */ = {
+			isa = PBXGroup;
+			children = (
+				8125D99A2727ACA700451426 /* Sm2Address.swift */,
+				8125D9AC2727AF5000451426 /* Sm2Token.swift */,
+				8125D9AF2727CD5500451426 /* Sm2InsertNetwork.swift */,
+				8125D9B22727D36900451426 /* Sm2GCDTimer.swift */,
+			);
+			path = Sm2;
+			sourceTree = "<group>";
+		};
 		8175C95C26808B4B008F4FC8 /* SnapKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -647,6 +666,7 @@
 		81E8879E26803BDC0068BB03 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				8125D9902727AC4100451426 /* Sm2 */,
 				811D4E9A268B4F03007DBF9F /* IQKeyboardManagerSwift */,
 				811947422683235E0043FBB4 /* OC */,
 				8119473526831B320043FBB4 /* Macro */,
@@ -712,7 +732,6 @@
 				472691485A1788D0E021A581 /* Pods-DBChainBlog.debug.xcconfig */,
 				F4D6D414697DA446F5073AB5 /* Pods-DBChainBlog.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -767,7 +786,7 @@
 			);
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
-				8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client.git" */,
+				8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */,
 			);
 			productRefGroup = 81E88783268039160068BB03 /* Products */;
 			projectDirPath = "";
@@ -861,9 +880,11 @@
 				8175CA0E26809745008F4FC8 /* JXSegmentedIndicatorRainbowLineView.swift in Sources */,
 				8175C9A626808B58008F4FC8 /* ConstraintLayoutSupportDSL.swift in Sources */,
 				817DF03226805CD700D65D0C /* MacroFont.swift in Sources */,
+				8125D9B32727D36900451426 /* Sm2GCDTimer.swift in Sources */,
 				8175CA3326809D9B008F4FC8 /* HomeListView.swift in Sources */,
 				8175CA0726809745008F4FC8 /* JXSegmentedBaseCell.swift in Sources */,
 				8175C98F26808B58008F4FC8 /* ConstraintInsetTarget.swift in Sources */,
+				8125D9AD2727AF5000451426 /* Sm2Token.swift in Sources */,
 				81EB64EF2681D27700FEF7C3 /* BlogDetailView.swift in Sources */,
 				811D4ECB268B4F03007DBF9F /* IQUIView+Hierarchy.swift in Sources */,
 				81EB64F32681D5C100FEF7C3 /* BlogDetailTableViewCell.swift in Sources */,
@@ -903,6 +924,7 @@
 				8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */,
 				81E88786268039160068BB03 /* AppDelegate.swift in Sources */,
 				8175CA2126809745008F4FC8 /* JXSegmentedTitleGradientCell.swift in Sources */,
+				8125D99B2727ACA700451426 /* Sm2Address.swift in Sources */,
 				8175CA1326809745008F4FC8 /* JXSegmentedIndicatorLineView.swift in Sources */,
 				8175CA0926809745008F4FC8 /* JXSegmentedView.swift in Sources */,
 				811D4EC5268B4F03007DBF9F /* IQKeyboardManager+Debug.swift in Sources */,
@@ -966,6 +988,7 @@
 				811D4EC0268B4F03007DBF9F /* IQKeyboardManagerConstantsInternal.swift in Sources */,
 				8175CA0F26809745008F4FC8 /* JXSegmentedIndicatorGradientLineView.swift in Sources */,
 				811D4EC7268B4F03007DBF9F /* IQKeyboardManager+Toolbar.swift in Sources */,
+				8125D9B02727CD5500451426 /* Sm2InsertNetwork.swift in Sources */,
 				8175C9A026808B58008F4FC8 /* Constraint.swift in Sources */,
 				81194746268329D40043FBB4 /* SwiftMBHUD.swift in Sources */,
 				8175C99A26808B58008F4FC8 /* ConstraintMakerEditable.swift in Sources */,
@@ -1195,7 +1218,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client.git" */ = {
+		8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:dbchaincloud/ios-client.git";
 			requirement = {
@@ -1208,7 +1231,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		8186E78C2726B9D400A57AB9 /* DBChainKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client.git" */;
+			package = 8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */;
 			productName = DBChainKit;
 		};
 /* End XCSwiftPackageProductDependency section */

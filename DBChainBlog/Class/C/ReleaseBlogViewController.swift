@@ -20,14 +20,15 @@ class ReleaseBlogViewController: BaseViewController {
 
         blogView.saveBlogBlock = { (titleStr: String, blogStr:String) in
             /// 插入到博客表
-            let insert = InsertRequest.init(tableName: DatabaseTableName.blogs.rawValue, insertDataUrl: InsertDataURL)
+//            let insert = InsertRequest.init(tableName: DatabaseTableName.blogs.rawValue, insertDataUrl: InsertDataURL)
+            let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.blogs.rawValue, insertDataUrl: InsertDataURL)
             let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
 
             DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
                 guard let mySelf = self else {return}
                 let fieldsDic = ["title":titleStr,"body":blogStr,"img":""]
 
-                insert.insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
+                insert.sm2_insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
                     print("插入数据的结果:\(stateStr)")
                     if stateStr == "1" {
                         SwiftMBHUD.showSuccess("发布成功")
@@ -40,7 +41,7 @@ class ReleaseBlogViewController: BaseViewController {
                     }
                 }
             } failure: { (code, message) in
-                print("获取用户信息失败")
+                print("获取用户信息失败 \(code)  \(message)")
                 SwiftMBHUD.dismiss()
             }
         }

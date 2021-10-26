@@ -24,13 +24,13 @@ class LoginViewController: BaseViewController {
         }
 
         loginView.signOutBlock = {
-            let filePath = documentTools() + "/USERICONPATH"
-            /// 创建文件并保存
-            if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
-                /// 该文件已存在
-                // 删除
-                let _ = FileTools.sharedInstance.deleteFile(fileName: USERICONPATH, path: filePath)
-            }
+//            let filePath = documentTools() + "/USERICONPATH"
+//            /// 创建文件并保存
+//            if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+//                /// 该文件已存在
+//                // 删除
+//                let _ = FileTools.sharedInstance.deleteFile(fileName: USERICONPATH, path: filePath)
+//            }
             UserDefault.removeUserData()
 
             let vc = CreateMnemonicController()

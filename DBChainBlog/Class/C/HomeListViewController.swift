@@ -51,13 +51,17 @@ class HomeListViewController: BaseViewController {
 
         SwiftMBHUD.showLoading()
         self.modelArr.removeAll()
-        guard UserDefault.getPrivateKeyUintArr() != nil,UserDefault.getPublickey() != nil else {
+        guard UserDefault.getPrivateKey() != nil,UserDefault.getPublickey() != nil else {
             return
         }
-        print(":私钥:\(UserDefault.getPrivateKeyUintArr())")
-        print(":公钥:\(UserDefault.getPublickey())")
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+        print(":私钥:\(UserDefault.getPrivateKey()!)")
+        print(":公钥:\(UserDefault.getPublickey()!)")
+
+//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+
+        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
         let url = QueryDataUrl + "\(token)/"
+
         DBQuery().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) {[weak self] (status) in
             guard let mySelf = self else {return}
 
@@ -74,7 +78,10 @@ class HomeListViewController: BaseViewController {
                             model.readNumber = mySelf.randomIn(min: 100, max: 1000)
 
                             /// Token 时效原因, 数据过多时会导致后面数据获取失败,  Token 需要重新生成
-                            let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+//                            let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+
+                            let userToken = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
+
                             let UserUrl = QueryDataUrl + "\(userToken)/"
 
                             /// 查询头像
@@ -86,48 +93,9 @@ class HomeListViewController: BaseViewController {
                                         /// 下载头像
                                         let userLastModel = umodel.result?.last
                                         model.name = userLastModel!.name
-                                        if !userLastModel!.photo.isBlank {
-                                            let dicPath = documentTools() + "/\(userLastModel!.photo)"
-                                            if FileTools.sharedInstance.isFileExisted(fileName: userLastModel!.photo, path: dicPath) == true {
-                                                /// 该文件已存在
-                                                let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: dicPath)
-                                                let imageData = try! Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
-                                                model.imgdata = imageData
-                                                tempBlogArr.append(model)
-                                                signal.signal()
-                                            } else {
-                                                /// 下载图片
-                                                let imageURL = DownloadFileURL + userLastModel!.photo
-
-                                                DBRequest.GET(url: imageURL, params: nil) { (imageJsonData) in
-                                                    /// 创建目录 文件夹 缓存数据
-                                                    let isSuccess = FileTools.sharedInstance.createDirectory(path:dicPath)
-                                                    /// 创建文件并保存
-                                                    if isSuccess {
-                                                        let saveFileStatus = FileTools.sharedInstance.createFile(fileName: userLastModel!.photo, path: dicPath, contents: imageJsonData, attributes: nil)
-                                                        if saveFileStatus == true {
-                                                            /// 该文件已存在
-                                                            let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: dicPath)
-                                                            print("保存成功!!!! \(fileDic[0])")
-
-                                                        } else {
-                                                            print("保存失败!!!! \(String(describing: userLastModel?.name))")
-                                                        }
-                                                    }
-                                                    model.imgdata = imageJsonData
-                                                    tempBlogArr.append(model)
-                                                    print("下载头像成功的下标:\(index) 下载头像的用户昵称: \(userLastModel!.name)")
-                                                    signal.signal()
-                                                } failure: { (code, message) in
-                                                    tempBlogArr.append(model)
-                                                    signal.signal()
-                                                }
-                                            }
-                                        } else {
-                                            print("没有头像的下标: \(index)")
-                                            tempBlogArr.append(model)
-                                            signal.signal()
-                                        }
+                                        model.imgUrl = userLastModel?.photo
+                                        tempBlogArr.append(model)
+                                        signal.signal()
                                     } else {
                                         print("没有查询到用户信息的下标: \(index) -- 博客标题: \(model.name)")
                                         tempBlogArr.append(model)

@@ -41,14 +41,15 @@ class BlogDetailViewController: BaseViewController {
     /// 发布评论
     func replyTitle(withTitle titleStr: String,withReplyId replyid:String) {
         /// 发布评论
-        let insert = InsertRequest.init(tableName: DatabaseTableName.discuss.rawValue, insertDataUrl: InsertDataURL)
+//        let insert = InsertRequest.init(tableName: DatabaseTableName.discuss.rawValue, insertDataUrl: InsertDataURL)
+        let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.discuss.rawValue, insertDataUrl: InsertDataURL)
         let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
         SwiftMBHUD.showLoading()
         DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
             guard let mySelf = self else {return}
             let fieldsDic = ["blog_id":mySelf.logModel.id,"discuss_id":replyid,"text":titleStr]
 
-            insert.insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
+            insert.sm2_insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
                 if stateStr == "1" {
                     SwiftMBHUD.showSuccess("发布成功")
                     mySelf.contentView.replyTextField.text = nil
@@ -67,7 +68,8 @@ class BlogDetailViewController: BaseViewController {
     func getCurrentBlogCommentList() {
         SwiftMBHUD.showLoading()
         self.discussModelArr.removeAll()
-        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
+        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
         let url = QueryDataUrl + "\(token)/"
         /// 临时保存回复数据
         var tempReplyArr :[discussModel] = []

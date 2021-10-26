@@ -1,16 +1,28 @@
 PODS:
+  - DBChainSm2 (2.0.2):
+    - GMOpenSSL
+  - GMOpenSSL (2.2.6)
   - HandyJSON (5.0.2)
+  - Kingfisher (6.3.1)
 
 DEPENDENCIES:
+  - DBChainSm2
   - HandyJSON (~> 5.0.2)
+  - Kingfisher
 
 SPEC REPOS:
   trunk:
+    - DBChainSm2
+    - GMOpenSSL
     - HandyJSON
+    - Kingfisher
 
 SPEC CHECKSUMS:
+  DBChainSm2: 947cd1de9e33cb250a5e1b81284ad2a1dcd04e98
+  GMOpenSSL: 9a58d4bbae233579275605fb65f7d92fb01f3c06
   HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
+  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
 
-PODFILE CHECKSUM: 09f1996216207b6e1c5c8a4792642084d4e7ec4d
+PODFILE CHECKSUM: 42fdad360e5460547f088cd455cbd59c6c2db1f7
 
 COCOAPODS: 1.11.2
