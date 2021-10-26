@@ -41,7 +41,6 @@ class BaseNavigationController:  UINavigationController,UINavigationControllerDe
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-
     }
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {

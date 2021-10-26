@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4805E14AF12B670CC84BB26A /* Pods_DBChainBlog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A937C580505B946DE8E9F9 /* Pods_DBChainBlog.framework */; };
 		8119473726831B5A0043FBB4 /* URLMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473626831B5A0043FBB4 /* URLMacro.swift */; };
 		8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473A268320A60043FBB4 /* TableNameMacro.swift */; };
 		81194740268323420043FBB4 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8119473E268323420043FBB4 /* MBProgressHUD.m */; };
@@ -155,6 +156,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		472691485A1788D0E021A581 /* Pods-DBChainBlog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBChainBlog.debug.xcconfig"; path = "Target Support Files/Pods-DBChainBlog/Pods-DBChainBlog.debug.xcconfig"; sourceTree = "<group>"; };
 		8119473626831B5A0043FBB4 /* URLMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLMacro.swift; sourceTree = "<group>"; };
 		8119473A268320A60043FBB4 /* TableNameMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableNameMacro.swift; sourceTree = "<group>"; };
 		8119473D268323410043FBB4 /* DBChainBlog-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DBChainBlog-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 		81EB64F22681D5C100FEF7C3 /* BlogDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BlogDetailTableViewCell.xib; sourceTree = "<group>"; };
 		81EB64F62681F34E00FEF7C3 /* UtilsFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsFrame.swift; sourceTree = "<group>"; };
 		88A937C580505B946DE8E9F9 /* Pods_DBChainBlog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DBChainBlog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4D6D414697DA446F5073AB5 /* Pods-DBChainBlog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBChainBlog.release.xcconfig"; path = "Target Support Files/Pods-DBChainBlog/Pods-DBChainBlog.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -315,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8186E78D2726B9D400A57AB9 /* DBChainKit in Frameworks */,
+				4805E14AF12B670CC84BB26A /* Pods_DBChainBlog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,6 +617,7 @@
 				81E88784268039160068BB03 /* DBChainBlog */,
 				81E88783268039160068BB03 /* Products */,
 				1B22E94EE378706488A50919 /* Frameworks */,
+				D61F6BF364FBB6827A725C5F /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -701,6 +706,16 @@
 			path = V;
 			sourceTree = "<group>";
 		};
+		D61F6BF364FBB6827A725C5F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				472691485A1788D0E021A581 /* Pods-DBChainBlog.debug.xcconfig */,
+				F4D6D414697DA446F5073AB5 /* Pods-DBChainBlog.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -708,9 +723,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 81E88796268039180068BB03 /* Build configuration list for PBXNativeTarget "DBChainBlog" */;
 			buildPhases = (
+				F21A3110369940142B15C320 /* [CP] Check Pods Manifest.lock */,
 				81E8877E268039160068BB03 /* Sources */,
 				81E8877F268039160068BB03 /* Frameworks */,
 				81E88780268039160068BB03 /* Resources */,
+				5B9E583F416A56440F6D93D2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -750,7 +767,7 @@
 			);
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
-				8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */,
+				8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client.git" */,
 			);
 			productRefGroup = 81E88783268039160068BB03 /* Products */;
 			projectDirPath = "";
@@ -775,6 +792,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5B9E583F416A56440F6D93D2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DBChainBlog/Pods-DBChainBlog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DBChainBlog/Pods-DBChainBlog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DBChainBlog/Pods-DBChainBlog-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F21A3110369940142B15C320 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DBChainBlog-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		81E8877E268039160068BB03 /* Sources */ = {
@@ -1067,6 +1126,7 @@
 		};
 		81E88797268039180068BB03 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 472691485A1788D0E021A581 /* Pods-DBChainBlog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1090,6 +1150,7 @@
 		};
 		81E88798268039180068BB03 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F4D6D414697DA446F5073AB5 /* Pods-DBChainBlog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1134,7 +1195,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */ = {
+		8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:dbchaincloud/ios-client.git";
 			requirement = {
@@ -1147,7 +1208,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		8186E78C2726B9D400A57AB9 /* DBChainKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */;
+			package = 8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client.git" */;
 			productName = DBChainKit;
 		};
 /* End XCSwiftPackageProductDependency section */
