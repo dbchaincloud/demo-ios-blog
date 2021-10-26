@@ -6,26 +6,17 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
         "state": {
           "branch": null,
-          "revision": "f96b619bcb2383b43d898402283924b80e2c4bae",
-          "version": "5.4.3"
+          "revision": "d120af1e8638c7da36c8481fd61a66c0c08dc4fc",
+          "version": "5.4.4"
         }
       },
       {
         "package": "CryptoSwift",
         "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
         "state": {
-          "branch": "master",
-          "revision": "13af4db1aa39e9c7054df442e1ca6227a1aa3927",
-          "version": null
-        }
-      },
-      {
-        "package": "HandyJSON",
-        "repositoryURL": "https://gitee.com/yangtingAnAn/HandyJSON.git",
-        "state": {
           "branch": null,
-          "revision": "dcf39cf062680ffa4fd0acb7f9117a97755c113f",
-          "version": "5.0.2"
+          "revision": "4b0565384d3c4c588af09e660535b2c7c9bf5b39",
+          "version": "1.4.2"
         }
       },
       {
@@ -33,7 +24,7 @@
         "repositoryURL": "git@github.com:dbchaincloud/ios-client.git",
         "state": {
           "branch": "main",
-          "revision": "da931809fd2385282b4f8bb6699dd31645f68df0",
+          "revision": "01e770ad03196b1f2962d8d0dd89e872211a6391",
           "version": null
         }
       },

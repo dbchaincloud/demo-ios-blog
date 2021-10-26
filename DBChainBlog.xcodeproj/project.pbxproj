@@ -36,9 +36,7 @@
 		811D4ECC268B4F03007DBF9F /* IQNSArray+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */; };
 		811D4ECD268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */; };
 		812C4BEA26846A5B00BC96B6 /* BlogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C4BE926846A5B00BC96B6 /* BlogModels.swift */; };
-		814CE4CE26C78EF7001C4D01 /* DBChainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 814CE4CD26C78EF7001C4D01 /* DBChainKit */; };
 		814CE4D126C790FA001C4D01 /* InsertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814CE4D026C790FA001C4D01 /* InsertRequest.swift */; };
-		8161EC2526AA9B2700F5D24D /* HandyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 8161EC2426AA9B2700F5D24D /* HandyJSON */; };
 		8175C98326808B58008F4FC8 /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */; };
 		8175C98426808B58008F4FC8 /* LayoutConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95F26808B58008F4FC8 /* LayoutConstraintItem.swift */; };
 		8175C98526808B58008F4FC8 /* ConstraintMakerPrioritizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C96026808B58008F4FC8 /* ConstraintMakerPrioritizable.swift */; };
@@ -132,6 +130,7 @@
 		817DF03826806CFC00D65D0C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03726806CFC00D65D0C /* HomeViewController.swift */; };
 		817DF03B26806DF100D65D0C /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03A26806DF100D65D0C /* UserDefault.swift */; };
 		817DF03E2680748200D65D0C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817DF03D2680748200D65D0C /* HomeView.swift */; };
+		8186E78D2726B9D400A57AB9 /* DBChainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8186E78C2726B9D400A57AB9 /* DBChainKit */; };
 		81E88786268039160068BB03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88785268039160068BB03 /* AppDelegate.swift */; };
 		81E88788268039160068BB03 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88787268039160068BB03 /* SceneDelegate.swift */; };
 		81E8878A268039160068BB03 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E88789268039160068BB03 /* ViewController.swift */; };
@@ -315,8 +314,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8161EC2526AA9B2700F5D24D /* HandyJSON in Frameworks */,
-				814CE4CE26C78EF7001C4D01 /* DBChainKit in Frameworks */,
+				8186E78D2726B9D400A57AB9 /* DBChainKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -720,8 +718,7 @@
 			);
 			name = DBChainBlog;
 			packageProductDependencies = (
-				8161EC2426AA9B2700F5D24D /* HandyJSON */,
-				814CE4CD26C78EF7001C4D01 /* DBChainKit */,
+				8186E78C2726B9D400A57AB9 /* DBChainKit */,
 			);
 			productName = DBChainBlog;
 			productReference = 81E88782268039160068BB03 /* DBChainBlog.app */;
@@ -753,8 +750,7 @@
 			);
 			mainGroup = 81E88779268039160068BB03;
 			packageReferences = (
-				8161EC2326AA9B2700F5D24D /* XCRemoteSwiftPackageReference "HandyJSON" */,
-				814CE4CC26C78EF7001C4D01 /* XCRemoteSwiftPackageReference "ios-client" */,
+				8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */,
 			);
 			productRefGroup = 81E88783268039160068BB03 /* Products */;
 			projectDirPath = "";
@@ -1138,7 +1134,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		814CE4CC26C78EF7001C4D01 /* XCRemoteSwiftPackageReference "ios-client" */ = {
+		8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:dbchaincloud/ios-client.git";
 			requirement = {
@@ -1146,26 +1142,13 @@
 				kind = branch;
 			};
 		};
-		8161EC2326AA9B2700F5D24D /* XCRemoteSwiftPackageReference "HandyJSON" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://gitee.com/yangtingAnAn/HandyJSON.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		814CE4CD26C78EF7001C4D01 /* DBChainKit */ = {
+		8186E78C2726B9D400A57AB9 /* DBChainKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 814CE4CC26C78EF7001C4D01 /* XCRemoteSwiftPackageReference "ios-client" */;
+			package = 8186E78B2726B9D400A57AB9 /* XCRemoteSwiftPackageReference "ios-client" */;
 			productName = DBChainKit;
-		};
-		8161EC2426AA9B2700F5D24D /* HandyJSON */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8161EC2326AA9B2700F5D24D /* XCRemoteSwiftPackageReference "HandyJSON" */;
-			productName = HandyJSON;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

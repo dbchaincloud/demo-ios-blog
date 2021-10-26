@@ -51,6 +51,11 @@ class HomeListViewController: BaseViewController {
 
         SwiftMBHUD.showLoading()
         self.modelArr.removeAll()
+        guard UserDefault.getPrivateKeyUintArr() != nil,UserDefault.getPublickey() != nil else {
+            return
+        }
+        print(":私钥:\(UserDefault.getPrivateKeyUintArr())")
+        print(":公钥:\(UserDefault.getPublickey())")
         let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
         let url = QueryDataUrl + "\(token)/"
         DBQuery().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) {[weak self] (status) in
