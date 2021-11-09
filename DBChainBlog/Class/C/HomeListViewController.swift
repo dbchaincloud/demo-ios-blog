@@ -107,7 +107,6 @@ class HomeListViewController: BaseViewController {
                                 }
 
                                 if index == bmodel.result!.count - 1 {
-                                    print("头像全部下载完毕!!!!!!!!!")
                                     mySelf.modelArr = tempBlogArr.reversed()
                                     SwiftMBHUD.dismiss()
                                 }

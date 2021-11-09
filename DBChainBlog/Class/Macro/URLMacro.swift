@@ -12,7 +12,6 @@ import Foundation
 
 let BASEURL : String = "https://controlpanel.dbchain.cloud/relay/"
 var Chainid : String = "testnet"
-//var APPCODE : String = "4HQJA8CUUF"
 var APPCODE : String = "5APTSCPSF7"
 
 /// 获取用户信息

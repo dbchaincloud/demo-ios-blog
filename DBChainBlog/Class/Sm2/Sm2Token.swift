@@ -29,24 +29,13 @@ public struct Sm2Token {
     /// - Returns: 成功则 返回Token. 错误返回空
     public func createAccessToken(privateKey:String,PublikeyData:Data) -> String {
         let millisecond = self.milliStamp
-        let secondUint = [UInt8](millisecond.utf8)
-//        do{
-//            let signMilliSecond = try signSawtoothSigning(data: secondUint, privateKey: privateKey)
+        // sm2 签名
+        let plainHex = DBChainGMUtils.string(toHex: self.milliStamp)
+        let userHex = DBChainGMUtils.string(toHex: sm2UserID)
+        let signMilliSecond = DBChainGMSm2Utils.signHex(plainHex!, privateKey: privateKey, userHex: userHex)
 
-            // sm2 签名
-            let plainHex = DBChainGMUtils.string(toHex: self.milliStamp)
-            let userHex = DBChainGMUtils.string(toHex: sm2UserID)
-            let signMilliSecond = DBChainGMSm2Utils.signHex(plainHex!, privateKey: privateKey, userHex: userHex)
-
-            let timeBase58 = Base58.encode(signMilliSecond!.hexaData)
-            print("Token: --- SignHexData: \(signMilliSecond!.hexaData) \nStringData:\(Data(hex: signMilliSecond!))")
-
-            let publicKeyBase58 = Base58.encode(PublikeyData)
-
-            return "\(publicKeyBase58):" + "\(millisecond):" + "\(timeBase58)"
-
-//        } catch {
-//            return ""
-//        }
+        let timeBase58 = Base58.encode(signMilliSecond!.hexaData)
+        let publicKeyBase58 = Base58.encode(PublikeyData)
+        return "\(publicKeyBase58):" + "\(millisecond):" + "\(timeBase58)"
     }
 }

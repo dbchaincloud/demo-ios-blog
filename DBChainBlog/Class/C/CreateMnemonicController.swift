@@ -48,49 +48,52 @@ class CreateMnemonicController: BaseViewController {
 //            let tempStr = mnemonicArr.joined(separator: ",")
 //            let tempMnemoicStr = tempStr.replacingOccurrences(of: ",", with: " ")
 
-            
             let lowMnemoicStr = self.mnemonicStr.lowercased()
+            let lowMnemoicStr = mnemonic.lowercased()
             let seedBip39 = Mnemonic.createSeed(mnemonic: lowMnemoicStr)
             let privateKey = PrivateKey(seed: seedBip39, coin: .bitcoin)
+
+            // 派生
+            let purpose = privateKey.derived(at: .hardened(44))
+            let coinType = purpose.derived(at: .hardened(118))
+            let account = coinType.derived(at: .hardened(0))
+            let change = account.derived(at: .notHardened(0))
+            let firstPrivateKey = change.derived(at: .notHardened(0))
+
             // 生成 Sm2 公钥
-            let publicKey = DBChainGMSm2Utils.adoptPrivatekeyGetPublicKey(privateKey.raw.toHexString(), isCompress: true)
+            let publicKey = DBChainGMSm2Utils.adoptPrivatekeyGetPublicKey(firstPrivateKey.raw.toHexString(), isCompress: true)
             // 生成 dbchain 地址
             let sm2Publick = DBChainGMUtils.hex(toData: publicKey)
             let sm2Pub = publicKey.hexaData
             let address = Sm2Address().sm2GetPubToDpAddress(publicKey.hexaData, .DBCHAIN_MAIN)
 
-            print("sm2Hex: \(sm2Publick), \nhex: \(sm2Pub), \naddress:\(address)")
+            print("私钥:\(firstPrivateKey.raw.toHexString())")
+            print("公钥:\(publicKey)")
+            print("地址:\(address)")
 
             if address.count > 0, publicKey.count > 0 {
-                let token = Sm2Token().createAccessToken(privateKey: privateKey.raw.toHexString(), PublikeyData: sm2Publick!)
-                print("VVVV: token: \(token)")
+                let token = Sm2Token().createAccessToken(privateKey: firstPrivateKey.raw.toHexString(), PublikeyData: sm2Publick!)
+
                 let url = GetIntegralUrl + token
 
                 DBRequest.GET(url: url, params: nil) { [weak self] (responeData) in
                     guard let mySelf = self else {return}
                     let jsonStr = String(data: responeData, encoding: .utf8)
-                    print("首次进入获取用户信息: \(jsonStr)")
                     if String().isjsonStyle(txt: jsonStr!) {
                         let dic : [String : Any] = (jsonStr?.toDictionary())!
+                        guard !dic.keys.contains("error") else {
+                            print(dic)
+                            SwiftMBHUD.showError("请求错误")
+                            return
+                        }
                         if dic["result"] as! String == "success" {
                             UserDefault.saveUserNikeName(mySelf.contentView.nameTextField.text!)
                             UserDefault.saveAddress(address)
                             UserDefault.savePublickey(publicKey)
-                            UserDefault.savePrivateKey(privateKey.raw.toHexString())
+                            UserDefault.savePrivateKey(firstPrivateKey.raw.toHexString())
 //                            UserDefault.savePrivateKeyUintArr(manager.privateKeyUint)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                 /// 更新个人信息
-//                                let publicBase = manager.publicKeyString.hexaData.base64EncodedString()
-//                                let insert = InsertDara.init(appcode: APPCODE,
-//                                                             publikeyBase64Str: publicBase,
-//                                                             address: manager.address,
-//                                                             tableName: DatabaseTableName.user.rawValue,
-//                                                             chainid: Chainid,
-//                                                             privateKeyDataUint: manager.privateKeyUint,
-//                                                             baseUrl: BASEURL,
-//                                                             publicKey: manager.publicKeyString,
-//                                                             insertDataUrl: InsertDataURL)
-
 //                                let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
 
                                 let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
@@ -108,7 +111,6 @@ class CreateMnemonicController: BaseViewController {
                                                      "motto":""] as [String : Any]
 
                                     insert.sm2_insertRowSortedSignDic(model: userModel, fields: fieldsDic) { (stateStr) in
-                                        print("登录成功!!!!!!!! ")
                                         if stateStr == "1" {
                                             SwiftMBHUD.dismiss()
                                             let vc = HomeViewController()

@@ -11,9 +11,6 @@ import Alamofire
 import DBChainSm2
 
 class Sm2InsertNetwork: NSObject {
-
-//    static let shared = Sm2InsertNetwork()
-
     public var appcode :String
     public var publikeyBase64Str :String
     public var address :String
@@ -75,32 +72,27 @@ class Sm2InsertNetwork: NSObject {
         let str = signDiv.dicValueString(signDiv)
         var replacStr = str!.replacingOccurrences(of: "dbchain\\/InsertRow", with: "dbchain/InsertRow")
         replacStr = replacStr.replacingOccurrences(of: "\\/", with: "/")
+        /// sm2 签名
+        let plainHex = DBChainGMUtils.string(toHex: replacStr)
+        let userHex = DBChainGMUtils.string(toHex: sm2UserID)
+        let signStr = DBChainGMSm2Utils.signHex(plainHex!, privateKey: privateKey, userHex: userHex)
 
-            /// sm2 签名
-            let plainHex = DBChainGMUtils.string(toHex: replacStr)
-            let userHex = DBChainGMUtils.string(toHex: sm2UserID)
-            let signStr = DBChainGMSm2Utils.signHex(plainHex!, privateKey: privateKey, userHex: userHex)
+        print("私钥:\(privateKey)")
+        print("公钥:\(publicKey)")
+        print("原文:\(replacStr)")
+        print("哈希原文:\(plainHex!)")
+        print("签名:\(signStr!)")
 
-            print("私钥:\(privateKey)")
-            print("公钥:\(publicKey)")
-            print("原文:\(replacStr)")
-            print("哈希原文:\(plainHex!)")
-            print("签名:\(signStr!)")
+        let signBase = signStr!.hexaData.base64EncodedString()
+        print("签名 Base64: \(signBase)")
 
-//            let signData = DBChainGMUtils.hex(toData: signStr!)
+        let ver = DBChainGMSm2Utils.verifyHex(plainHex!, signRS: signStr!, publicKey: publicKey, userHex: userHex)
+        print("验证签名结果: \(ver)")
 
-            let signBase = signStr!.hexaData.base64EncodedString()
-            print("签名 Base64: \(signBase)")
-
-            let ver = DBChainGMSm2Utils.verifyHex(plainHex!, signRS: signStr!, publicKey: publicKey, userHex: userHex)
-            print("验证签名结果: \(ver)")
-
-            sm2_insertRowData(insertUrlStr: insertDataUrl, publikeyBase: publikeyBase64Str, signature: signBase) { (status) in
-                insertStatusBlock(status)
-            }
+        sm2_insertRowData(insertUrlStr: insertDataUrl, publikeyBase: publikeyBase64Str, signature: signBase) { (status) in
+            insertStatusBlock(status)
+        }
      }
-
-
 
     /// 最终提交数据
     /// - Parameters:
@@ -119,31 +111,14 @@ class Sm2InsertNetwork: NSObject {
 
 //        let sign = signature.base64EncodedString()
 
-        let signDivSorted = ["key":["type":"tendermint/PubKeySm2",
-                                    "value":publikeyBase]]
+        let sortedDic = sortedDictionary(publickBaseStr: publikeyBase, signature: signature)
 
-        let typeSignDiv = sortedDictionarybyLowercaseString(dic: signDivSorted)
-
-        let signDic = ["key":["pub_key":typeSignDiv[0],
-                              "signature":signature]]
-
-        let signDiv = sortedDictionarybyLowercaseString(dic: signDic)
-
-        let tx = ["key":["memo":"",
-                         "fee":fee,
-                         "msg":msgArr,
-                         "signatures":[signDiv[0]]]]
-
-        let sortTX = sortedDictionarybyLowercaseString(dic: tx)
-
-        let dataSort = sortedDictionarybyLowercaseString(dic: ["key": ["mode":"async","tx":sortTX[0]]])
-        
         let isTimerExistence = Sm2GCDTimer.shared.isExistTimer(WithTimerName: "VerificationHash")
 
-        print("交易数据: \(dataSort[0])")
+        print("交易数据: \(sortedDic)")
 
-        DBRequest.POST(url: insertUrlStr, params:( dataSort[0] )) { [self] (json) in
-
+        DBRequest.POST(url: insertUrlStr, params:( sortedDic )) { [self] (json) in
+//            print(String(data: json, encoding: .utf8))
              let decoder = JSONDecoder()
              let insertModel = try? decoder.decode(DBInsertModel.self, from: json)
              guard let model = insertModel else {
@@ -196,6 +171,29 @@ class Sm2InsertNetwork: NSObject {
         }
      }
 
+    func sortedDictionary(publickBaseStr: String,signature:String) -> [String:Any] {
+        let signDivSorted = ["key":["type":"tendermint/PubKeySm2",
+                                    "value":publickBaseStr]]
+
+        let typeSignDiv = sortedDictionarybyLowercaseString(dic: signDivSorted)
+
+        let signDic = ["key":["pub_key":typeSignDiv[0],
+                              "signature":signature]]
+
+        let signDiv = sortedDictionarybyLowercaseString(dic: signDic)
+
+        let tx = ["key":["memo":"",
+                         "fee":fee,
+                         "msg":msgArr,
+                         "signatures":[signDiv[0]]]]
+
+        let sortTX = sortedDictionarybyLowercaseString(dic: tx)
+
+        let dataSort = sortedDictionarybyLowercaseString(dic: ["key": ["mode":"async","tx":sortTX[0]]])
+
+        return dataSort[0]
+    }
+
     /// 字典排序
     public func sortedDictionarybyLowercaseString(dic:Dictionary<String, Any>) -> [[String:Any]] {
         let allkeyArray  = dic.keys
@@ -217,33 +215,32 @@ class Sm2InsertNetwork: NSObject {
     ///   - hash: 插入数据时返回的hash值
     /// - Returns: 不为空则是成功
     public func verificationHash(url:String,verifiSuccessBlock:@escaping(_ status: String) -> Void){
+        DBRequest.GET(url: url, params: nil) { [weak self] (data) in
+            guard let mySelf = self else {return}
+            let json = mySelf.dataToJSON(data: data as NSData)
+            print("验证结果: \(json)")
+            if json.keys.count > 0 {
+                /// 状态:  0: 错误 已经失败  1:  成功  2: 等待
+                if json["error"] != nil {
+                    verifiSuccessBlock("0")
+                } else {
+                    let result = json["result"] as? [String:Any]
+                    let status = result?["state"]
+                    if status as! String == "pending" {
+                        verifiSuccessBlock("2")
+                    } else if status as! String == "success" {
+                        verifiSuccessBlock("1")
+                    } else {
+                        verifiSuccessBlock("0")
+                    }
+                }
+            } else {
+                verifiSuccessBlock("0")
+            }
 
-       DBRequest.GET(url: url, params: nil) { [weak self] (data) in
-         guard let mySelf = self else {return}
-        let json = mySelf.dataToJSON(data: data as NSData)
-        print("验证结果: \(json)")
-        if json.keys.count > 0 {
-           /// 状态:  0: 错误 已经失败  1:  成功  2: 等待
-           if json["error"] != nil {
-               verifiSuccessBlock("0")
-           } else {
-            let result = json["result"] as? [String:Any]
-               let status = result?["state"]
-               if status as! String == "pending" {
-                   verifiSuccessBlock("2")
-               } else if status as! String == "success" {
-                   verifiSuccessBlock("1")
-               } else {
-                   verifiSuccessBlock("0")
-               }
-           }
-        } else {
+        } failure: { (code, message) in
             verifiSuccessBlock("0")
         }
-
-      } failure: { (code, message) in
-           verifiSuccessBlock("0")
-      }
     }
 
     public func dataToJSON(data:NSData) ->[String : Any] {
