@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import DBChainKit
+import GMChainSm2
 
 class MinePageViewController: BaseViewController {
 
@@ -54,10 +54,10 @@ class MinePageViewController: BaseViewController {
         let filePath = documentTools() + "/USERICONPATH"
         if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true  {
             let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
-            do{
+            do {
                 let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
                 contentView.iconImg = UIImage(data: imageData)!
-            }catch{
+            } catch {
                 contentView.iconImg = UIImage(named: "home_icon_image")!
             }
         }
@@ -71,43 +71,29 @@ class MinePageViewController: BaseViewController {
 
     func getCurrentUserInfo() {
         SwiftMBHUD.showLoading()
-//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
-        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
-        let url = QueryDataUrl + "\(token)/"
-        DBQuery().queryOneData(urlStr: url, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) { [weak self] (responseData) in
+        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
+        IPAProvider.request(NetworkAPI.queryOneData(token: token, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldDic: ["created_by":UserDefault.getAddress()!])) { [weak self] (result) in
             guard let mySelf = self else {return}
-            let jsonStr = String(data: responseData, encoding: .utf8)
+            guard case .success(let response) = result else {SwiftMBHUD.dismiss(); return}
+            let jsonStr = String(data: response.data, encoding: .utf8)
             if let userModel = BaseUserModel.deserialize(from: jsonStr) {
                 if userModel.result?.count ?? 0 > 0  {
                     mySelf.infoModel = userModel.result!.last!
                 }
             }
-
-            mySelf.getCurrentBlogText(urlStr: url)
+            mySelf.getCurrentBlogText()
         }
     }
 
-    func getCurrentBlogText(urlStr: String) {
-        DBQuery().queryOneData(urlStr: urlStr, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE, fieldToValueDic: ["created_by":UserDefault.getAddress()!]) {[weak self] (responeData) in
+    func getCurrentBlogText() {
+        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
+        IPAProvider.request(NetworkAPI.queryOneData(token: token, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE, fieldDic: ["created_by":UserDefault.getAddress()!])) { [weak self] (result) in
             guard let mySelf = self else {return}
+            guard case .success(let response) = result else {SwiftMBHUD.dismiss(); return}
             SwiftMBHUD.dismiss()
-            let jsonStr = String(data: responeData, encoding: .utf8)
+            let jsonStr = String(data: response.data, encoding: .utf8)
             if let blogModel = BaseBlogsModel.deserialize(from: jsonStr) {
                 if blogModel.result?.count ?? 0 > 0 {
-//                    let filePath = documentTools() + "/USERICONPATH"
-//                    if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
-//                        let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: filePath)
-//                        do{
-//                            let imageData = try Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
-//                            for model in blogModel.result! {
-////                                model.imgdata = imageData
-//                                mySelf.contentView.logModelArr.append(model)
-//                            }
-//                        }catch{
-//                            mySelf.contentView.logModelArr = blogModel.result!
-//                        }
-//                    } else {
-//                    }
                     mySelf.contentView.logModelArr = blogModel.result!
                 } else {
                     SwiftMBHUD.dismiss()

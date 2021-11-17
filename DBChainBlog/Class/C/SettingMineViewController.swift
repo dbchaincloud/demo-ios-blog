@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import DBChainKit
+import GMChainSm2
 import Alamofire
 
 class SettingMineViewController: BaseViewController {
@@ -54,7 +54,8 @@ class SettingMineViewController: BaseViewController {
             if mySelf.selectUploadImage.pngData() != nil {
                 /// 上传头像
                 mySelf.uploadUserIconGetResultString(imageName: nameStr) { (result) in
-                    if !result.isBlank {
+
+                    if !result.isEmpty {
                         mySelf.uploadUserInfoEvent(result, nameStr, sex, age, mottoStr)
                     } else {
                         SwiftMBHUD.showError("头像上传失败,请重试")
@@ -68,7 +69,7 @@ class SettingMineViewController: BaseViewController {
                     mySelf.navigationController?.popViewController(animated: true)
                 } else {
                     /// 数据有修改
-                    if mySelf.userInfoModel.photo.isBlank {
+                    if mySelf.userInfoModel.photo.isEmpty {
                         mySelf.uploadUserInfoEvent("", nameStr, sex, age, mottoStr)
                     } else {
                         mySelf.uploadUserInfoEvent(mySelf.userInfoModel.photo,nameStr, sex, age, mottoStr)
@@ -80,70 +81,75 @@ class SettingMineViewController: BaseViewController {
 
     func uploadUserInfoEvent(_ resultCid:String,_ nameStr:String,_ sex:String,_ age:String,_ mottoStr:String) {
         /// 插入user表
-//        let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
-        let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
-        let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
-        DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { [weak self] (umodel) in
+        IPAProvider.request(NetworkAPI.getUserModelUrl(address: UserDefault.getAddress()!)) { [weak self] (result) in
             guard let mySelf = self else {return}
-            let dic = ["name":nameStr,
-                       "age":age,
-                       "dbchain_key":UserDefault.getAddress()!,
-                       "sex":sex,
-                       "status":"",
-                       "photo":resultCid,
-                       "motto":mottoStr]
-            insert.sm2_insertRowSortedSignDic(model: umodel, fields: dic) { (stateStr) in
-                if stateStr == "1" {
-                    SwiftMBHUD.showSuccess("保存成功")
-                    if mySelf.selectUploadImage.pngData() != nil {
-                        /// 将头像保存到本地
-                        let filePath = documentTools() + "/USERICONPATH"
-                        let imageData = mySelf.selectUploadImage.pngData()!
-
-                        /// 创建文件并保存
-                        if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
-                            /// 该文件已存在
-                            // 删除
-                            let _ = FileTools.sharedInstance.deleteFile(fileName: USERICONPATH, path: filePath)
-                        } else {
-                            /// 重新创建目录 文件夹 缓存数据
-                            let _ = FileTools.sharedInstance.createDirectory(path:filePath)
-                        }
-
-                        /// 创建文件并保存
-                        if FileTools.sharedInstance.isFileExisted(path: filePath) {
-                            let saveFileStatus = FileTools.sharedInstance.createFile(fileName: USERICONPATH, path: filePath, contents:imageData, attributes: nil)
-                            if saveFileStatus == true {
-                                print("图片保存成功")
+            guard case .success(let response) = result else { SwiftMBHUD.dismiss(); return }
+            do {
+                let model = try JSONDecoder().decode(ChainUserModel.self, from: response.data)
+                let dic = ["name":nameStr,
+                           "age":age,
+                           "dbchain_key":UserDefault.getAddress()!,
+                           "sex":sex,
+                           "status":"",
+                           "photo":resultCid,
+                           "motto":mottoStr]
+                IPAProvider.request(NetworkAPI.insertData(userModel: model, fields: dic, tableName: DatabaseTableName.user.rawValue, publicKey: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, address: UserDefault.getAddress()!, msgType: insertDataType, sm2UserID: sm2UserID)) { (insertResult) in
+                    guard case .success(let insertResponse) = insertResult else {SwiftMBHUD.dismiss(); return }
+                    do {
+                        let imodel = try JSONDecoder().decode(BaseInsertModel.self, from: insertResponse.data)
+                        guard imodel.txhash != nil else {return}
+                        /// 查询结果是否成功
+                        loopQueryResultState(publickeyStr: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, queryTxhash: imodel.txhash!) { (state) in
+                            if state == true {
+                                SwiftMBHUD.showSuccess("保存成功")
+                                mySelf.savePngData()
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
+                                /// 保存 昵称
+                                UserDefault.saveUserNikeName(nameStr)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    mySelf.navigationController?.popViewController(animated: true)
+                                }
                             } else {
-                                print("图片保存失败")
+                                SwiftMBHUD.showError("保存失败")
                             }
                         }
-
-                    }
-
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
-                    /// 保存 昵称
-                    UserDefault.saveUserNikeName(nameStr)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        mySelf.navigationController?.popViewController(animated: true)
-                    }
-                } else {
-                    SwiftMBHUD.showError("保存失败")
+                    } catch {print("解析插入信息模型失败1")}
                 }
-            }
-        } failure: { (code, message) in
-            SwiftMBHUD.showError("保存失败")
+            } catch {print("解析用户信息失败!")}
         }
     }
 
+    func savePngData() {
+        if self.selectUploadImage.pngData() != nil {
+            /// 将头像保存到本地
+            let filePath = documentTools() + "/USERICONPATH"
+            let imageData = self.selectUploadImage.pngData()!
 
+            /// 创建文件并保存
+            if FileTools.sharedInstance.isFileExisted(fileName: USERICONPATH, path: filePath) == true {
+                /// 该文件已存在
+                // 删除
+                let _ = FileTools.sharedInstance.deleteFile(fileName: USERICONPATH, path: filePath)
+            } else {
+                /// 重新创建目录 文件夹 缓存数据
+                let _ = FileTools.sharedInstance.createDirectory(path:filePath)
+            }
+
+            /// 创建文件并保存
+            if FileTools.sharedInstance.isFileExisted(path: filePath) {
+                let saveFileStatus = FileTools.sharedInstance.createFile(fileName: USERICONPATH, path: filePath, contents:imageData, attributes: nil)
+                if saveFileStatus == true {
+                    print("图片保存成功")
+                } else {
+                    print("图片保存失败")
+                }
+            }
+        }
+    }
 
     func uploadUserIconGetResultString(imageName:String,resultStrBlock:@escaping(_ resultStr : String) -> Void) {
-//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: UserDefault.getPublickey()!.hexaData)
-        
-        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
-        let urlStr = UploadFileURL + token + "/\(APPCODE)"
+        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
+        let urlStr = BASEURL + UploadFileURL + token + "/\(APPCODE)"
         let headers : HTTPHeaders = ["Content-type": "multipart/form-data",
                                      "Content-Disposition" : "form-data",
                                      "Content-Type": "application/json;charset=utf-8"]

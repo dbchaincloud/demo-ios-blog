@@ -7,7 +7,9 @@
 
 import Foundation
 import UIKit
-import DBChainKit
+//import DBChainKit
+import GMChainSm2
+import HDWalletSDK
 import DBChainSm2
 
 class CreateMnemonicController: BaseViewController {
@@ -18,7 +20,7 @@ class CreateMnemonicController: BaseViewController {
     }()
 
     var mnemonicStr :String! = "" {
-        didSet{
+        didSet {
             contentView.mnemonicStr = mnemonicStr
         }
     }
@@ -28,31 +30,20 @@ class CreateMnemonicController: BaseViewController {
 
         view.addSubview(contentView)
 
-        mnemonicStr = DBChainKit().createMnemonic()
+        mnemonicStr = Sm2Mnemonic().createMnemonicString()
 
         /// 生成助记词
         contentView.createMnemonicBlock = {
-            self.mnemonicStr = DBChainKit().createMnemonic()
+            self.mnemonicStr = Sm2Mnemonic().createMnemonicString()
         }
 
         /// 进入首页
         contentView.goinButtonBlock = {
             SwiftMBHUD.showLoading()
-
             UserDefault.saveCurrentMnemonic(self.mnemonicStr)
-
-            /// 生成公钥私钥地址等保存
-//            let mnemonicArr :[String] = self.mnemonicStr.components(separatedBy: " ")
-//            let manager = DBMnemonicManager().MnemonicGetPrivateKeyStrAndPublickStrWithMnemonicArr(mnemonicArr)
-//
-//            let tempStr = mnemonicArr.joined(separator: ",")
-//            let tempMnemoicStr = tempStr.replacingOccurrences(of: ",", with: " ")
-
             let lowMnemoicStr = self.mnemonicStr.lowercased()
-            let lowMnemoicStr = mnemonic.lowercased()
             let seedBip39 = Mnemonic.createSeed(mnemonic: lowMnemoicStr)
             let privateKey = PrivateKey(seed: seedBip39, coin: .bitcoin)
-
             // 派生
             let purpose = privateKey.derived(at: .hardened(44))
             let coinType = purpose.derived(at: .hardened(118))
@@ -63,81 +54,83 @@ class CreateMnemonicController: BaseViewController {
             // 生成 Sm2 公钥
             let publicKey = DBChainGMSm2Utils.adoptPrivatekeyGetPublicKey(firstPrivateKey.raw.toHexString(), isCompress: true)
             // 生成 dbchain 地址
-            let sm2Publick = DBChainGMUtils.hex(toData: publicKey)
-            let sm2Pub = publicKey.hexaData
-            let address = Sm2Address().sm2GetPubToDpAddress(publicKey.hexaData, .DBCHAIN_MAIN)
+//            let sm2Publick = DBChainGMUtils.hex(toData: publicKey)
+            let sm2PublickeyData = publicKey.hexaData
+
+            let address = Sm2ChainAddress.shared.sm2GetPubToDpAddress(sm2PublickeyData, .DBCHAIN_MAIN)
 
             print("私钥:\(firstPrivateKey.raw.toHexString())")
             print("公钥:\(publicKey)")
             print("地址:\(address)")
 
             if address.count > 0, publicKey.count > 0 {
-                let token = Sm2Token().createAccessToken(privateKey: firstPrivateKey.raw.toHexString(), PublikeyData: sm2Publick!)
-
-                let url = GetIntegralUrl + token
-
-                DBRequest.GET(url: url, params: nil) { [weak self] (responeData) in
+                let token = Sm2Token.shared.createAccessToken(privateKeyStr: firstPrivateKey.raw.toHexString(), publikeyStr: publicKey)
+                IPAProvider.request(NetworkAPI.getIntegralUrl(token: token)) { [weak self] (result) in
                     guard let mySelf = self else {return}
-                    let jsonStr = String(data: responeData, encoding: .utf8)
+                    guard case .success(let response) = result else { SwiftMBHUD.showError("获取积分失败");return }
+                    let jsonStr = String(data: response.data, encoding: .utf8)
                     if String().isjsonStyle(txt: jsonStr!) {
                         let dic : [String : Any] = (jsonStr?.toDictionary())!
-                        guard !dic.keys.contains("error") else {
-                            print(dic)
-                            SwiftMBHUD.showError("请求错误")
-                            return
-                        }
+                        guard !dic.keys.contains("error") else { SwiftMBHUD.showError("请求错误"); return }
                         if dic["result"] as! String == "success" {
+                            print("获取积分成功!!!")
                             UserDefault.saveUserNikeName(mySelf.contentView.nameTextField.text!)
                             UserDefault.saveAddress(address)
                             UserDefault.savePublickey(publicKey)
                             UserDefault.savePrivateKey(firstPrivateKey.raw.toHexString())
-//                            UserDefault.savePrivateKeyUintArr(manager.privateKeyUint)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                /// 更新个人信息
-//                                let insert = InsertRequest.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
-
-                                let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.user.rawValue, insertDataUrl: InsertDataURL)
-
-                                let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
-
-                                DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) { (userModel) in
-
-                                    let fieldsDic = ["name":mySelf.contentView.nameTextField.text!,
-                                                     "age":"",
-                                                     "dbchain_key":address,
-                                                     "sex":"",
-                                                     "status":"",
-                                                     "photo":"",
-                                                     "motto":""] as [String : Any]
-
-                                    insert.sm2_insertRowSortedSignDic(model: userModel, fields: fieldsDic) { (stateStr) in
-                                        if stateStr == "1" {
-                                            SwiftMBHUD.dismiss()
-                                            let vc = HomeViewController()
-                                            let nav = BaseNavigationController.init(rootViewController: vc)
-                                            UIApplication.shared.keyWindow?.rootViewController = nav
-                                        } else {
-                                            SwiftMBHUD.showError("登录失败")
-                                        }
-                                    }
-                                } failure: { (code, message) in
-                                    print("获取用户信息失败")
-                                    SwiftMBHUD.dismiss()
-                                }
+                            mySelf.insertUserInfo(address: address, publicKey: publicKey, privateKey: firstPrivateKey.raw.toHexString())
                             }
-
                         } else { SwiftMBHUD.showError("获取积分失败") }
                     }
-                } failure: { (code, message) in
-                    print("获取新用户积分失败")
-                    SwiftMBHUD.showError("获取积分失败")
                 }
-
             } else {
                 SwiftMBHUD.showText("助记词错误 无法生成公钥与私钥")
             }
         }
+    }
 
+
+    func insertUserInfo(address: String,publicKey: String, privateKey: String) {
+        IPAProvider.request(NetworkAPI.getUserModelUrl(address: address)) {[weak self] (userResult) in
+            guard let mySelf = self else {return}
+            guard case .success(let userResponse) = userResult else { SwiftMBHUD.showError("获取用户信息失败");return }
+            do {
+                let model = try JSONDecoder().decode(ChainUserModel.self, from: userResponse.data)
+
+                let fieldsDic = ["name":mySelf.contentView.nameTextField.text!,
+                                 "age":"",
+                                 "dbchain_key":address,
+                                 "sex":"",
+                                 "status":"",
+                                 "photo":"",
+                                 "motto":""] as [String : Any]
+                IPAProvider.request(NetworkAPI.insertData(userModel: model, fields: fieldsDic, tableName: DatabaseTableName.user.rawValue, publicKey: publicKey, privateKey: privateKey, address: address, msgType: insertDataType, sm2UserID: sm2UserID)) { (insertResult) in
+
+                    guard case .success(let insertResponse) = insertResult else { return }
+                    do {
+                        print("获取用户信息: \(String(data: insertResponse.data, encoding: .utf8)!)")
+                        let model = try JSONDecoder().decode(BaseInsertModel.self, from: insertResponse.data)
+                        guard model.txhash != nil else {return}
+
+                        /// 查询结果
+                        print("开始查询结果: 公钥:\(publicKey)\n私钥:\(privateKey)\n")
+                        loopQueryResultState(publickeyStr: publicKey, privateKey: privateKey, queryTxhash: model.txhash!) { (state) in
+                            if state == true {
+                                SwiftMBHUD.dismiss()
+                                let vc = HomeViewController()
+                                let nav = BaseNavigationController.init(rootViewController: vc)
+                                UIApplication.shared.keyWindow?.rootViewController = nav
+                            } else {
+                                SwiftMBHUD.showError("登录失败")
+                            }
+                        }
+                    } catch { print("插入信息错误") }
+                }
+            } catch {
+                SwiftMBHUD.dismiss()
+            }
+        }
     }
 
 }

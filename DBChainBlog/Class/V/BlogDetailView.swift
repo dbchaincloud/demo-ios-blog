@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 typealias BlogDetailReplyBlock = (_ replyTitle:String,_ replyID: String) -> ()
 //typealias BlogDetailReplyWithReplyIDBlock = () -> ()
@@ -331,12 +332,7 @@ class sectionHeaderView : UIView {
 
     var model = discussModel(){
         didSet{
-            if model.imageData != nil {
-                self.iconImgV.image = UIImage(data: model.imageData!)
-            } else {
-                self.iconImgV.image = UIImage(named: "home_icon_image")
-            }
-
+            self.iconImgV.kf.setImage(with: URL(string: DownloadFileURL + model.imageIndex), placeholder: UIImage(named: "home_icon_image"))
             self.nameLabel.text = model.nickName
             self.textLabel.text = model.text
         }

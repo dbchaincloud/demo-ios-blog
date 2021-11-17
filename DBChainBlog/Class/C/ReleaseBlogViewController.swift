@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import DBChainKit
+import GMChainSm2
+
 class ReleaseBlogViewController: BaseViewController {
 
     lazy var blogView : ReleaseBlogView = {
@@ -20,29 +21,37 @@ class ReleaseBlogViewController: BaseViewController {
 
         blogView.saveBlogBlock = { (titleStr: String, blogStr:String) in
             /// 插入到博客表
-//            let insert = InsertRequest.init(tableName: DatabaseTableName.blogs.rawValue, insertDataUrl: InsertDataURL)
-            let insert = Sm2InsertNetwork.init(tableName: DatabaseTableName.blogs.rawValue, insertDataUrl: InsertDataURL)
-            let userModelUrl = GetUserDataURL + UserDefault.getAddress()!
-
-            DBRequestCollection().getUserAccountNum(urlStr: userModelUrl) {[weak self] (jsonData) in
+            IPAProvider.request(NetworkAPI.getUserModelUrl(address: UserDefault.getAddress()!)) {[weak self] (result) in
                 guard let mySelf = self else {return}
-                let fieldsDic = ["title":titleStr,"body":blogStr,"img":""]
+                guard case .success(let response) = result else { return }
+                do {
+                    let model = try JSONDecoder().decode(ChainUserModel.self, from: response.data)
+                    /// 插入数据
+                    let fieldsDic = ["title":titleStr,"body":blogStr,"img":""]
+                    IPAProvider.request(NetworkAPI.insertData(userModel: model, fields: fieldsDic, tableName: DatabaseTableName.blogs.rawValue, publicKey: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, address: UserDefault.getAddress()!, msgType: insertDataType, sm2UserID: sm2UserID)) { (insertResult) in
+                        guard case .success(let insertResponse) = insertResult else { return }
+                        do {
+                            let insertModel = try JSONDecoder().decode(BaseInsertModel.self, from: insertResponse.data)
+                            guard insertModel.txhash != nil else {return}
+                            /// 查询结果
+                            loopQueryResultState(publickeyStr: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, queryTxhash: insertModel.txhash!) { (state) in
+                                if state == true {
+                                    SwiftMBHUD.showSuccess("发布成功")
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: BLOGSUPLOADSUCCESS), object: nil)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        mySelf.navigationController?.popViewController(animated: true)
+                                    }
+                                } else {
+                                    SwiftMBHUD.showError("登录失败")
+                                }
+                            }
 
-                insert.sm2_insertRowSortedSignDic(model: jsonData, fields: fieldsDic) { (stateStr) in
-                    print("插入数据的结果:\(stateStr)")
-                    if stateStr == "1" {
-                        SwiftMBHUD.showSuccess("发布成功")
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: BLOGSUPLOADSUCCESS), object: nil)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            mySelf.navigationController?.popViewController(animated: true)
-                        }
-                    } else {
-                        SwiftMBHUD.showError("发布失败")
+                        } catch {print("插入数据解析json失败")}
                     }
+                } catch {
+                    print("获取用户模型解析失败")
                 }
-            } failure: { (code, message) in
-                print("获取用户信息失败 \(code)  \(message)")
-                SwiftMBHUD.dismiss()
+
             }
         }
     }

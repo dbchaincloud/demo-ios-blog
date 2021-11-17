@@ -17,25 +17,12 @@ class BlogDetailTableViewCell: UITableViewCell {
 
     var replyModel = replyDiscussModel() {
         didSet{
-            if replyModel.imageData != nil {
-
-                let img = UIImage(data: replyModel.imageData!)
-                if img != nil {
-                    iconImgV.image = img
-                } else {
-                    iconImgV.image = UIImage(named: "home_icon_image")
-                }
-
-            } else {
-                iconImgV.image = UIImage(named: "home_icon_image")
-            }
-
+            self.iconImgV.kf.setImage(with: URL(string: DownloadFileURL + replyModel.imageIndex), placeholder: UIImage(named: "home_icon_image"))
             if !replyModel.nickName.isBlank {
                 nameLabel.text = replyModel.nickName + " 回复 " + replyModel.replyNickName
             } else {
                 nameLabel.text = "未知用户"
             }
-
             contentTitleLabel.text = replyModel.text
         }
     }

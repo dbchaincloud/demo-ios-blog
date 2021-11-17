@@ -90,6 +90,12 @@ extension String {
         }
         return result
     }
+
+    //  字符串是否为空
+    public var isBlank: Bool {
+         let trimmedStr = self.trimmingCharacters(in: .whitespacesAndNewlines)
+         return trimmedStr.isEmpty
+     }
 }
 
 extension Data {

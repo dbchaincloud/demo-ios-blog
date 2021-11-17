@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import DBChainKit
+import GMChainSm2
+
 class HomeListViewController: BaseViewController {
 
     var modelArr:[blogModel] = [] {
@@ -56,19 +57,15 @@ class HomeListViewController: BaseViewController {
         }
         print(":私钥:\(UserDefault.getPrivateKey()!)")
         print(":公钥:\(UserDefault.getPublickey()!)")
-
-//        let token = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
-
-        let token = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
-        let url = QueryDataUrl + "\(token)/"
-
-        DBQuery().queryTableData(urlStr: url, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE) {[weak self] (status) in
+        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
+        IPAProvider.request(NetworkAPI.queryTableList(token: token, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE)) {[weak self] (result) in
             guard let mySelf = self else {return}
-
-            if let bmodel = BaseBlogsModel.deserialize(from: status) {
+            guard case .success(let response) = result else { return }
+            do {
+                let json = try response.mapJSON() as! NSDictionary
+                if let bmodel = BaseBlogsModel.deserialize(from: json) {
                 if bmodel.result?.count ?? 0 > 0 {
                     let signal = DispatchSemaphore(value: 1)
-
                     let global = DispatchGroup()
                     var tempBlogArr :[blogModel] = []
 
@@ -76,19 +73,12 @@ class HomeListViewController: BaseViewController {
                         global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
                             signal.wait()
                             model.readNumber = mySelf.randomIn(min: 100, max: 1000)
-
                             /// Token 时效原因, 数据过多时会导致后面数据获取失败,  Token 需要重新生成
-//                            let userToken = DBToken().createAccessToken(privateKey: UserDefault.getPrivateKeyUintArr()! , PublikeyData: (UserDefault.getPublickey()?.hexaData)!)
-
-                            let userToken = Sm2Token().createAccessToken(privateKey: UserDefault.getPrivateKey()!, PublikeyData: UserDefault.getPublickey()!.hexaData)
-
-                            let UserUrl = QueryDataUrl + "\(userToken)/"
-
-                            /// 查询头像
-                            DBQuery().queryOneData(urlStr: UserUrl, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldToValueDic: ["dbchain_key":model.created_by]) { (responseData) in
-
-                                let json = String(data: responseData, encoding: .utf8)
-                                if let umodel = BaseUserModel.deserialize(from: json) {
+                            let userToken = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
+                            IPAProvider.request(NetworkAPI.queryOneData(token: userToken, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldDic: ["dbchain_key":model.created_by])) { (userResult) in
+                                guard case .success(let userResponse) = userResult else { return }
+                                let userJson = String(data: userResponse.data, encoding: .utf8)
+                                if let umodel = BaseUserModel.deserialize(from: userJson) {
                                     if umodel.result?.count ?? 0 > 0 {
                                         /// 下载头像
                                         let userLastModel = umodel.result?.last
@@ -113,14 +103,13 @@ class HomeListViewController: BaseViewController {
                             }
                         }))
                     }
-
                 } else {
                     /// 没有博客数据
                     SwiftMBHUD.dismiss()
                 }
-            } else {
-                SwiftMBHUD.showError("数据解析错误")
-            }
+
+                }
+            } catch { print("返回结果解析 JSON 失败! ") }
         }
     }
 

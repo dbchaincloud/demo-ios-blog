@@ -1,28 +1,54 @@
 PODS:
-  - DBChainSm2 (2.0.2):
+  - Alamofire (5.4.4)
+  - CryptoSwift (1.4.2)
+  - DBChainSm2 (2.0.3):
     - GMOpenSSL
+  - GMChainSm2 (0.0.1):
+    - DBChainSm2
+    - HDWalletSDK
   - GMOpenSSL (2.2.6)
   - HandyJSON (5.0.2)
+  - HDWalletSDK (1.2.0):
+    - CryptoSwift (~> 1.4.2)
+    - secp256k1.swift (~> 0.1.4)
   - Kingfisher (6.3.1)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
+  - secp256k1.swift (0.1.4)
 
 DEPENDENCIES:
-  - DBChainSm2
+  - GMChainSm2
   - HandyJSON (~> 5.0.2)
   - Kingfisher
+  - Moya
 
 SPEC REPOS:
   trunk:
+    - Alamofire
+    - CryptoSwift
     - DBChainSm2
+    - GMChainSm2
     - GMOpenSSL
     - HandyJSON
+    - HDWalletSDK
     - Kingfisher
+    - Moya
+    - secp256k1.swift
 
 SPEC CHECKSUMS:
-  DBChainSm2: 947cd1de9e33cb250a5e1b81284ad2a1dcd04e98
+  Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  CryptoSwift: a532e74ed010f8c95f611d00b8bbae42e9fe7c17
+  DBChainSm2: 64c9be5f7ab889c389e1790cf427512647730bcc
+  GMChainSm2: 33afc4f4ea6474f00e44afbc06f990cdd3594ace
   GMOpenSSL: 9a58d4bbae233579275605fb65f7d92fb01f3c06
   HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
+  HDWalletSDK: 1ef2cf954a5999e420e2735164b2c697be7445f4
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
 
-PODFILE CHECKSUM: 42fdad360e5460547f088cd455cbd59c6c2db1f7
+PODFILE CHECKSUM: 7b219fb9baf9e68b6165fa704bb58612d31e3053
 
 COCOAPODS: 1.11.2
