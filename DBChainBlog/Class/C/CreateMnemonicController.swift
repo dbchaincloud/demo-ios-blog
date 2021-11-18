@@ -43,28 +43,29 @@ class CreateMnemonicController: BaseViewController {
             UserDefault.saveCurrentMnemonic(self.mnemonicStr)
             let lowMnemoicStr = self.mnemonicStr.lowercased()
             let seedBip39 = Mnemonic.createSeed(mnemonic: lowMnemoicStr)
-            let privateKey = PrivateKey(seed: seedBip39, coin: .bitcoin)
-            // 派生
-            let purpose = privateKey.derived(at: .hardened(44))
-            let coinType = purpose.derived(at: .hardened(118))
-            let account = coinType.derived(at: .hardened(0))
-            let change = account.derived(at: .notHardened(0))
-            let firstPrivateKey = change.derived(at: .notHardened(0))
+//            let privateKey = PrivateKey(seed: seedBip39, coin: .bitcoin)
+//            // 派生
+//            let purpose = privateKey.derived(at: .hardened(44))
+//            let coinType = purpose.derived(at: .hardened(118))
+//            let account = coinType.derived(at: .hardened(0))
+//            let change = account.derived(at: .notHardened(0))
+//            let firstPrivateKey = change.derived(at: .notHardened(0))
 
+            let privatekey = Sm2PrivateKey(seed: seedBip39, coin: .bitcoin)
+            let privatekeyStr = privatekey.createSm2PrivateKey()
             // 生成 Sm2 公钥
-            let publicKey = DBChainGMSm2Utils.adoptPrivatekeyGetPublicKey(firstPrivateKey.raw.toHexString(), isCompress: true)
+            let publicKey = DBChainGMSm2Utils.adoptPrivatekeyGetPublicKey(privatekeyStr, isCompress: true)
             // 生成 dbchain 地址
-//            let sm2Publick = DBChainGMUtils.hex(toData: publicKey)
             let sm2PublickeyData = publicKey.hexaData
 
             let address = Sm2ChainAddress.shared.sm2GetPubToDpAddress(sm2PublickeyData, .DBCHAIN_MAIN)
 
-            print("私钥:\(firstPrivateKey.raw.toHexString())")
+            print("私钥:\(privatekeyStr)")
             print("公钥:\(publicKey)")
             print("地址:\(address)")
 
             if address.count > 0, publicKey.count > 0 {
-                let token = Sm2Token.shared.createAccessToken(privateKeyStr: firstPrivateKey.raw.toHexString(), publikeyStr: publicKey)
+                let token = Sm2Token.shared.createAccessToken(privateKeyStr: privatekeyStr, publikeyStr: publicKey)
                 IPAProvider.request(NetworkAPI.getIntegralUrl(token: token)) { [weak self] (result) in
                     guard let mySelf = self else {return}
                     guard case .success(let response) = result else { SwiftMBHUD.showError("获取积分失败");return }
@@ -77,9 +78,9 @@ class CreateMnemonicController: BaseViewController {
                             UserDefault.saveUserNikeName(mySelf.contentView.nameTextField.text!)
                             UserDefault.saveAddress(address)
                             UserDefault.savePublickey(publicKey)
-                            UserDefault.savePrivateKey(firstPrivateKey.raw.toHexString())
+                            UserDefault.savePrivateKey(privatekeyStr)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                            mySelf.insertUserInfo(address: address, publicKey: publicKey, privateKey: firstPrivateKey.raw.toHexString())
+                            mySelf.insertUserInfo(address: address, publicKey: publicKey, privateKey: privatekeyStr)
                             }
                         } else { SwiftMBHUD.showError("获取积分失败") }
                     }
@@ -97,7 +98,6 @@ class CreateMnemonicController: BaseViewController {
             guard case .success(let userResponse) = userResult else { SwiftMBHUD.showError("获取用户信息失败");return }
             do {
                 let model = try JSONDecoder().decode(ChainUserModel.self, from: userResponse.data)
-
                 let fieldsDic = ["name":mySelf.contentView.nameTextField.text!,
                                  "age":"",
                                  "dbchain_key":address,
