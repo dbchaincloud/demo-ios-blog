@@ -66,8 +66,8 @@ extension StringProtocol {
 
 extension String {
     /// 是否为json字符串
-    func isjsonStyle(txt:String) -> Bool {
-       let jsondata = txt.data(using: .utf8)
+    func isjsonStyle() -> Bool {
+       let jsondata = self.data(using: .utf8)
        do {
            try JSONSerialization.jsonObject(with: jsondata!, options: .mutableContainers)
            return true

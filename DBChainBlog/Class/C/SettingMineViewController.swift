@@ -148,6 +148,7 @@ class SettingMineViewController: BaseViewController {
     }
 
     func uploadUserIconGetResultString(imageName:String,resultStrBlock:@escaping(_ resultStr : String) -> Void) {
+
         let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
         let urlStr = BASEURL + UploadFileURL + token + "/\(APPCODE)"
         let headers : HTTPHeaders = ["Content-type": "multipart/form-data",
@@ -161,6 +162,7 @@ class SettingMineViewController: BaseViewController {
             if response.response?.statusCode == 200 {
                 let value = response.value as? Dictionary<String, Any>
                 if ((value?.keys.contains("result")) != nil) {
+                    print("上传图片成功: \(value!)")
                     resultStrBlock(value!["result"] as! String)
                 } else {
                     resultStrBlock("")

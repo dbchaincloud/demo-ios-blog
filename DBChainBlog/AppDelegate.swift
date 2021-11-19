@@ -16,15 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
         self.window = UIWindow(frame: UIScreen.main.bounds)
 
-        if UserDefault.getCurrentMnemonic() != nil {
-            let vc = LoginViewController()
-            let nav = BaseNavigationController.init(rootViewController: vc)
-            window?.rootViewController = nav
-        } else {
+//        if UserDefault.getCurrentMnemonic() != nil {
+//            let vc = LoginViewController()
+//            let nav = BaseNavigationController.init(rootViewController: vc)
+//            window?.rootViewController = nav
+//        } else {
             let vc = CreateMnemonicController()
             let nav = BaseNavigationController.init(rootViewController: vc)
             window?.rootViewController = nav
-        }
+//        }
 
         return true
     }
