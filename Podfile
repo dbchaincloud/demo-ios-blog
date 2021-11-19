@@ -10,7 +10,7 @@ target 'DBChainBlog' do
   #pod 'DBChainSm2'
 
   pod 'Moya'
-  pod 'GMChainSm2'
+  pod 'GMChainSm2', '~> 0.0.2'
   pod 'Kingfisher'
 
 #  pod 'DBChainKit'
