@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//import GMChainSm2
 
 class MinePageViewController: BaseViewController {
 
@@ -94,8 +93,8 @@ class MinePageViewController: BaseViewController {
                 if blogModel.result?.count ?? 0 > 0 {
                     mySelf.contentView.logModelArr = blogModel.result!
                 } else {
-                    SwiftMBHUD.dismiss()
                     print("没有发布过博客")
+                    SwiftMBHUD.dismiss()
                 }
             }
         }

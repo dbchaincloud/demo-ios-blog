@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//import GMChainSm2
 
 class HomeListViewController: BaseViewController {
 
@@ -55,52 +54,46 @@ class HomeListViewController: BaseViewController {
         dbchain.queryDataByTablaName(DatabaseTableName.blogs.rawValue) {[weak self] (result) in
             guard let mySelf = self else { SwiftMBHUD.dismiss(); return }
             guard result.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
-            if let bmodel = BaseBlogsModel.deserialize(from: result) {
-            if bmodel.result?.count ?? 0 > 0 {
+            guard let bmodel = BaseBlogsModel.deserialize(from: result) else { SwiftMBHUD.dismiss(); return }
+            guard bmodel.result?.count ?? 0 > 0 else { SwiftMBHUD.dismiss(); return }
 
-                let signal = DispatchSemaphore(value: 1)
-                let global = DispatchGroup()
-                var tempBlogArr :[blogModel] = []
+            let signal = DispatchSemaphore(value: 1)
+            let global = DispatchGroup()
+            var tempBlogArr :[blogModel] = []
 
-                for (index,model) in bmodel.result!.enumerated() {
-                    global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
-                        signal.wait()
-                        model.readNumber = mySelf.randomIn(min: 100, max: 1000)
-                        /// 查询头像信息
-                        dbchain.queryDataByCondition(DatabaseTableName.user.rawValue,
-                                                     ["dbchain_key":model.created_by]) { (userResult) in
+            for (index,model) in bmodel.result!.enumerated() {
+                global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
+                    signal.wait()
+                    model.readNumber = mySelf.randomIn(min: 100, max: 1000)
+                    /// 查询头像信息
+                    dbchain.queryDataByCondition(DatabaseTableName.user.rawValue,
+                                                 ["dbchain_key":model.created_by]) { (userResult) in
 
-                            guard userResult.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
-                            if let umodel = BaseUserModel.deserialize(from: userResult) {
-                                if umodel.result?.count ?? 0 > 0 {
-                                    /// 查找头像
-                                    let userLastModel = umodel.result?.last
-                                    model.name = userLastModel!.name
-                                    model.imgUrl = userLastModel?.photo
-                                    tempBlogArr.append(model)
-                                    signal.signal()
-                                } else {
-                                    print("没有查询到用户信息的下标: \(index) -- 博客标题: \(model.name)")
-                                    tempBlogArr.append(model)
-                                    signal.signal()
-                                }
+                        guard userResult.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
+                        if let umodel = BaseUserModel.deserialize(from: userResult) {
+                            if umodel.result?.count ?? 0 > 0 {
+                                /// 查找头像
+                                let userLastModel = umodel.result?.last
+                                model.name = userLastModel!.name
+                                model.imgUrl = userLastModel?.photo
+                                tempBlogArr.append(model)
+                                signal.signal()
                             } else {
+                                print("没有查询到用户信息的下标: \(index) -- 博客标题: \(model.name)")
                                 tempBlogArr.append(model)
                                 signal.signal()
                             }
-
-                            if index == bmodel.result!.count - 1 {
-                                mySelf.modelArr = tempBlogArr.reversed()
-                                SwiftMBHUD.dismiss()
-                            }
+                        } else {
+                            tempBlogArr.append(model)
+                            signal.signal()
                         }
-                    }))
-                }
-            } else {
-                /// 没有博客数据
-                SwiftMBHUD.dismiss()
-            }
 
+                        if index == bmodel.result!.count - 1 {
+                            mySelf.modelArr = tempBlogArr.reversed()
+                            SwiftMBHUD.dismiss()
+                        }
+                    }
+                }))
             }
         }
     }

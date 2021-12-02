@@ -6,7 +6,7 @@
 //
 
 import UIKit
-//import DBChainKit
+
 class LoginViewController: BaseViewController {
 
     lazy var loginView : LoginView = {

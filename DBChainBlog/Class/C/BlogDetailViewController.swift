@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//import GMChainSm2
 
 class BlogDetailViewController: BaseViewController {
 
@@ -24,6 +23,7 @@ class BlogDetailViewController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
+
         self.title = "帖子详情"
         self.view.addSubview(contentView)
 
@@ -73,33 +73,35 @@ class BlogDetailViewController: BaseViewController {
             dbchain.queryDataByCondition(DatabaseTableName.discuss.rawValue,
                                          ["blog_id":self.logModel.id]) { [weak self] (result) in
 
-                guard let mySelf = self else { group.leave(); SwiftMBHUD.dismiss(); return }
-                guard result.isjsonStyle() else { group.leave(); SwiftMBHUD.dismiss(); return }
+                guard let mySelf = self else {
+                    group.leave(); SwiftMBHUD.dismiss()
+                    return
+                }
+                guard result.isjsonStyle() else {
+                    group.leave(); SwiftMBHUD.dismiss()
+                    return
+                }
 
                 guard let baseDiscussModel = BaseDiscussModel.deserialize(from: result) else {
-                    signal.signal()
-                    group.leave()
-                    SwiftMBHUD.dismiss()
+                    signal.signal(); group.leave(); SwiftMBHUD.dismiss()
                     return
                 }
 
                 guard baseDiscussModel.result?.count ?? 0 > 0 else {
-                    signal.signal()
-                    group.leave()
-                    SwiftMBHUD.dismiss()
+                    signal.signal(); group.leave(); SwiftMBHUD.dismiss()
                     return
                 }
 
                 for (idx,model) in baseDiscussModel.result!.enumerated() {
-                    print("查询评论的头像: \(model.id) --- 评论id: \(model.discuss_id) --- 内容:\(model.text) -- \(model.created_by)")
-                    /// 查找User表的头像cid   QmTpgJnPzkq1ist8CCT3cUFijd6STL2JjnwHzCMYNfR6sW
+
+                    /// 查找User表的头像cid
                     dbchain.queryDataByCondition( DatabaseTableName.user.rawValue,
                                                   ["dbchain_key":model.created_by]) { (cidResult) in
 
                         guard cidResult.isjsonStyle() else { return }
                         guard let userModel = BaseUserModel.deserialize(from: cidResult) else {
-                            signal.signal()
-                            group.leave()
+                            signal.signal(); group.leave()
+                            SwiftMBHUD.dismiss()
                             return
                         }
 
@@ -153,7 +155,6 @@ class BlogDetailViewController: BaseViewController {
                     rmodel.created_at = relpyModel.created_at
                     rmodel.created_by = relpyModel.created_by
                     rmodel.id = relpyModel.id
-//                    rmodel.imageData = relpyModel.imageData
                     rmodel.imageIndex = relpyModel.imageIndex
                     rmodel.nickName = relpyModel.nickName
                     rmodel.replyID = relpyModel.id

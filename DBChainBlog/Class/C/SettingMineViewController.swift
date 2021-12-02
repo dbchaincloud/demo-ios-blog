@@ -50,6 +50,7 @@ class SettingMineViewController: BaseViewController {
 
         contentView.settingSaveBlock = {[weak self] (nameStr:String,sex:String,age:String,mottoStr:String) in
             guard let mySelf = self else {return}
+
             SwiftMBHUD.showLoading()
             if mySelf.selectUploadImage.pngData() != nil {
                 /// 上传头像

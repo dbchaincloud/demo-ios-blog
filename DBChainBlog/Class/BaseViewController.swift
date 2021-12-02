@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import DBChainKit
 
+/// 初始化DBChainKit
 let dbchain = DBChainKit.init(appcode: "5APTSCPSF7",
                               chainid: "testnet",
                               baseurl: "https://controlpanel.dbchain.cloud/relay/",

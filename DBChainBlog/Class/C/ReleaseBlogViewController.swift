@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//import GMChainSm2
 
 class ReleaseBlogViewController: BaseViewController {
 
@@ -17,6 +16,7 @@ class ReleaseBlogViewController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
+
         view.addSubview(blogView)
 
         blogView.saveBlogBlock = { [weak self] (titleStr: String, blogStr:String) in
