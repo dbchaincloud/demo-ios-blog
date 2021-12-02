@@ -27,7 +27,7 @@ class HomeListTableViewCell: UITableViewCell {
                 redNumberLabel.text = "\(model.readNumber!)"
             }
             if model.imgUrl != nil {
-                iconImageV.kf.setImage(with: URL(string: DownloadFileURL + model.imgUrl!),placeholder: UIImage(named: "home_icon_image"))
+                iconImageV.kf.setImage(with: URL(string: dbchain.baseurl! + "ipfs/" + model.imgUrl!),placeholder: UIImage(named: "home_icon_image"))
             } else {
                 iconImageV.image = UIImage(named: "home_icon_image")
             }

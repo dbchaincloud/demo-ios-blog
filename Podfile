@@ -4,15 +4,14 @@ target 'DBChainBlog' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  # Pods for DBChainBlog
-	pod 'HandyJSON', '~> 5.0.2'
-
   #pod 'DBChainSm2'
+  #pod 'GMChainSm2', '~> 0.0.2'
 
+	pod 'HandyJSON', '~> 5.0.2'
   pod 'Moya'
-  pod 'GMChainSm2', '~> 0.0.2'
   pod 'Kingfisher'
 
-#  pod 'DBChainKit'
+  pod 'DBChainKit/sm2'
 
 end
+

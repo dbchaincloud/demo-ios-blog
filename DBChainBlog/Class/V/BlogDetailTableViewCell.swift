@@ -17,7 +17,7 @@ class BlogDetailTableViewCell: UITableViewCell {
 
     var replyModel = replyDiscussModel() {
         didSet{
-            self.iconImgV.kf.setImage(with: URL(string: DownloadFileURL + replyModel.imageIndex), placeholder: UIImage(named: "home_icon_image"))
+            self.iconImgV.kf.setImage(with: URL(string: dbchain.baseurl! + "ipfs/" + replyModel.imageIndex), placeholder: UIImage(named: "home_icon_image"))
             if !replyModel.nickName.isBlank {
                 nameLabel.text = replyModel.nickName + " 回复 " + replyModel.replyNickName
             } else {

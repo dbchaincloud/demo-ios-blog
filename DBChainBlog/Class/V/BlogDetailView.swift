@@ -332,7 +332,7 @@ class sectionHeaderView : UIView {
 
     var model = discussModel(){
         didSet{
-            self.iconImgV.kf.setImage(with: URL(string: DownloadFileURL + model.imageIndex), placeholder: UIImage(named: "home_icon_image"))
+            self.iconImgV.kf.setImage(with: URL(string: dbchain.baseurl! + "ipfs/" + model.imageIndex), placeholder: UIImage(named: "home_icon_image"))
             self.nameLabel.text = model.nickName
             self.textLabel.text = model.text
         }

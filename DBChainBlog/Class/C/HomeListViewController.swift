@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import GMChainSm2
+//import GMChainSm2
 
 class HomeListViewController: BaseViewController {
 
@@ -52,64 +52,56 @@ class HomeListViewController: BaseViewController {
 
         SwiftMBHUD.showLoading()
         self.modelArr.removeAll()
-        guard UserDefault.getPrivateKey() != nil,UserDefault.getPublickey() != nil else {
-            return
-        }
-        print(":私钥:\(UserDefault.getPrivateKey()!)")
-        print(":公钥:\(UserDefault.getPublickey()!)")
-        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
-        IPAProvider.request(NetworkAPI.queryTableList(token: token, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE)) {[weak self] (result) in
-            guard let mySelf = self else {return}
-            guard case .success(let response) = result else { return }
-            do {
-                let json = try response.mapJSON() as! NSDictionary
-                if let bmodel = BaseBlogsModel.deserialize(from: json) {
-                if bmodel.result?.count ?? 0 > 0 {
-                    let signal = DispatchSemaphore(value: 1)
-                    let global = DispatchGroup()
-                    var tempBlogArr :[blogModel] = []
+        dbchain.queryDataByTablaName(DatabaseTableName.blogs.rawValue) {[weak self] (result) in
+            guard let mySelf = self else { SwiftMBHUD.dismiss(); return }
+            guard result.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
+            if let bmodel = BaseBlogsModel.deserialize(from: result) {
+            if bmodel.result?.count ?? 0 > 0 {
 
-                    for (index,model) in bmodel.result!.enumerated() {
-                        global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
-                            signal.wait()
-                            model.readNumber = mySelf.randomIn(min: 100, max: 1000)
-                            /// Token 时效原因, 数据过多时会导致后面数据获取失败,  Token 需要重新生成
-                            let userToken = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
-                            IPAProvider.request(NetworkAPI.queryOneData(token: userToken, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldDic: ["dbchain_key":model.created_by])) { (userResult) in
-                                guard case .success(let userResponse) = userResult else { return }
-                                let userJson = String(data: userResponse.data, encoding: .utf8)
-                                if let umodel = BaseUserModel.deserialize(from: userJson) {
-                                    if umodel.result?.count ?? 0 > 0 {
-                                        /// 下载头像
-                                        let userLastModel = umodel.result?.last
-                                        model.name = userLastModel!.name
-                                        model.imgUrl = userLastModel?.photo
-                                        tempBlogArr.append(model)
-                                        signal.signal()
-                                    } else {
-                                        print("没有查询到用户信息的下标: \(index) -- 博客标题: \(model.name)")
-                                        tempBlogArr.append(model)
-                                        signal.signal()
-                                    }
+                let signal = DispatchSemaphore(value: 1)
+                let global = DispatchGroup()
+                var tempBlogArr :[blogModel] = []
+
+                for (index,model) in bmodel.result!.enumerated() {
+                    global.notify(queue: DispatchQueue.global(), work: DispatchWorkItem.init(block: {
+                        signal.wait()
+                        model.readNumber = mySelf.randomIn(min: 100, max: 1000)
+                        /// 查询头像信息
+                        dbchain.queryDataByCondition(DatabaseTableName.user.rawValue,
+                                                     ["dbchain_key":model.created_by]) { (userResult) in
+
+                            guard userResult.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
+                            if let umodel = BaseUserModel.deserialize(from: userResult) {
+                                if umodel.result?.count ?? 0 > 0 {
+                                    /// 查找头像
+                                    let userLastModel = umodel.result?.last
+                                    model.name = userLastModel!.name
+                                    model.imgUrl = userLastModel?.photo
+                                    tempBlogArr.append(model)
+                                    signal.signal()
                                 } else {
+                                    print("没有查询到用户信息的下标: \(index) -- 博客标题: \(model.name)")
                                     tempBlogArr.append(model)
                                     signal.signal()
                                 }
-
-                                if index == bmodel.result!.count - 1 {
-                                    mySelf.modelArr = tempBlogArr.reversed()
-                                    SwiftMBHUD.dismiss()
-                                }
+                            } else {
+                                tempBlogArr.append(model)
+                                signal.signal()
                             }
-                        }))
-                    }
-                } else {
-                    /// 没有博客数据
-                    SwiftMBHUD.dismiss()
-                }
 
+                            if index == bmodel.result!.count - 1 {
+                                mySelf.modelArr = tempBlogArr.reversed()
+                                SwiftMBHUD.dismiss()
+                            }
+                        }
+                    }))
                 }
-            } catch { print("返回结果解析 JSON 失败! ") }
+            } else {
+                /// 没有博客数据
+                SwiftMBHUD.dismiss()
+            }
+
+            }
         }
     }
 

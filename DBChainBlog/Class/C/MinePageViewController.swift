@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import GMChainSm2
+//import GMChainSm2
 
 class MinePageViewController: BaseViewController {
 
@@ -71,12 +71,11 @@ class MinePageViewController: BaseViewController {
 
     func getCurrentUserInfo() {
         SwiftMBHUD.showLoading()
-        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
-        IPAProvider.request(NetworkAPI.queryOneData(token: token, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldDic: ["created_by":UserDefault.getAddress()!])) { [weak self] (result) in
-            guard let mySelf = self else {return}
-            guard case .success(let response) = result else {SwiftMBHUD.dismiss(); return}
-            let jsonStr = String(data: response.data, encoding: .utf8)
-            if let userModel = BaseUserModel.deserialize(from: jsonStr) {
+        dbchain.queryDataByCondition(DatabaseTableName.user.rawValue,
+                                     ["created_by":dbchain.address!]) { [weak self] (result) in
+            guard let mySelf = self else { SwiftMBHUD.dismiss(); return}
+            guard result.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
+            if let userModel = BaseUserModel.deserialize(from: result) {
                 if userModel.result?.count ?? 0 > 0  {
                     mySelf.infoModel = userModel.result!.last!
                 }
@@ -86,13 +85,12 @@ class MinePageViewController: BaseViewController {
     }
 
     func getCurrentBlogText() {
-        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
-        IPAProvider.request(NetworkAPI.queryOneData(token: token, tableName: DatabaseTableName.blogs.rawValue, appcode: APPCODE, fieldDic: ["created_by":UserDefault.getAddress()!])) { [weak self] (result) in
-            guard let mySelf = self else {return}
-            guard case .success(let response) = result else {SwiftMBHUD.dismiss(); return}
+        dbchain.queryDataByCondition(DatabaseTableName.blogs.rawValue,
+                                     ["created_by":dbchain.address!]) {[weak self] (result) in
+            guard let mySelf = self else { SwiftMBHUD.dismiss(); return }
+            guard result.isjsonStyle() else { SwiftMBHUD.dismiss(); return }
             SwiftMBHUD.dismiss()
-            let jsonStr = String(data: response.data, encoding: .utf8)
-            if let blogModel = BaseBlogsModel.deserialize(from: jsonStr) {
+            if let blogModel = BaseBlogsModel.deserialize(from: result) {
                 if blogModel.result?.count ?? 0 > 0 {
                     mySelf.contentView.logModelArr = blogModel.result!
                 } else {

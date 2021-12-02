@@ -37,8 +37,6 @@
 		811D4ECC268B4F03007DBF9F /* IQNSArray+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */; };
 		811D4ECD268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */; };
 		812C4BEA26846A5B00BC96B6 /* BlogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C4BE926846A5B00BC96B6 /* BlogModels.swift */; };
-		81463B4F2743A765004CDADB /* IPAProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81463B4E2743A765004CDADB /* IPAProvider.swift */; };
-		81463B532743AAAD004CDADB /* IPALoopQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81463B522743AAAD004CDADB /* IPALoopQuery.swift */; };
 		81463B562743B588004CDADB /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81463B552743B588004CDADB /* BaseModel.swift */; };
 		814CE4D126C790FA001C4D01 /* InsertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814CE4D026C790FA001C4D01 /* InsertRequest.swift */; };
 		8175C98326808B58008F4FC8 /* ConstraintMultiplierTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */; };
@@ -193,8 +191,6 @@
 		811D4EB5268B4F03007DBF9F /* IQNSArray+Sort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQNSArray+Sort.swift"; sourceTree = "<group>"; };
 		811D4EB6268B4F03007DBF9F /* IQKeyboardManager+UITextFieldViewNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IQKeyboardManager+UITextFieldViewNotification.swift"; sourceTree = "<group>"; };
 		812C4BE926846A5B00BC96B6 /* BlogModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogModels.swift; sourceTree = "<group>"; };
-		81463B4E2743A765004CDADB /* IPAProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAProvider.swift; sourceTree = "<group>"; };
-		81463B522743AAAD004CDADB /* IPALoopQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPALoopQuery.swift; sourceTree = "<group>"; };
 		81463B552743B588004CDADB /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		814CE4D026C790FA001C4D01 /* InsertRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertRequest.swift; sourceTree = "<group>"; };
 		8175C95E26808B58008F4FC8 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
@@ -433,15 +429,6 @@
 			path = Categories;
 			sourceTree = "<group>";
 		};
-		8125D9902727AC4100451426 /* Sm2 */ = {
-			isa = PBXGroup;
-			children = (
-				81463B4E2743A765004CDADB /* IPAProvider.swift */,
-				81463B522743AAAD004CDADB /* IPALoopQuery.swift */,
-			);
-			path = Sm2;
-			sourceTree = "<group>";
-		};
 		8175C95C26808B4B008F4FC8 /* SnapKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -660,7 +647,6 @@
 		81E8879E26803BDC0068BB03 /* Class */ = {
 			isa = PBXGroup;
 			children = (
-				8125D9902727AC4100451426 /* Sm2 */,
 				811D4E9A268B4F03007DBF9F /* IQKeyboardManagerSwift */,
 				811947422683235E0043FBB4 /* OC */,
 				8119473526831B320043FBB4 /* Macro */,
@@ -682,9 +668,9 @@
 			isa = PBXGroup;
 			children = (
 				81E887A626803D2B0068BB03 /* CreateMnemonicController.swift */,
+				8175C9C826808FC4008F4FC8 /* LoginViewController.swift */,
 				817DF03726806CFC00D65D0C /* HomeViewController.swift */,
 				8175CA2E268097D1008F4FC8 /* HomeListViewController.swift */,
-				8175C9C826808FC4008F4FC8 /* LoginViewController.swift */,
 				81EB64D9268180A300FEF7C3 /* ReleaseBlogViewController.swift */,
 				81EB64DF268195FD00FEF7C3 /* MinePageViewController.swift */,
 				81EB64E52681BD8B00FEF7C3 /* SettingMineViewController.swift */,
@@ -915,7 +901,6 @@
 				8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */,
 				81E88786268039160068BB03 /* AppDelegate.swift in Sources */,
 				8175CA2126809745008F4FC8 /* JXSegmentedTitleGradientCell.swift in Sources */,
-				81463B532743AAAD004CDADB /* IPALoopQuery.swift in Sources */,
 				8175CA1326809745008F4FC8 /* JXSegmentedIndicatorLineView.swift in Sources */,
 				8175CA0926809745008F4FC8 /* JXSegmentedView.swift in Sources */,
 				811D4EC5268B4F03007DBF9F /* IQKeyboardManager+Debug.swift in Sources */,
@@ -948,7 +933,6 @@
 				811D4EB8268B4F03007DBF9F /* IQKeyboardManager+Internal.swift in Sources */,
 				817DF03526805EE500D65D0C /* CreateMnemonicView.swift in Sources */,
 				8175C98C26808B58008F4FC8 /* ConstraintDSL.swift in Sources */,
-				81463B4F2743A765004CDADB /* IPAProvider.swift in Sources */,
 				811D4EB7268B4F03007DBF9F /* IQTextView.swift in Sources */,
 				8175C99B26808B58008F4FC8 /* ConstraintMaker.swift in Sources */,
 				817DF02F2680436B00D65D0C /* UIViewExtension.swift in Sources */,

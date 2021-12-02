@@ -18,6 +18,11 @@ class LoginViewController: BaseViewController {
         super.setupUI()
         view.addSubview(loginView)
         loginView.goinBlock = {
+            /// 记录数据重新给dbchain各参数赋值
+            let privatekey = dbchain.generatePrivateByMenemonci(UserDefault.getCurrentMnemonic()!)
+            let publickey = dbchain.generatePublickey(privatekey)
+            _ = dbchain.generateAddress(publickey)
+
             let vc = HomeViewController()
             let nav = BaseNavigationController.init(rootViewController: vc)
             UIApplication.shared.keyWindow?.rootViewController = nav

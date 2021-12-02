@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import GMChainSm2
+//import GMChainSm2
 import Alamofire
 
 class SettingMineViewController: BaseViewController {
@@ -81,41 +81,25 @@ class SettingMineViewController: BaseViewController {
 
     func uploadUserInfoEvent(_ resultCid:String,_ nameStr:String,_ sex:String,_ age:String,_ mottoStr:String) {
         /// 插入user表
-        IPAProvider.request(NetworkAPI.getUserModelUrl(address: UserDefault.getAddress()!)) { [weak self] (result) in
-            guard let mySelf = self else {return}
-            guard case .success(let response) = result else { SwiftMBHUD.dismiss(); return }
-            do {
-                let model = try JSONDecoder().decode(ChainUserModel.self, from: response.data)
-                let dic = ["name":nameStr,
-                           "age":age,
-                           "dbchain_key":UserDefault.getAddress()!,
-                           "sex":sex,
-                           "status":"",
-                           "photo":resultCid,
-                           "motto":mottoStr]
-                IPAProvider.request(NetworkAPI.insertData(userModel: model, fields: dic, tableName: DatabaseTableName.user.rawValue, publicKey: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, address: UserDefault.getAddress()!, msgType: insertDataType, sm2UserID: sm2UserID)) { (insertResult) in
-                    guard case .success(let insertResponse) = insertResult else {SwiftMBHUD.dismiss(); return }
-                    do {
-                        let imodel = try JSONDecoder().decode(BaseInsertModel.self, from: insertResponse.data)
-                        guard imodel.txhash != nil else {return}
-                        /// 查询结果是否成功
-                        loopQueryResultState(publickeyStr: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, queryTxhash: imodel.txhash!) { (state) in
-                            if state == true {
-                                SwiftMBHUD.showSuccess("保存成功")
-                                mySelf.savePngData()
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
-                                /// 保存 昵称
-                                UserDefault.saveUserNikeName(nameStr)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    mySelf.navigationController?.popViewController(animated: true)
-                                }
-                            } else {
-                                SwiftMBHUD.showError("保存失败")
-                            }
-                        }
-                    } catch {print("解析插入信息模型失败1")}
-                }
-            } catch {print("解析用户信息失败!")}
+        let dic = ["name":nameStr,
+                   "age":age,
+                   "dbchain_key":dbchain.address!,
+                   "sex":sex,
+                   "status":"",
+                   "photo":resultCid,
+                   "motto":mottoStr]
+
+        dbchain.insertRow(tableName: DatabaseTableName.user.rawValue,
+                          fields: dic) { [weak self] (result) in
+            guard let mySelf = self else { SwiftMBHUD.dismiss(); return }
+            if result == "1" {
+                SwiftMBHUD.showSuccess("保存成功")
+                mySelf.savePngData()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: USERICONUPLOADSUCCESS), object: nil)
+                mySelf.navigationController?.popViewController(animated: true)
+            } else {
+                SwiftMBHUD.showError("保存失败")
+            }
         }
     }
 
@@ -148,8 +132,9 @@ class SettingMineViewController: BaseViewController {
     }
 
     func uploadUserIconGetResultString(imageName:String,resultStrBlock:@escaping(_ resultStr : String) -> Void) {
-        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
-        let urlStr = BASEURL + UploadFileURL + token + "/\(APPCODE)"
+
+        let url = dbchain.baseurl! + "dbchain/upload/\(dbchain.token!)/\(dbchain.appcode!)"
+
         let headers : HTTPHeaders = ["Content-type": "multipart/form-data",
                                      "Content-Disposition" : "form-data",
                                      "Content-Type": "application/json;charset=utf-8"]
@@ -157,7 +142,7 @@ class SettingMineViewController: BaseViewController {
         let imgData = self.selectUploadImage.compressImage()
         AF.upload(multipartFormData: { MultipartFormData in
             MultipartFormData.append(imgData, withName: "file", fileName: imageName, mimeType: "application/octet-stream")
-        }, to: urlStr,headers: headers).responseJSON { response in
+        }, to: url,headers: headers).responseJSON { response in
             if response.response?.statusCode == 200 {
                 let value = response.value as? Dictionary<String, Any>
                 if ((value?.keys.contains("result")) != nil) {

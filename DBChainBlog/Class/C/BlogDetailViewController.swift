@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import GMChainSm2
+//import GMChainSm2
 
 class BlogDetailViewController: BaseViewController {
 
@@ -42,30 +42,15 @@ class BlogDetailViewController: BaseViewController {
     func replyTitle(withTitle titleStr: String,withReplyId replyid:String) {
         /// 发布评论
         SwiftMBHUD.showLoading()
-        IPAProvider.request(NetworkAPI.getUserModelUrl(address: UserDefault.getAddress()!)) { [weak self] (result) in
-            guard let mySelf = self else {return}
-            guard case .success(let response) = result else { SwiftMBHUD.dismiss(); return }
-            do {
-                let model = try JSONDecoder().decode(ChainUserModel.self, from: response.data)
-                let dic = ["blog_id":mySelf.logModel.id,"discuss_id":replyid,"text":titleStr]
-                IPAProvider.request(NetworkAPI.insertData(userModel: model, fields: dic, tableName: DatabaseTableName.discuss.rawValue, publicKey: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, address: UserDefault.getAddress()!, msgType: insertDataType, sm2UserID: sm2UserID)) { (insertResult) in
-                    guard case .success(let insertResponse) = insertResult else {SwiftMBHUD.dismiss(); return }
-                    do {
-                        let imodel = try JSONDecoder().decode(BaseInsertModel.self, from: insertResponse.data)
-                        guard imodel.txhash != nil else {return}
-                        /// 查询结果是否成功
-                        loopQueryResultState(publickeyStr: UserDefault.getPublickey()!, privateKey: UserDefault.getPrivateKey()!, queryTxhash: imodel.txhash!) { (state) in
-                            if state == true {
-                               SwiftMBHUD.showSuccess("发布成功")
-                               mySelf.contentView.replyTextField.text = nil
-                               mySelf.getCurrentBlogCommentList()
-                            } else {
-                                SwiftMBHUD.showError("发布失败")
-                            }
-                        }
-                    } catch {print("11解析插入信息模型失败1")}
-                }
-            } catch {print("22解析用户信息失败!")}
+        let dic = ["blog_id":self.logModel.id,
+                   "discuss_id":replyid,
+                   "text":titleStr]
+        dbchain.insertRow(tableName: DatabaseTableName.discuss.rawValue,
+                          fields: dic) { (result) in
+            guard result == "1" else { SwiftMBHUD.showError("发布失败"); return }
+            SwiftMBHUD.showSuccess("发布成功")
+            self.contentView.replyTextField.text = nil
+            self.getCurrentBlogCommentList()
         }
     }
 
@@ -74,7 +59,7 @@ class BlogDetailViewController: BaseViewController {
     func getCurrentBlogCommentList() {
         SwiftMBHUD.showLoading()
         self.discussModelArr.removeAll()
-        let token = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
+
         /// 临时保存回复数据
         var tempReplyArr :[discussModel] = []
 
@@ -85,126 +70,73 @@ class BlogDetailViewController: BaseViewController {
         group.enter()
         queue.async {
             signal.wait()
-            IPAProvider.request(NetworkAPI.queryOneData(token: token, tableName: DatabaseTableName.discuss.rawValue, appcode: APPCODE, fieldDic: ["blog_id":self.logModel.id])) {[weak self] (result) in
-                guard let mySelf = self else {group.leave(); return}
-                guard case .success(let response) = result else { SwiftMBHUD.dismiss(); return }
-                let json = String(data: response.data, encoding: .utf8)
-//                print("获取博客详情 JSON: \(json)")
-                if let baseDiscussModel = BaseDiscussModel.deserialize(from: json) {
-                    if baseDiscussModel.result?.count ?? 0 > 0 {
-//                        print("查询博客信息")
-                        for (idx,model) in baseDiscussModel.result!.enumerated() {
-//                            print("开始查询 评论和回复!!!!!!!!!")
-                            let rToken = Sm2Token.shared.createAccessToken(privateKeyStr: UserDefault.getPrivateKey()!, publikeyStr: UserDefault.getPublickey()!)
-                            /// 查找User表的头像cid   QmTpgJnPzkq1ist8CCT3cUFijd6STL2JjnwHzCMYNfR6sW
-                            IPAProvider.request(NetworkAPI.queryOneData(token: rToken, tableName: DatabaseTableName.user.rawValue, appcode: APPCODE, fieldDic: ["dbchain_key":model.created_by])) { (cidResult) in
-                                guard case .success(let cidResponse) = cidResult else { return }
-                                let userJson = String(data: cidResponse.data, encoding: .utf8)
-//                                print("查询评论的 头像!!!!")
-                                if let userModel = BaseUserModel.deserialize(from: userJson) {
-                                    if userModel.result?.count ?? 0 > 0 {
-                                        /// 下载头像
-                                        let usermodel = userModel.result!.last
-                                        if !usermodel!.name.isBlank {
-                                            model.nickName = usermodel!.name
-                                        }
+            dbchain.queryDataByCondition(DatabaseTableName.discuss.rawValue,
+                                         ["blog_id":self.logModel.id]) { [weak self] (result) in
 
-                                        model.imageIndex = usermodel!.photo
-                                        if model.discuss_id.isBlank {
-                                            mySelf.discussModelArr.append(model)
-                                        } else {
-                                            model.replyNickName = usermodel!.name
-                                            tempReplyArr.append(model)
-                                        }
+                guard let mySelf = self else { group.leave(); SwiftMBHUD.dismiss(); return }
+                guard result.isjsonStyle() else { group.leave(); SwiftMBHUD.dismiss(); return }
 
-                                        if idx == baseDiscussModel.result!.count - 1 {
-                                            signal.signal()
-                                            group.leave()
-                                        }
-
-//                                        if !usermodel!.photo.isBlank {
-//                                            /// 判断本地是否有数据
-//                                            let dicPath = documentTools() + "/\(usermodel!.photo)"
-//                                            if FileTools.sharedInstance.isFileExisted(fileName: usermodel!.photo, path: dicPath) == true {
-//                                                /// 本地有缓存数据.
-//                                                /// 该文件已存在
-//                                                let fileDic = FileTools.sharedInstance.filePathsWithDirPath(path: dicPath)
-//                                                let imageData = try! Data(contentsOf: URL.init(fileURLWithPath: fileDic[0]))
-//                                                model.imageData = imageData
-//
-//                                                if model.discuss_id.isBlank {
-//                                                    mySelf.discussModelArr.append(model)
-//                                                } else {
-//                                                    model.replyNickName = usermodel!.name
-//                                                    tempReplyArr.append(model)
-//                                                }
-//
-//                                                if idx == baseDiscussModel.result!.count - 1 {
-//                                                    signal.signal()
-//                                                    group.leave()
-//                                                }
-//                                            } else {
-//                                                let imageURL = DownloadFileURL + usermodel!.photo
-//                                                DBRequest.GET(url: imageURL, params: nil) {[weak self] (imageJsonData) in
-//                                                    guard let mySelf = self else {return}
-//                                                    model.imageData = imageJsonData
-//                                                    if model.discuss_id.isBlank {
-//                                                        mySelf.discussModelArr.append(model)
-//                                                    } else {
-//                                                        model.replyNickName = usermodel!.name
-//                                                        tempReplyArr.append(model)
-//                                                    }
-//                                                    if idx == baseDiscussModel.result!.count - 1 {
-//                                                        signal.signal()
-//                                                        group.leave()
-//                                                    }
-//                                                } failure: { (code, message) in
-//                                                    print("头像下载失败")
-//                                                    if idx == baseDiscussModel.result!.count - 1 {
-//                                                        signal.signal()
-//                                                        group.leave()
-//                                                    }
-//                                                }
-//                                            }
-//
-//                                        } else {
-//                                            if model.discuss_id.isBlank {
-//                                                mySelf.discussModelArr.append(model)
-//                                            } else {
-//                                                model.replyNickName = usermodel!.name
-//                                                tempReplyArr.append(model)
-//                                            }
-//                                            if idx == baseDiscussModel.result!.count - 1 {
-//                                                signal.signal()
-//                                                group.leave()
-//                                            }
-//                                        }
-
-                                    } else {
-                                        if model.discuss_id.isBlank {
-                                            mySelf.discussModelArr.append(model)
-                                        } else {
-                                            model.replyNickName = "未知用户"
-                                            tempReplyArr.append(model)
-                                        }
-
-                                        if idx == baseDiscussModel.result!.count - 1 {
-                                            signal.signal()
-                                            group.leave()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        signal.signal()
-                        group.leave()
-                        SwiftMBHUD.dismiss()
-                    }
-                } else {
+                guard let baseDiscussModel = BaseDiscussModel.deserialize(from: result) else {
                     signal.signal()
                     group.leave()
                     SwiftMBHUD.dismiss()
+                    return
+                }
+
+                guard baseDiscussModel.result?.count ?? 0 > 0 else {
+                    signal.signal()
+                    group.leave()
+                    SwiftMBHUD.dismiss()
+                    return
+                }
+
+                for (idx,model) in baseDiscussModel.result!.enumerated() {
+                    print("查询评论的头像: \(model.id) --- 评论id: \(model.discuss_id) --- 内容:\(model.text) -- \(model.created_by)")
+                    /// 查找User表的头像cid   QmTpgJnPzkq1ist8CCT3cUFijd6STL2JjnwHzCMYNfR6sW
+                    dbchain.queryDataByCondition( DatabaseTableName.user.rawValue,
+                                                  ["dbchain_key":model.created_by]) { (cidResult) in
+
+                        guard cidResult.isjsonStyle() else { return }
+                        guard let userModel = BaseUserModel.deserialize(from: cidResult) else {
+                            signal.signal()
+                            group.leave()
+                            return
+                        }
+
+                        if userModel.result?.count ?? 0 > 0 {
+                            /// 头像
+                            let usermodel = userModel.result!.last
+                            if !usermodel!.name.isBlank {
+                                model.nickName = usermodel!.name
+                            }
+
+                            model.imageIndex = usermodel!.photo
+                            if model.discuss_id.isBlank {
+                                mySelf.discussModelArr.append(model)
+                            } else {
+                                model.replyNickName = usermodel!.name
+                                tempReplyArr.append(model)
+                            }
+
+                            if idx == baseDiscussModel.result!.count - 1 {
+                                signal.signal()
+                                group.leave()
+                            }
+                        } else {
+
+                            if model.discuss_id.isBlank {
+                                mySelf.discussModelArr.append(model)
+                            } else {
+                                model.replyNickName = "未知用户"
+                                tempReplyArr.append(model)
+                            }
+
+                            if idx == baseDiscussModel.result!.count - 1 {
+                                signal.signal()
+                                group.leave()
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -7,6 +7,12 @@
 
 import Foundation
 import UIKit
+import DBChainKit
+
+let dbchain = DBChainKit.init(appcode: "5APTSCPSF7",
+                              chainid: "testnet",
+                              baseurl: "https://controlpanel.dbchain.cloud/relay/",
+                              encryptType: Sm2())
 
 class BaseViewController: UIViewController {
 

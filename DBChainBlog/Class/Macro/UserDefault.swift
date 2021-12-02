@@ -63,15 +63,15 @@ class UserDefault: NSObject {
 //        return UserDefaults.standard.array(forKey: "kPrivateKeyUintArrKey")
 //    }
 
-    /// 保存秘钥 [Uint8 ] 格式
-    static func savePrivateKeyUintArr(_ PrivateUintKey: [UInt8]) {
-        UserDefaults.standard.setValue(PrivateUintKey, forKey: "kPrivateKeyUintArrKey")
-    }
-
-    /// 取出秘钥  [ Uint8 ]
-    static func getPrivateKeyUintArr() -> [UInt8]? {
-        return UserDefaults.standard.object(forKey: "kPrivateKeyUintArrKey") as? [UInt8]
-    }
+//    /// 保存秘钥 [Uint8 ] 格式
+//    static func savePrivateKeyUintArr(_ PrivateUintKey: [UInt8]) {
+//        UserDefaults.standard.setValue(PrivateUintKey, forKey: "kPrivateKeyUintArrKey")
+//    }
+//
+//    /// 取出秘钥  [ Uint8 ]
+//    static func getPrivateKeyUintArr() -> [UInt8]? {
+//        return UserDefaults.standard.object(forKey: "kPrivateKeyUintArrKey") as? [UInt8]
+//    }
 
     static func removeUserData() {
         UserDefaults.standard.removeObject(forKey: "kCurrentMnemonic")
