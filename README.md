@@ -21,4 +21,4 @@
 * iOS 9.0 及以上
 
 # 其余相关
-* DBChainKit 地址 (https://github.com/dbchaincloud/ios-client)
+* DBChainKit 地址 (https://github.com/dbchaincloud/dbchain-ios-client)
