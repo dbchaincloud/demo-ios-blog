@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4805E14AF12B670CC84BB26A /* Pods_DBChainBlog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A937C580505B946DE8E9F9 /* Pods_DBChainBlog.framework */; };
-		8119473726831B5A0043FBB4 /* URLMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473626831B5A0043FBB4 /* URLMacro.swift */; };
 		8119473B268320A60043FBB4 /* TableNameMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8119473A268320A60043FBB4 /* TableNameMacro.swift */; };
 		81194740268323420043FBB4 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8119473E268323420043FBB4 /* MBProgressHUD.m */; };
 		81194746268329D40043FBB4 /* SwiftMBHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81194745268329D40043FBB4 /* SwiftMBHUD.swift */; };
@@ -156,7 +155,6 @@
 
 /* Begin PBXFileReference section */
 		472691485A1788D0E021A581 /* Pods-DBChainBlog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBChainBlog.debug.xcconfig"; path = "Target Support Files/Pods-DBChainBlog/Pods-DBChainBlog.debug.xcconfig"; sourceTree = "<group>"; };
-		8119473626831B5A0043FBB4 /* URLMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLMacro.swift; sourceTree = "<group>"; };
 		8119473A268320A60043FBB4 /* TableNameMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableNameMacro.swift; sourceTree = "<group>"; };
 		8119473D268323410043FBB4 /* DBChainBlog-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DBChainBlog-Bridging-Header.h"; sourceTree = "<group>"; };
 		8119473E268323420043FBB4 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
@@ -348,7 +346,6 @@
 				817DF03126805CD700D65D0C /* MacroFont.swift */,
 				817DF03A26806DF100D65D0C /* UserDefault.swift */,
 				81EB64F62681F34E00FEF7C3 /* UtilsFrame.swift */,
-				8119473626831B5A0043FBB4 /* URLMacro.swift */,
 				8119473A268320A60043FBB4 /* TableNameMacro.swift */,
 			);
 			path = Macro;
@@ -912,7 +909,6 @@
 				8175C9C926808FC4008F4FC8 /* LoginViewController.swift in Sources */,
 				811D4EBE268B4F03007DBF9F /* IQInvocation.swift in Sources */,
 				8175CA2A26809745008F4FC8 /* JXSegmentedTitleAttributeDataSource.swift in Sources */,
-				8119473726831B5A0043FBB4 /* URLMacro.swift in Sources */,
 				81E88788268039160068BB03 /* SceneDelegate.swift in Sources */,
 				8175CA0226809745008F4FC8 /* JXSegmentedTitleOrImageItemModel.swift in Sources */,
 				8175CA2926809745008F4FC8 /* JXSegmentedViewTool.swift in Sources */,

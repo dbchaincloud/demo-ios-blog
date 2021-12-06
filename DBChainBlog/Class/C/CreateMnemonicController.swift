@@ -26,6 +26,7 @@ class CreateMnemonicController: BaseViewController {
 
     override func setupUI() {
         super.setupUI()
+
         view.addSubview(contentView)
 
         mnemonicStr = dbchain.createMnemonic()
@@ -38,7 +39,6 @@ class CreateMnemonicController: BaseViewController {
         /// 进入首页
         contentView.goinButtonBlock = {
             SwiftMBHUD.showLoading()
-
             UserDefault.saveCurrentMnemonic(self.mnemonicStr)
             /// 全部转小写, 大写生成私钥不一致
             let lowMnemoicStr = self.mnemonicStr.lowercased()

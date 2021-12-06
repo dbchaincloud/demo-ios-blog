@@ -6,7 +6,7 @@ target 'DBChainBlog' do
 
 	pod 'HandyJSON', '~> 5.0.2'
   pod 'Kingfisher'
-
+  pod 'SVProgressHUD'
   pod 'DBChainKit/sm2'
 
 end

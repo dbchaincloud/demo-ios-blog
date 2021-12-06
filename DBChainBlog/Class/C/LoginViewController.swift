@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class LoginViewController: BaseViewController {
 
@@ -19,13 +20,18 @@ class LoginViewController: BaseViewController {
         view.addSubview(loginView)
         loginView.goinBlock = {
             /// 记录数据重新给dbchain各参数赋值
-            let privatekey = dbchain.generatePrivateByMenemonci(UserDefault.getCurrentMnemonic()!)
-            let publickey = dbchain.generatePublickey(privatekey)
-            _ = dbchain.generateAddress(publickey)
+            SwiftMBHUD.showLoading()
+            DispatchQueue.global().async {
+                let privatekey = dbchain.generatePrivateByMenemonci(UserDefault.getCurrentMnemonic()!)
+                let publickey = dbchain.generatePublickey(privatekey)
+                _ = dbchain.generateAddress(publickey)
 
-            let vc = HomeViewController()
-            let nav = BaseNavigationController.init(rootViewController: vc)
-            UIApplication.shared.keyWindow?.rootViewController = nav
+                DispatchQueue.main.async {
+                    let vc = HomeViewController()
+                    let nav = BaseNavigationController.init(rootViewController: vc)
+                    UIApplication.shared.keyWindow?.rootViewController = nav
+                }
+            }
         }
 
         loginView.signOutBlock = {
